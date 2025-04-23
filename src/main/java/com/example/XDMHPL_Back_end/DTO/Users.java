@@ -48,12 +48,14 @@ public class Users {
 	@Column(name = "Role", nullable = true)
 	private String role;
 	
+	@Column(name = "Hide", nullable = true)
+	private boolean hide;
 	// Constructor rỗng bắt buộc cho JPA
 	public Users() {}
 
 	// Constructor đầy đủ
 	public Users(String fullName, String userName, String password, String email, String avatar, String phoneNumber, LocalDate dateOfBirth, String gender
-			, String coverPhotoURL, String sessionID,String Bio, String role) {
+			, String coverPhotoURL, String sessionID,String Bio, String role, boolean hide) {
 		this.fullName = fullName;
 		this.email = email;
 		this.userName = userName;
@@ -66,6 +68,7 @@ public class Users {
 		this.phoneNumber = phoneNumber;
 		this.dateOfBirth = dateOfBirth;
 		this.gender = gender;
+		this.hide = hide;
 	}
 
 	// Getter và Setter đúng
@@ -108,4 +111,6 @@ public class Users {
 	public String getRole() { return role;}
 	public void setRole(String role) { this.role = role;}
 	
+	public boolean getHide() { return hide;}
+	public void setHide(boolean hide) {this.hide = hide;}
 }
