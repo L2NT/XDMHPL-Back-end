@@ -82,8 +82,11 @@ public class Users {
 	private List<ChatBoxDetail> chatBoxDetails; // Danh sách các ChatBoxDetail liên kết với User
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private List<Comment> Comments; // Danh sách các bài đã likes của User
+
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Like> Likes; // Danh sách các bài đã likes của User
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	private List<Comment> Comments; // Danh sách các bài đã likes của User
+	private List<Post> Posts; // Danh sách các bài đã likes của User
 }

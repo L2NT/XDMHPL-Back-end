@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.example.XDMHPL_Back_end.DTO.LoginRequest;
 import com.example.XDMHPL_Back_end.DTO.LoginResponse;
+import com.example.XDMHPL_Back_end.DTO.UserDTO;
 import com.example.XDMHPL_Back_end.Services.SessionService;
 import com.example.XDMHPL_Back_end.Services.UserService;
 import com.example.XDMHPL_Back_end.model.Users;
@@ -52,15 +53,12 @@ public class AuthController {
 
             // 3. Tạo session và lưu vào DB
             String sessionId = sessionService.createSession(user.getUserID(), deviceInfo);
-
+            UserDTO userDTO = UserDTO.fromEntity(user);
             // 4. Trả về sessionId kèm thông tin cơ bản của user
-            LoginResponse resp = new LoginResponse(
-                    sessionId,
-                    user.getUserID(),
-                    user.getUserName(),
-                    user.getRole(),
-                    "Đăng nhập thành công"
-            );
+            LoginResponse resp = new LoginResponse();
+            resp.setSessionId(sessionId);
+            resp.setUser(userDTO);
+            resp.setMessage("Đăng nhập thành công.");
             return ResponseEntity.ok(resp);
 
         } catch (Exception e) {

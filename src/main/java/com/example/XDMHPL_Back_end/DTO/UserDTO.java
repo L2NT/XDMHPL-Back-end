@@ -1,7 +1,8 @@
 package com.example.XDMHPL_Back_end.DTO;
 
-import java.sql.Date;
 import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import com.example.XDMHPL_Back_end.model.Users;
 
@@ -25,8 +26,19 @@ public class UserDTO {
     private String bio;
     private String role;
 
+    // Danh sách bạn bè
+    private List<FriendDTO> friends;
+    private List<FriendDTO> friendOf;
+
+    // Danh sách người theo dõi và đang theo dõi
+    // private List<Integer> followers;
+    // private List<Integer> followings;
+
+    // Danh sách session
+    // private List<String> sessions;
+
     // Constructors, getters, setters
-    
+
     // Phương thức chuyển đổi từ Entity sang DTO
     public static UserDTO fromEntity(Users user) {
         UserDTO dto = new UserDTO();
@@ -41,9 +53,34 @@ public class UserDTO {
         dto.setCoverPhotoUrl(user.getCoverPhotoURL());
         dto.setBio(user.getBio());
         dto.setRole(user.getRole());
+
+        // Chuyển đổi danh sách friends
+        dto.setFriends(user.getFriends().stream()
+                .map(friend -> new FriendDTO(
+                        friend.getFriendID(),
+                        friend.getStatus(),
+                        friend.getCreatedAt(),
+                        friend.getFriendUser().getUserID(),
+                        friend.getFriendUser().getFullName(),
+                        friend.getFriendUser().getUserName(),
+                        friend.getFriendUser().getEmail()))
+                .collect(Collectors.toList()));
+
+        // Chuyển đổi danh sách friendOf
+        dto.setFriendOf(user.getFriendOf().stream()
+                .map(friend -> new FriendDTO(
+                        friend.getFriendID(),
+                        friend.getStatus(),
+                        friend.getCreatedAt(),
+                        friend.getUser().getUserID(),
+                        friend.getUser().getFullName(),
+                        friend.getUser().getUserName(),
+                        friend.getUser().getEmail()))
+                .collect(Collectors.toList()));
+
         return dto;
     }
-    
+
     // Phương thức chuyển đổi từ DTO sang Entity
     public Users toEntity() {
         Users user = new Users();
