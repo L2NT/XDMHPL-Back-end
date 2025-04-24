@@ -1,71 +1,29 @@
 package com.example.XDMHPL_Back_end.model;
 
-import java.sql.Date;
-
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "postshare")
-public class PostShare {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int shareID;
-
-	@Column(name = "OriginalPostID", nullable = false, unique = false)
-	private int originalPostID;
-
-	@Column(name = "SharedByUserID", nullable = false, unique = false)
-	private int sharedByUserID ;
-
-	@Column(name = "ShareDate", nullable = false, unique = false)
-	private Date shareDate;
-
-	@Column(name = "Content", nullable = false)
-	private String content;
+@Table(name = "sharepost")
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@DiscriminatorValue("SHARE")
+public class PostShare  extends Post{
+	@Column(name = "OriginalPostID", nullable = false)
+    private int originalPostID;  // Luôn lưu ID của bài đăng gốc ban đầu
     
-	// Constructor rỗng bắt buộc cho JPA
-	public PostShare() {}
-
-	// Constructor đầy đủ
-	public PostShare(int originalPostID, int sharedByUserID, Date shareDate, String content) {
-        this.originalPostID = originalPostID;
-        this.sharedByUserID = sharedByUserID;
-        this.shareDate = shareDate;
-        this.content = content;
-    }
+    @Column(name = "ParentShareID")
+    private Integer parentShareID;  // ID của bài đăng share trực tiếp (có thể null nếu share từ bài gốc)
     
-    // Getters
-    public int getShareID() {
-        return shareID;
-    }
-    public int getOriginalPostID() {
-        return originalPostID;
-    }
-    public int getSharedByUserID() {
-        return sharedByUserID;
-    }
-    public Date getShareDate() {
-        return shareDate;
-    }
-    public String getContent() {
-        return content;
-    }
+    @ManyToOne
+    @JoinColumn(name = "OriginalPostID", insertable = false, updatable = false)
+    private Post originalPost;
     
-    //setters
-    public void setShareID(int shareID) {
-        this.shareID = shareID;
-    }
-    public void setOriginalPostID(int originalPostID) {
-        this.originalPostID = originalPostID;
-    }
-    public void setSharedByUserID(int sharedByUserID) {
-        this.sharedByUserID = sharedByUserID;
-    }
-    public void setShareDate(Date shareDate) {
-        this.shareDate = shareDate;
-    }
-    public void setContent(String content) {
-        this.content = content;
-    }
+    @ManyToOne
+    @JoinColumn(name = "ParentShareID", insertable = false, updatable = false)
+    private PostShare parentShare;  // Bài đăng share mà người dùng đã share từ đó
     
 }

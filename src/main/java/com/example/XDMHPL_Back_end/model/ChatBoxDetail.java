@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
+
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -28,6 +29,7 @@ public class ChatBoxDetail {
     @MapsId("chatBoxID")
     @JoinColumn(name = "ChatBoxID")
     private ChatBox chatBox;
+
 }
 
 

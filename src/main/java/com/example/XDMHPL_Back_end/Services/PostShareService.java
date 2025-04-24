@@ -20,7 +20,7 @@ public class PostShareService {
     }
 
     public PostShare createPostShare(int originalPostID, int sharedByUserID, Date shareDate, String content) {
-    	PostShare postShare = new PostShare( originalPostID, sharedByUserID, shareDate, content);
+    	PostShare postShare = new PostShare( );
         return postShareRepository.save(postShare);
     }
     

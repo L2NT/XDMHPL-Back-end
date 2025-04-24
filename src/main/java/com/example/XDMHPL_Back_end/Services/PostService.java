@@ -19,6 +19,7 @@ import com.example.XDMHPL_Back_end.Repositories.PostMediaRepository;
 import com.example.XDMHPL_Back_end.Repositories.PostRepository;
 import com.example.XDMHPL_Back_end.model.Post;
 import com.example.XDMHPL_Back_end.model.PostMedia;
+import com.example.XDMHPL_Back_end.model.Users;
 
 
 @Service
@@ -28,6 +29,9 @@ public class PostService {
 
     @Autowired
     private PostMediaRepository postMediaRepository;
+
+    @Autowired
+    private UserService userService;
 
     private final String IMAGE_UPLOAD_PATH = "src/main/resources/static/uploads/postimage/";
     private final String VIDEO_UPLOAD_PATH = "src/main/resources/static/uploads/postvideo/";
@@ -40,10 +44,10 @@ public class PostService {
                             List<String> mediaTypes, List<MultipartFile> mediaFiles) throws IOException {
         
         // Tạo một đối tượng Post mới
+        Users user = userService.getUserById(userID);
         Post post = new Post();
-        post.setUserID(userID);
+        post.setUser(user);;
         post.setContent(content);
-        post.setType(type);
         post.setCreationDate(new Date());
         post.setPriorityScore(0); // Giá trị mặc định
         post.setHide(0); // Không ẩn bài đăng

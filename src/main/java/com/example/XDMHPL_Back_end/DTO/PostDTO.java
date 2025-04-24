@@ -17,7 +17,6 @@ import lombok.NoArgsConstructor;
 public class PostDTO {
     private int postID;
     private Date creationDate;
-    private String type;
     private int userID;
     private String content;
     private int priorityScore;
@@ -31,8 +30,7 @@ public class PostDTO {
         PostDTO dto = new PostDTO();
         dto.setPostID(post.getPostID());
         dto.setCreationDate(post.getCreationDate());
-        dto.setType(post.getType());
-        dto.setUserID(post.getUserID());
+        dto.setUserID(post.getUser().getUserID());
         dto.setContent(post.getContent());
         dto.setPriorityScore(post.getPriorityScore());
         

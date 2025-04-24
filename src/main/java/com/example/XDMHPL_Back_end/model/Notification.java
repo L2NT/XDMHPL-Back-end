@@ -1,7 +1,6 @@
 package com.example.XDMHPL_Back_end.model;
 
 import java.sql.Date;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -54,4 +53,5 @@ public class Notification {
 
     @Column(name = "IsReadFlag")
     private int isReadFlag;
+
 }

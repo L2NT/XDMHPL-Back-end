@@ -13,30 +13,35 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name = "post_type", discriminatorType = DiscriminatorType.STRING)
 public class Post {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int postID;
-
-	@Column(name = "CreationDate", nullable = false, unique = false)
-	private Date creationDate;
-
-	@Column(name = "Type", nullable = false, unique = false)
-	private String type;
-
-	@Column(name = "UserID", nullable = false, unique = false)
-	private int userID;
-
-	@Column(name = "Content", nullable = false)
-	private String content;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int postID;
     
-    @Column(name = "PriorityScore", nullable = false, unique = false)
+    @Column(name = "CreationDate", nullable = false)
+    private Date creationDate;
+    
+	@ManyToOne
+	@JoinColumn(name = "UserID")
+	private Users user; // Thêm quan hệ với Users
+    
+    @Column(name = "Content", nullable = false)
+    private String content;
+    
+    @Column(name = "PriorityScore", nullable = false)
     private int priorityScore;
     
     @Column(name = "Hide", nullable = false)
     private int hide;
-
+    
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<PostMedia> mediaList;
-
+    
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Like> likes;
+    
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Comment> comments;
 }

@@ -8,6 +8,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 import com.example.XDMHPL_Back_end.Repositories.SessionRepository;
 import com.example.XDMHPL_Back_end.model.Session;
+import com.example.XDMHPL_Back_end.model.Users;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -35,7 +36,8 @@ public class SessionInterceptor implements HandlerInterceptor {
         // gán userID nếu cần
         int userID = sessionRepository
             .findById(sessionId)
-            .map(Session::getUserID)
+            .map(Session::getUser) // Lấy đối tượng Users
+            .map(Users::getUserID) // Lấy userID từ Users
             .orElse(null);
         req.setAttribute("userID", userID);
         return true;

@@ -26,7 +26,20 @@ public class UserService {
     public Users createUser(String fullName, String userName, String password, String email, String avatar, String phoneNumber, LocalDate dateOfBirth, String gender
 			, String coverPhotoURL, String sessionID, String role) {
         String encryptedPassword = passwordEncoder.encode(password);
-    	Users user = new Users(fullName, userName, encryptedPassword, email, avatar,phoneNumber, dateOfBirth, gender, coverPhotoURL, sessionID, null, role, false);
+    	Users user = new Users();
+        user.setFullName(fullName);
+        user.setUserName(userName);
+        user.setPassword(encryptedPassword);
+        user.setEmail(email);
+        user.setAvatar(avatar);
+        user.setPhoneNumber(phoneNumber);
+        user.setDateOfBirth(dateOfBirth);
+        user.setGender(gender);
+        user.setCoverPhotoURL(coverPhotoURL);
+        user.setSessionID(sessionID);
+        user.setRole(role);
+        user.setHide(false); // Default value for hide
+        user.setBio(null); // Default value for bio
         return usersRepository.save(user);
     }
     
