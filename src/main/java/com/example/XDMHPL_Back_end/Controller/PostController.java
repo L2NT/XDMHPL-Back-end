@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.XDMHPL_Back_end.DTO.Post;
 import com.example.XDMHPL_Back_end.Services.PostService;
+import com.example.XDMHPL_Back_end.model.Post;
 
 @RestController
 @RequestMapping("/post")

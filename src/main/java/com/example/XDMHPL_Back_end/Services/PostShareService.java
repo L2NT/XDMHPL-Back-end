@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.XDMHPL_Back_end.Repositories.PostShareRepository;
-import com.example.XDMHPL_Back_end.DTO.PostShare;
+import com.example.XDMHPL_Back_end.model.PostShare;
 
 
 @Service

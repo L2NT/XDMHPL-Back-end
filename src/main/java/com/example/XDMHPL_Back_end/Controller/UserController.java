@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.XDMHPL_Back_end.DTO.Users;
 import com.example.XDMHPL_Back_end.Services.UserService;
+import com.example.XDMHPL_Back_end.model.Users;
 
 @RestController
 @RequestMapping("/users")

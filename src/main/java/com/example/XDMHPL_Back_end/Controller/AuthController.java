@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.*;
 
 import com.example.XDMHPL_Back_end.DTO.LoginRequest;
 import com.example.XDMHPL_Back_end.DTO.LoginResponse;
-import com.example.XDMHPL_Back_end.DTO.Users;
 import com.example.XDMHPL_Back_end.Services.SessionService;
 import com.example.XDMHPL_Back_end.Services.UserService;
+import com.example.XDMHPL_Back_end.model.Users;
 import com.example.XDMHPL_Back_end.DTO.ErrorResponse;
 
 import jakarta.servlet.http.HttpServletRequest;

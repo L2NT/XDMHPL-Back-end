@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.XDMHPL_Back_end.Repositories.PostRepository;
-import com.example.XDMHPL_Back_end.DTO.Post;
+import com.example.XDMHPL_Back_end.model.Post;
 
 
 @Service
@@ -20,7 +20,12 @@ public class PostService {
     }
 
     public Post createPost(Date creationDate, String type, int userID, String content, int priorityScore) {
-    	Post post = new Post(creationDate, type, userID, content, priorityScore);
+    	Post post = new Post();
+        post.setCreationDate(creationDate);
+        post.setType(type);
+        post.setUserID(userID);
+        post.setContent(content);
+        post.setPriorityScore(priorityScore);
         return postRepository.save(post);
     }
     

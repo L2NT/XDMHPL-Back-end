@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.XDMHPL_Back_end.DTO.PostShare;
 import com.example.XDMHPL_Back_end.Services.PostShareService;
+import com.example.XDMHPL_Back_end.model.PostShare;
 
 @RestController
 @RequestMapping("/postshare")

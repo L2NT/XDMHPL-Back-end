@@ -2,7 +2,7 @@ package com.example.XDMHPL_Back_end.Repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.example.XDMHPL_Back_end.DTO.Session;
+import com.example.XDMHPL_Back_end.model.Session;
 
 import java.time.LocalDateTime;
 import java.util.Optional;

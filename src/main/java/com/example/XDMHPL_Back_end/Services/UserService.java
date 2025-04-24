@@ -7,7 +7,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.XDMHPL_Back_end.Repositories.UserRepository;
-import com.example.XDMHPL_Back_end.DTO.Users;
+import com.example.XDMHPL_Back_end.model.Users;
 
 
 @Service

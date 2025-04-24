@@ -1,4 +1,4 @@
-package com.example.XDMHPL_Back_end.DTO;
+package com.example.XDMHPL_Back_end.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;

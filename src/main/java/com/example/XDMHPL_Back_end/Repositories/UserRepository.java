@@ -5,7 +5,7 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.example.XDMHPL_Back_end.DTO.Users;
+import com.example.XDMHPL_Back_end.model.Users;
 
 public interface UserRepository extends JpaRepository<Users, Integer> {
     Optional<Users> findById(Integer id);

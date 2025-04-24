@@ -239,7 +239,7 @@ CREATE TABLE `sessions` (
 --
 
 CREATE TABLE `users` (
-  `UserID` int(11) NOT NULL UNIQUE,
+  `UserID` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `FullName` mediumtext DEFAULT NULL,
   `Username` varchar(50) DEFAULT NULL,
   `Password` varchar(255) DEFAULT NULL,

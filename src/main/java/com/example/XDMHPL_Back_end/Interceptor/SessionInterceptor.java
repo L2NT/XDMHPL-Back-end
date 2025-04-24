@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-import com.example.XDMHPL_Back_end.DTO.Session;
 import com.example.XDMHPL_Back_end.Repositories.SessionRepository;
+import com.example.XDMHPL_Back_end.model.Session;
 
 import java.io.IOException;
 import java.time.LocalDateTime;

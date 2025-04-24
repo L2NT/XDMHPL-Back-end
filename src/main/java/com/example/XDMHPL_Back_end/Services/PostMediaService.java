@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.XDMHPL_Back_end.Repositories.PostMediaRepository;
-import com.example.XDMHPL_Back_end.DTO.PostMedia;
+import com.example.XDMHPL_Back_end.model.PostMedia;
 
 
 @Service
@@ -19,7 +19,10 @@ public class PostMediaService {
     }
 
     public PostMedia createPostMedia(String type, String mediaURL, int postID) {
-    	PostMedia postMedia = new PostMedia( type, mediaURL, postID);
+    	PostMedia postMedia = new PostMedia();
+        postMedia.setType(type);
+        postMedia.setMediaURL(mediaURL);
+        // postMedia.setPostID(postID);
         return postMediaRepository.save(postMedia);
     }
     
