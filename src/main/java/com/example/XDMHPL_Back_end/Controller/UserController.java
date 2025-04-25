@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.XDMHPL_Back_end.DTO.UserDTO;
 import com.example.XDMHPL_Back_end.Services.UserService;
 import com.example.XDMHPL_Back_end.model.Users;
 
@@ -22,8 +23,9 @@ public class UserController {
 	private UserService usersService;
 	
 	@GetMapping
-	public List<Users> getUsers() {
-		return usersService.getAllUser();
+	public List<UserDTO> getUsers() {
+		List<Users> users = usersService.getAllUser();
+		return users.stream().map(UserDTO::fromEntity).toList();
 	}
 	
 	@PostMapping("/create-user")

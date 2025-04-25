@@ -28,8 +28,9 @@ public class PostController {
 	private PostService postService;
 
 	@GetMapping
-	public List<Post> getCustomers() {
-		return postService.getAllPost();
+	public List<PostDTO> getAllPosts() {
+		List<Post> posts = postService.getAllPost();
+		return posts.stream().map(PostDTO::fromEntity).toList();
 	}
 
 	@PostMapping("/create")
@@ -42,7 +43,7 @@ public class PostController {
 
 		try {
 			PostDTO createdPost = postService.createPost(userId, content, type, mediaTypes, mediaFiles);
-			return new ResponseEntity<>(createdPost, HttpStatus.CREATED);
+			return new ResponseEntity<>("Bài đăng đã tạo:", HttpStatus.CREATED);
 		} catch (IOException e) {
 			Map<String, String> response = new HashMap<>();
 			response.put("error", "Không thể tạo bài đăng: " + e.getMessage());

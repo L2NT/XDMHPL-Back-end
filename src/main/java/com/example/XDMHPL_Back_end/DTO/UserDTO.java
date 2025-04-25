@@ -58,7 +58,7 @@ public class UserDTO {
         dto.setFriends(user.getFriends().stream()
                 .map(friend -> new FriendDTO(
                         friend.getFriendID(),
-                        friend.getStatus(),
+                        friend.getStatus().toString(),
                         friend.getCreatedAt(),
                         friend.getFriendUser().getUserID(),
                         friend.getFriendUser().getFullName(),
@@ -70,7 +70,7 @@ public class UserDTO {
         dto.setFriendOf(user.getFriendOf().stream()
                 .map(friend -> new FriendDTO(
                         friend.getFriendID(),
-                        friend.getStatus(),
+                        friend.getStatus().toString(),
                         friend.getCreatedAt(),
                         friend.getUser().getUserID(),
                         friend.getUser().getFullName(),

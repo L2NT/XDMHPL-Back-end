@@ -1,11 +1,11 @@
 package com.example.XDMHPL_Back_end.DTO;
 
-
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import com.example.XDMHPL_Back_end.model.Post;
+import com.example.XDMHPL_Back_end.model.PostShare;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,10 +20,20 @@ public class PostDTO {
     private int userID;
     private String content;
     private int priorityScore;
-    private List<PostMediaDTO> mediaList;
+    private int likeCount;
+    private int commentCount;
+    private int shareCount;
+    private String postType;
 
-    // Constructors, getters, setters
-    
+    // Thêm các trường cho PostShare
+    private Integer originalPostID; // Cho post_type=SHARE
+    private Integer parentShareID; // Cho post_type=SHARE
+
+    private List<PostMediaDTO> mediaList;
+    private List<CommentDTO> comments;
+    private List<LikeDTO> likes;
+    private List<ShareDTO> shares;
+
     // Phương thức chuyển đổi từ Entity sang DTO
     public static PostDTO fromEntity(Post post) {
         PostDTO dto = new PostDTO();
@@ -32,15 +42,57 @@ public class PostDTO {
         dto.setUserID(post.getUser().getUserID());
         dto.setContent(post.getContent());
         dto.setPriorityScore(post.getPriorityScore());
-        
+
+        // Đặt loại post
+        if (post instanceof PostShare) {
+            dto.setPostType("SHARE");
+            PostShare sharePost = (PostShare) post;
+            dto.setOriginalPostID(sharePost.getOriginalPostID());
+            dto.setParentShareID(sharePost.getParentShareID());
+        } else {
+            dto.setPostType("POST"); // hoặc loại tương ứng khác
+        }
+
         // Chuyển đổi danh sách media
         if (post.getMediaList() != null) {
             List<PostMediaDTO> mediaDTOs = post.getMediaList().stream()
-                .map(PostMediaDTO::fromEntity)
-                .collect(Collectors.toList());
+                    .map(PostMediaDTO::fromEntity)
+                    .collect(Collectors.toList());
             dto.setMediaList(mediaDTOs);
         }
-        
+
+        // Đếm số lượng like
+        if (post.getLikes() != null) {
+            dto.setLikeCount(post.getLikes().size());
+            List<LikeDTO> likeDTOs = post.getLikes().stream()
+                    .map(LikeDTO::fromEntity)
+                    .collect(Collectors.toList());
+            dto.setLikes(likeDTOs);
+        }
+
+        // Đếm số lượng comment
+        if (post.getComments() != null) {
+            dto.setCommentCount(post.getComments().size());
+            List<CommentDTO> commentDTOs = post.getComments().stream()
+                    .map(CommentDTO::fromEntity)
+                    .collect(Collectors.toList());
+            dto.setComments(commentDTOs);
+        }
+
+        // Thêm danh sách shares
+        if (post.getSharedPosts() != null) {
+            dto.setShareCount(post.getSharedPosts().size());
+            List<ShareDTO> shareDTOs = post.getSharedPosts().stream()
+                    .map(sharePost -> {
+                        ShareDTO shareDTO = new ShareDTO();
+                        shareDTO.setPostID(sharePost.getPostID());
+                        shareDTO.setUserID(sharePost.getUser().getUserID());
+                        return shareDTO;
+                    })
+                    .collect(Collectors.toList());
+            dto.setShares(shareDTOs);
+        }
+
         return dto;
     }
 }

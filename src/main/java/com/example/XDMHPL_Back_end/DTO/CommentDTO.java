@@ -22,6 +22,7 @@ public class CommentDTO {
     public static CommentDTO fromEntity(Comment comment) {
         CommentDTO dto = new CommentDTO();
         dto.setCommentID(comment.getCommentID());
+        dto.setContent(comment.getContent());
         dto.setUserID(comment.getUser().getUserID());
         dto.setPostID(comment.getPost().getPostID());
         dto.setCreationDate(comment.getCreationDate().toString()); // Chuyển đổi Date thành String
