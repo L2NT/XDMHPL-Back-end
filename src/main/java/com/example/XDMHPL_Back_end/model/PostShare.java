@@ -11,12 +11,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @DiscriminatorValue("SHARE")
-public class PostShare  extends Post{
-	@Column(name = "OriginalPostID", nullable = false)
-    private int originalPostID;  // Luôn lưu ID của bài đăng gốc ban đầu
+public class PostShare extends Post {
+    @Column(name = "OriginalPostID", nullable = false)
+    private int originalPostID;  
     
     @Column(name = "ParentShareID")
-    private Integer parentShareID;  // ID của bài đăng share trực tiếp (có thể null nếu share từ bài gốc)
+    private Integer parentShareID;  
     
     @ManyToOne
     @JoinColumn(name = "OriginalPostID", insertable = false, updatable = false)
@@ -24,6 +24,5 @@ public class PostShare  extends Post{
     
     @ManyToOne
     @JoinColumn(name = "ParentShareID", insertable = false, updatable = false)
-    private PostShare parentShare;  // Bài đăng share mà người dùng đã share từ đó
-    
+    private Post parentPost; 
 }

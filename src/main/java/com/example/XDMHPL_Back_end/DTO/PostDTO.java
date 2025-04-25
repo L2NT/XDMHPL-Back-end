@@ -1,5 +1,6 @@
 package com.example.XDMHPL_Back_end.DTO;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,6 +36,7 @@ public class PostDTO {
     private List<ShareDTO> shares;
 
     // Phương thức chuyển đổi từ Entity sang DTO
+
     public static PostDTO fromEntity(Post post) {
         PostDTO dto = new PostDTO();
         dto.setPostID(post.getPostID());
@@ -50,7 +52,7 @@ public class PostDTO {
             dto.setOriginalPostID(sharePost.getOriginalPostID());
             dto.setParentShareID(sharePost.getParentShareID());
         } else {
-            dto.setPostType("POST"); // hoặc loại tương ứng khác
+            dto.setPostType("POST");
         }
 
         // Chuyển đổi danh sách media
@@ -79,18 +81,35 @@ public class PostDTO {
             dto.setComments(commentDTOs);
         }
 
-        // Thêm danh sách shares
-        if (post.getSharedPosts() != null) {
-            dto.setShareCount(post.getSharedPosts().size());
-            List<ShareDTO> shareDTOs = post.getSharedPosts().stream()
-                    .map(sharePost -> {
-                        ShareDTO shareDTO = new ShareDTO();
-                        shareDTO.setPostID(sharePost.getPostID());
-                        shareDTO.setUserID(sharePost.getUser().getUserID());
-                        return shareDTO;
-                    })
-                    .collect(Collectors.toList());
-            dto.setShares(shareDTOs);
+        // Xử lý shares dựa trên loại bài đăng
+        if (post instanceof PostShare) {
+            // Nếu là post share, chỉ hiển thị danh sách các bài share trực tiếp từ nó
+            if (post.getDirectSharedPosts() != null) {
+                dto.setShareCount(post.getDirectSharedPosts().size());
+
+                List<ShareDTO> shareDTOs = post.getDirectSharedPosts().stream()
+                        .map(ShareDTO::fromEntity)
+                        .collect(Collectors.toList());
+
+                dto.setShares(shareDTOs);
+            } else {
+                dto.setShareCount(0);
+                dto.setShares(new ArrayList<>());
+            }
+        } else {
+            // Nếu là post gốc, hiển thị danh sách tất cả các bài share có nguồn gốc từ nó
+            if (post.getAllSharedPosts() != null) {
+                dto.setShareCount(post.getAllSharedPosts().size());
+
+                List<ShareDTO> shareDTOs = post.getAllSharedPosts().stream()
+                        .map(ShareDTO::fromEntity)
+                        .collect(Collectors.toList());
+
+                dto.setShares(shareDTOs);
+            } else {
+                dto.setShareCount(0);
+                dto.setShares(new ArrayList<>());
+            }
         }
 
         return dto;

@@ -45,10 +45,13 @@ public class Post {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Comment> comments;
 
-    @OneToMany(mappedBy = "originalPost", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<PostShare> sharedPosts;
-    
-    // Hoặc nếu muốn theo dõi cả những bài share từ PostShare
-    @OneToMany(mappedBy = "parentShare", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<PostShare> childShares;
+     // Quan hệ với các bài share TRỰC TIẾP từ post này (không phân biệt là post gốc hay share)
+    @OneToMany
+    @JoinColumn(name = "ParentShareID")
+     private List<PostShare> directSharedPosts;
+     
+     // Quan hệ với các bài đăng share có originalPostID = postID (chỉ dành cho post gốc)
+    @OneToMany
+    @JoinColumn(name = "OriginalPostID") 
+     private List<PostShare> allSharedPosts;
 }

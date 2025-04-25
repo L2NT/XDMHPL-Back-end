@@ -1,0 +1,51 @@
+package com.example.XDMHPL_Back_end.Controller;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.XDMHPL_Back_end.Services.CommentService;
+import com.example.XDMHPL_Back_end.Services.UserService;
+import com.example.XDMHPL_Back_end.model.Comment;
+
+
+
+
+@RestController
+@RequestMapping("/comments")
+public class CommentController {
+    @Autowired
+    private CommentService commentService;
+
+    @PostMapping("/post/{postId}/{userId}")
+    public ResponseEntity<?> createComment(@RequestBody Comment comment, @PathVariable("postId") Integer postId, @PathVariable("userId") Integer userId )
+    {
+        try {
+			commentService.createComment(comment, postId, userId);
+			return new ResponseEntity<>("Đã thay đổi tương tác bài đăng:", HttpStatus.OK);
+		} catch (Exception e) {
+			Map<String, String> response = new HashMap<>();
+			response.put("error", "Không thể tương tác bài đăng: " + e.getMessage());
+			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+    }
+
+    @PutMapping("/api/comments/like/{commentId}")
+    public Comment LikeComment( 
+        @RequestHeader("Authorization") String jwt, @PathVariable("commentId") Integer commentId) throws Exception
+    {
+        // User user=userService.findUserByJwt(jwt);
+        // Comment likedComment = commentService.likeComment(commentId, user.getId());
+        // return likedComment;
+        return null;
+    }
+}
