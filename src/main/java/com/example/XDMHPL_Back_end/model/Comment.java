@@ -24,6 +24,9 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int commentID;
 
+    @Column(name = "Content")
+    private String content;
+
     @Column(name = "CreationDate")
     private Date creationDate;
 

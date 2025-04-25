@@ -21,7 +21,6 @@ public class PostDTO {
     private String content;
     private int priorityScore;
     private List<PostMediaDTO> mediaList;
-    private UserDTO user; // Thông tin người đăng bài
 
     // Constructors, getters, setters
     
