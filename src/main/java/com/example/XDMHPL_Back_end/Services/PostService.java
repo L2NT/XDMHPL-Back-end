@@ -47,7 +47,7 @@ public class PostService {
     private final String VIDEO_UPLOAD_PATH = "src/main/resources/static/uploads/postvideo/";
 
     public List<Post> getAllPost() {
-        return postRepository.findAll();
+        return postRepository.findByHide(0);
     }
 
     public PostDTO createPost(int userID, String content, String type,
@@ -253,6 +253,17 @@ public class PostService {
         Post savedPost = postRepository.save(post);
 
         return PostDTO.fromEntity(savedPost);
+    }
+
+    public void deletePost(int postId) {
+        // Tìm bài đăng theo ID
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy bài đăng với ID: " + postId));
+
+        // Xóa các media liên quan đến bài đăng
+        post.setHide(1);
+
+        postRepository.save(post);
     }
 
     // để lấy đường dẫn tuyệt đối từ URL tương đối
