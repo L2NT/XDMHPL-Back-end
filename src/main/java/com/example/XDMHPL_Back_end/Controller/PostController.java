@@ -52,6 +52,27 @@ public class PostController {
 		}
 	}
 
+	@PutMapping("/update")
+	public ResponseEntity<?> updatePost(
+			@RequestParam("userId") int userId,
+			@RequestParam("postId") int postId,
+			@RequestParam("content") String content,
+			@RequestParam("type") String type,
+			@RequestParam(value = "keepMediaIds", required = false) List<Integer> keepMediaIds,
+			@RequestParam(value = "mediaTypes", required = false) List<String> mediaTypes,
+			@RequestParam(value = "mediaFiles", required = false) List<MultipartFile> mediaFiles) {
+
+		try {
+			PostDTO updatedPost = postService.updatePost(userId, postId, content, type, keepMediaIds, mediaTypes,
+					mediaFiles);
+			return new ResponseEntity<>("Bài đăng đã cập nhật thành công", HttpStatus.OK);
+		} catch (IOException e) {
+			Map<String, String> response = new HashMap<>();
+			response.put("error", "Không thể cập nhật bài đăng: " + e.getMessage());
+			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
 	@PutMapping("/like/{postId}/{userId}")
 	public ResponseEntity<?> likePost(@PathVariable int postId, @PathVariable int userId) {
 		try {

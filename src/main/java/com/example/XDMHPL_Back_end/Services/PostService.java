@@ -124,14 +124,14 @@ public class PostService {
         // Tìm bài đăng theo ID
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy bài đăng với ID: " + postId));
-    
+
         // Tìm người dùng theo ID
         Users user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy người dùng với ID: " + userId));
-    
+
         // Kiểm tra xem người dùng đã thích bài đăng này chưa
         Like existingLike = likeRepository.findByPostAndUser(post, user);
-    
+
         if (existingLike != null) {
             // Nếu đã thích rồi, xóa like đi
             likeRepository.delete(existingLike);
@@ -146,5 +146,129 @@ public class PostService {
 
     public Post getPostByID(Integer id) {
         return postRepository.findById(id).orElse(null);
+    }
+
+    public PostDTO updatePost(int userID, int postId, String content, String type,
+            List<Integer> keepMediaIds, List<String> mediaTypes,
+            List<MultipartFile> mediaFiles) throws IOException {
+
+        // Lấy post hiện tại
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy bài đăng"));
+
+        // Kiểm tra quyền của người dùng
+        if (post.getUser().getUserID() != userID) {
+            throw new RuntimeException("Không có quyền cập nhật bài đăng này");
+        }
+
+        // Cập nhật nội dung
+        post.setContent(content);
+
+        // Xử lý media
+        List<PostMedia> currentMedia = post.getMediaList();
+        List<PostMedia> mediaToKeep = new ArrayList<>();
+        List<PostMedia> mediaToDelete = new ArrayList<>();
+
+        // Phân loại media: giữ lại hay xóa
+        for (PostMedia media : currentMedia) {
+            if (keepMediaIds != null && keepMediaIds.contains(media.getPostMediaID())) {
+                mediaToKeep.add(media);
+            } else {
+                mediaToDelete.add(media);
+            }
+        }
+
+        // Xóa các media không còn cần thiết
+        for (PostMedia media : mediaToDelete) {
+            // Xóa file vật lý
+            String filePath = getAbsolutePathFromRelativeUrl(media.getMediaURL());
+            File fileToDelete = new File(filePath);
+
+            if (postMediaRepository.existsById(media.getPostMediaID())) {
+                postMediaRepository.delete(media);
+            } else {
+                System.out
+                        .println("PostMedia với ID " + media.getPostMediaID() + " không tồn tại trong cơ sở dữ liệu.");
+            }
+
+            if (fileToDelete.exists()) {
+                fileToDelete.delete();
+            }
+
+        }
+
+        // Thêm media mới nếu có
+        if (mediaFiles != null && !mediaFiles.isEmpty()) {
+            for (int i = 0; i < mediaFiles.size(); i++) {
+                MultipartFile file = mediaFiles.get(i);
+                // Kiểm tra file có rỗng không
+                if (file.isEmpty()) {
+                    continue;
+                }
+
+                String mediaType = mediaTypes.get(i);
+
+                // Xử lý và lưu file giống như khi tạo post
+                String uploadPath;
+                if ("image".equals(mediaType)) {
+                    uploadPath = IMAGE_UPLOAD_PATH;
+                } else if ("video".equals(mediaType)) {
+                    uploadPath = VIDEO_UPLOAD_PATH;
+                } else {
+                    continue;
+                }
+
+                // Tạo thư mục nếu chưa tồn tại
+                File directory = new File(uploadPath);
+                if (!directory.exists()) {
+                    directory.mkdirs();
+                }
+
+                String originalFilename = file.getOriginalFilename();
+                String fileExtension = originalFilename.substring(originalFilename.lastIndexOf("."));
+                String newFilename = UUID.randomUUID().toString() + fileExtension;
+                String filePath = uploadPath + newFilename;
+
+                Path path = Paths.get(filePath);
+                Files.write(path, file.getBytes());
+
+                PostMedia postMedia = new PostMedia();
+                postMedia.setType(mediaType);
+                String relativeUrl = "/uploads/" +
+                        (mediaType.equals("image") ? "postimage/" : "postvideo/") +
+                        newFilename;
+                postMedia.setMediaURL(relativeUrl);
+                postMedia.setPost(post);
+
+                mediaToKeep.add(postMediaRepository.save(postMedia));
+            }
+        }
+
+        // Cập nhật danh sách media cho post
+        post.getMediaList().clear();
+        post.getMediaList().addAll(mediaToKeep);
+        Post savedPost = postRepository.save(post);
+
+        return PostDTO.fromEntity(savedPost);
+    }
+
+    // để lấy đường dẫn tuyệt đối từ URL tương đối
+    private String getAbsolutePathFromRelativeUrl(String relativeUrl) {
+        // Loại bỏ phần "/uploads/" từ relativeUrl
+        String relativePath = relativeUrl.replace("/uploads/", "");
+
+        // Xác định đường dẫn gốc tùy thuộc vào loại media
+        String basePath;
+        if (relativePath.startsWith("postimage/")) {
+            basePath = IMAGE_UPLOAD_PATH;
+            relativePath = relativePath.replace("postimage/", "");
+        } else if (relativePath.startsWith("postvideo/")) {
+            basePath = VIDEO_UPLOAD_PATH;
+            relativePath = relativePath.replace("postvideo/", "");
+        } else {
+            basePath = ""; // Mặc định
+        }
+
+        return basePath + relativePath;
     }
 }
