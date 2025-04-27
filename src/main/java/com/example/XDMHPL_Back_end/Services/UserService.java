@@ -2,6 +2,9 @@ package com.example.XDMHPL_Back_end.Services;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -76,5 +79,19 @@ public class UserService {
         }
 
         return null;
+    }
+
+
+    private Map<Integer, Boolean> onlineUsers = new ConcurrentHashMap<>();
+    public void updateOnlineStatus(int userId, boolean isOnline) {
+        onlineUsers.put(userId , isOnline);
+    }
+    public boolean isUserOnline(int userId) {
+        return onlineUsers.getOrDefault(userId , false);
+    }
+
+    public void updateUserActivity(int userId) {
+        // Cập nhật thời gian hoạt động cuối cùng
+        updateOnlineStatus(userId , true);
     }
 }
