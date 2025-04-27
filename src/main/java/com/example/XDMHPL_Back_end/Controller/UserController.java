@@ -17,7 +17,7 @@ import com.example.XDMHPL_Back_end.Services.UserService;
 import com.example.XDMHPL_Back_end.model.Users;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/users")
 public class UserController {
 	@Autowired
 	private UserService usersService;

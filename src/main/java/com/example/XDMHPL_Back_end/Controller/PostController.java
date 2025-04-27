@@ -24,7 +24,7 @@ import com.example.XDMHPL_Back_end.Services.PostService;
 import com.example.XDMHPL_Back_end.model.Post;
 
 @RestController
-@RequestMapping("/posts")
+@RequestMapping("/api/posts")
 public class PostController {
 	@Autowired
 	private PostService postService;

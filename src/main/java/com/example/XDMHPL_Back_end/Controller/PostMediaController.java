@@ -14,7 +14,7 @@ import com.example.XDMHPL_Back_end.Services.PostMediaService;
 import com.example.XDMHPL_Back_end.model.PostMedia;
 
 @RestController
-@RequestMapping("/postmedia")
+@RequestMapping("/api/postmedia")
 public class PostMediaController {
 	@Autowired
 	private PostMediaService postMediaService;
