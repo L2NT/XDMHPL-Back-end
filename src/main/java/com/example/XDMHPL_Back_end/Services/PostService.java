@@ -163,9 +163,11 @@ public class PostService {
 
         // Cập nhật nội dung
         post.setContent(content);
+        System.out.println( type);
 
-        if (type == "post") {
+        if ("post".equals(type)) {
             // Xử lý media
+            System.out.println(                "Đang xử lý media...");
             List<PostMedia> currentMedia = post.getMediaList();
             List<PostMedia> mediaToKeep = new ArrayList<>();
             List<PostMedia> mediaToDelete = new ArrayList<>();

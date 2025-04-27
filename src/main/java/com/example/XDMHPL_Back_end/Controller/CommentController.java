@@ -21,7 +21,7 @@ import com.example.XDMHPL_Back_end.model.Comment;
 
 
 @RestController
-@RequestMapping("/api/comments")
+@RequestMapping("/comments")
 public class CommentController {
     @Autowired
     private CommentService commentService;

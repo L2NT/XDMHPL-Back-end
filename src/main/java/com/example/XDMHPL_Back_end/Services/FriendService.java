@@ -40,7 +40,11 @@ public class FriendService {
         user.getFriendOf().stream()
             .filter(friend -> friend.getStatus() == FriendStatus.ACCEPTED)
             .forEach(friend -> acceptedFriends.add(friend.getUser()));
-        
+        if(acceptedFriends.isEmpty()) {
+            throw new UsernameNotFoundException("No accepted friends found for user with ID: " + userId);
+        } else {
+            System.out.println("Accepted friends for user " + userId );
+        }
         return acceptedFriends;
     }
 }

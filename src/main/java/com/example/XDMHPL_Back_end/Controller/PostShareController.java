@@ -19,7 +19,7 @@ import com.example.XDMHPL_Back_end.model.PostShare;
 import com.example.XDMHPL_Back_end.model.Users;
 
 @RestController
-@RequestMapping("/api/postshare")
+@RequestMapping("/postshare")
 public class PostShareController {
 	@Autowired
 	private PostShareService postShareService;
