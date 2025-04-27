@@ -1,6 +1,8 @@
 package com.example.XDMHPL_Back_end.DTO;
 
-import java.sql.Date;
+
+
+import java.util.Date;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

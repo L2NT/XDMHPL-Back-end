@@ -89,4 +89,18 @@ public class AuthController {
 	private Users phoneCheck(@PathVariable String phoneNumber) {
 	    return userService.getUserByPhoneNumber(phoneNumber);
 	}
+
+
+    @GetMapping("/current-user/{userID}")
+    public ResponseEntity<?> getCurrentUser( @PathVariable int userID) {
+        try {
+            return ResponseEntity.ok(userService.getCurrentUser(userID));
+
+        } catch (Exception e) {
+            // 5. Log lỗi và trả về 500
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ErrorResponse("Lỗi hệ thống: " + e.getMessage()));
+        }
+    }
 }

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.example.XDMHPL_Back_end.DTO.UserDTO;
 import com.example.XDMHPL_Back_end.Repositories.UserRepository;
 import com.example.XDMHPL_Back_end.model.Users;
 
@@ -93,5 +94,16 @@ public class UserService {
     public void updateUserActivity(int userId) {
         // Cập nhật thời gian hoạt động cuối cùng
         updateOnlineStatus(userId , true);
+    }
+
+
+
+    //current user
+    public UserDTO getCurrentUser(int userId) {
+        Users user = usersRepository.findById(userId).orElse(null);
+        if (user != null) {
+            return UserDTO.fromEntity(user);
+        }
+        return null;
     }
 }
