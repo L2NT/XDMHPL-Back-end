@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.XDMHPL_Back_end.Services.CommentService;
 import com.example.XDMHPL_Back_end.Services.NotificationService;
 import com.example.XDMHPL_Back_end.Services.PostService;
 import com.example.XDMHPL_Back_end.Services.UserService;
@@ -34,10 +35,13 @@ public class NotificationController {
     private NotificationService notificationService;
     
     @Autowired
-    private UserService userService; // Giả định rằng bạn có UserService để lấy thông tin user
+    private UserService userService; 
 
     @Autowired
-    private PostService postService; // Giả định bạn có PostService để lấy thông tin bài viết
+    private PostService postService; 
+
+    @Autowired
+    private CommentService commentService;
     
     /**
      * Lấy tất cả thông báo của người dùng hiện tại
@@ -84,13 +88,13 @@ public class NotificationController {
             // Nếu có PostID, lấy đối tượng Post tương ứng
             if (payload.containsKey("postId")) {
                 // Giả định bạn có PostService
-                // post = postService.getPostById((Integer) payload.get("postId"));
+                post = postService.getPostByID((Integer) payload.get("postId"));
             }
             
             // Nếu có CommentID, lấy đối tượng Comment tương ứng
             if (payload.containsKey("commentId")) {
                 // Giả định bạn có CommentService
-                // comment = commentService.getCommentById((Integer) payload.get("commentId"));
+                comment = commentService.getCommentById((Integer) payload.get("commentId"));
             }
             
             // Nếu có MessageID, lấy đối tượng Message tương ứng

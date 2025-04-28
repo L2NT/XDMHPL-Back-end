@@ -40,4 +40,10 @@ public class CommentService {
         post.getComments().add(savedComment);
         postRepository.save(post);
     }
+
+
+    public Comment getCommentById(int commentId) {
+        return commentRepository.findById(commentId)
+                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy bình luận với ID: " + commentId));
+    }
 }
