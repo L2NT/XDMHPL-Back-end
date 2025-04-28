@@ -3,6 +3,8 @@ package com.example.XDMHPL_Back_end.model;
 import java.sql.Date;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -30,8 +32,9 @@ public class Notification {
     @JoinColumn(name = "SenderID")
     private Users sender;
 
+    @Enumerated(EnumType.STRING) 
     @Column(name = "Type")
-    private String type;
+    private NotificationStatus type;
 
     @ManyToOne
     @JoinColumn(name = "PostID")
