@@ -66,7 +66,7 @@ public class UserPresenceController {
                 
                 messagingTemplate.convertAndSendToUser(
                         String.valueOf(friend.getUserID()),
-                        "/statususer",
+                        "/queue/statususer",
                         statusUpdate);
                 System.out.println("Message sent successfully");
             } catch (Exception e) {
