@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Apr 27, 2025 at 01:35 PM
+-- Generation Time: Apr 28, 2025 at 04:07 PM
 -- Server version: 8.0.41
 -- PHP Version: 8.3.13
 
@@ -100,19 +100,11 @@ CREATE TABLE `following` (
 
 CREATE TABLE `friends` (
   `friendID` int NOT NULL,
-  `CreatedAt` date DEFAULT NULL,
-  `Status` enum('ACCEPTED','PENDING') DEFAULT NULL,
+  `CreatedAt` datetime(6) DEFAULT NULL,
+  `Status` enum('ACCEPTED','PENDING','REJECTED') DEFAULT NULL,
   `FriendUserID` int DEFAULT NULL,
   `UserID` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Dumping data for table `friends`
---
-
-INSERT INTO `friends` (`friendID`, `CreatedAt`, `Status`, `FriendUserID`, `UserID`) VALUES
-(1, '2025-04-25', 'ACCEPTED', 2, 1),
-(2, '2025-04-18', 'PENDING', 1, 3);
 
 -- --------------------------------------------------------
 
@@ -172,9 +164,9 @@ CREATE TABLE `messagemedia` (
 CREATE TABLE `notification` (
   `notificationID` int NOT NULL,
   `Content` varchar(255) DEFAULT NULL,
-  `CreatedAt` date DEFAULT NULL,
+  `CreatedAt` datetime(6) DEFAULT NULL,
   `IsReadFlag` int DEFAULT NULL,
-  `Type` varchar(255) DEFAULT NULL,
+  `Type` enum('COMMENT','FRIEND_REQUEST','LIKE','MESSAGE') DEFAULT NULL,
   `CommentID` int DEFAULT NULL,
   `MessageID` int DEFAULT NULL,
   `PostID` int DEFAULT NULL,
@@ -251,14 +243,6 @@ CREATE TABLE `sessions` (
   `UserID` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Dumping data for table `sessions`
---
-
-INSERT INTO `sessions` (`sessionID`, `createdAt`, `deviceInfo`, `expiresAt`, `UserID`) VALUES
-('480b4b8c-f6bc-4162-836b-ef568925b2a5', '2025-04-27 09:35:43.321117', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36', '2025-04-27 11:35:43.321117', 2),
-('f53d584a-5259-4109-8f84-31662d8b8ed2', '2025-04-27 11:56:38.190022', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36 Edg/135.0.0.0', '2025-04-27 13:56:38.190022', 2);
-
 -- --------------------------------------------------------
 
 --
@@ -315,7 +299,9 @@ CREATE TABLE `users` (
 INSERT INTO `users` (`userID`, `Bio`, `AvatarURL`, `CoverPhotoURL`, `DateOfBirth`, `Email`, `FullName`, `Gender`, `Hide`, `Password`, `PhoneNumber`, `Role`, `SessionID`, `UserName`) VALUES
 (1, NULL, NULL, NULL, '2000-04-22', 'huynhsmash2468@gmail.com', 'HuỳnhTuấn', 'Nam', b'0', '$2a$10$uODsvkYz9zK9L5Bjnk5Z1.vV6ASaSesjNHg0xhAmF395zQqbxojNe', '0938124402', 'user', NULL, 'tuan2810'),
 (2, NULL, NULL, NULL, '2000-04-21', 'abc468@gmail.com', 'Huỳnh A', 'Nam', b'0', '$2a$10$uODsvkYz9zK9L5Bjnk5Z1.vV6ASaSesjNHg0xhAmF395zQqbxojNe', '0938124321', 'user', NULL, 'abc123'),
-(3, NULL, NULL, NULL, '2000-03-22', 'abc123@gmail.com', 'Huỳnh C', 'Nam', b'0', '$2a$10$uODsvkYz9zK9L5Bjnk5Z1.vV6ASaSesjNHg0xhAmF395zQqbxojNe', '0939124402', 'user', NULL, 'zeus2810');
+(3, NULL, NULL, NULL, '2000-03-22', 'abc123@gmail.com', 'Huỳnh C', 'Nam', b'0', '$2a$10$uODsvkYz9zK9L5Bjnk5Z1.vV6ASaSesjNHg0xhAmF395zQqbxojNe', '0939124402', 'user', NULL, 'zeus2810'),
+(4, NULL, NULL, NULL, '2000-03-22', 'bcd123@gmail.com', 'Luffy', 'Nam', b'0', '$2a$10$uODsvkYz9zK9L5Bjnk5Z1.vV6ASaSesjNHg0xhAmF395zQqbxojNe', '0932111122', 'user', NULL, 'zac2810'),
+(5, NULL, NULL, NULL, '2000-04-27', 'tuan123@gmail.com', 'HuỳnhTuấn', 'Nam', b'0', '$2a$10$EMcvUCQXy64Hgw/uuqux9eM043ara31pOmYmrQO.XaC3Rh3w/2Xuy', '0938124567', 'user', NULL, 'yassuo');
 
 --
 -- Indexes for dumped tables
@@ -466,7 +452,7 @@ ALTER TABLE `following`
 -- AUTO_INCREMENT for table `friends`
 --
 ALTER TABLE `friends`
-  MODIFY `friendID` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `friendID` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `likes`
@@ -508,7 +494,7 @@ ALTER TABLE `postmedia`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `userID` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `userID` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- Constraints for dumped tables
