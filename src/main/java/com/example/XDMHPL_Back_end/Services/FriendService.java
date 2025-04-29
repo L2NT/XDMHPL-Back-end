@@ -12,6 +12,7 @@ import com.example.XDMHPL_Back_end.Repositories.FriendRepository;
 import com.example.XDMHPL_Back_end.Repositories.UserRepository;
 import com.example.XDMHPL_Back_end.model.Friend;
 import com.example.XDMHPL_Back_end.model.FriendStatus;
+import com.example.XDMHPL_Back_end.model.NotificationStatus;
 import com.example.XDMHPL_Back_end.model.Users;
 
 import jakarta.transaction.Transactional;
@@ -25,6 +26,9 @@ public class FriendService {
 
     @Autowired
     private FriendRepository friendRepository;
+
+    @Autowired
+    private NotificationService notificationService;
     
     // Constructor...
     
@@ -73,6 +77,7 @@ public class FriendService {
         receiver.getFriends().add(friend);
 
         friendRepository.save(friend);
+        notificationService.createNotification(receiver,sender,NotificationStatus.FRIEND_REQUEST, null, null, null, "Đã gửi cho bạn lời mời kết bạn");
     }
 
 

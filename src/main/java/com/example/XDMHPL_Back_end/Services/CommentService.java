@@ -10,6 +10,7 @@ import com.example.XDMHPL_Back_end.Repositories.CommentRepository;
 import com.example.XDMHPL_Back_end.Repositories.PostRepository;
 import com.example.XDMHPL_Back_end.Repositories.UserRepository;
 import com.example.XDMHPL_Back_end.model.Comment;
+import com.example.XDMHPL_Back_end.model.NotificationStatus;
 import com.example.XDMHPL_Back_end.model.Post;
 import com.example.XDMHPL_Back_end.model.Users;
 
@@ -23,6 +24,10 @@ public class CommentService {
 
     @Autowired
     private CommentRepository commentRepository;
+
+
+    @Autowired
+    private NotificationService notificationService;
     public void createComment(Comment comment, int postId, int userId) {
         // Tìm bài đăng theo ID
         Post post = postRepository.findById(postId)
@@ -39,6 +44,9 @@ public class CommentService {
         Comment savedComment=commentRepository.save(comment);
         post.getComments().add(savedComment);
         postRepository.save(post);
+        // Gửi thông báo cho người dùng được nhắc đến trong bình luận
+        notificationService.createNotification(post.getUser(),user,NotificationStatus.COMMENT, post, savedComment, null, "Đã bình luận về bài viết của bạn");
+        
     }
 
 

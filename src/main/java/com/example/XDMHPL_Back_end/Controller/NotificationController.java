@@ -70,50 +70,41 @@ public class NotificationController {
     /**
      * Tạo thông báo mới
      */
-    @PostMapping
-    public ResponseEntity<Notification> createNotification(@RequestBody Map<String, Object> payload) {
-        try {
-            // Trích xuất dữ liệu từ payload
-            Users user = userService.getUserById((Integer) payload.get("userId"));
-            Users sender = userService.getUserById((Integer) payload.get("senderId"));
+    // @PostMapping
+    // public ResponseEntity<Notification> createNotification(@RequestBody Map<String, Object> payload) {
+    //     try {
+    //         Users user = userService.getUserById((Integer) payload.get("userId"));
+    //         Users sender = userService.getUserById((Integer) payload.get("senderId"));
             
-            // Chuyển đổi kiểu thông báo từ String sang enum
-            NotificationStatus type = NotificationStatus.valueOf((String) payload.get("type"));
+    //         NotificationStatus type = NotificationStatus.valueOf((String) payload.get("type"));
             
-            // Lấy các đối tượng liên quan (có thể null)
-            Post post = null;
-            Comment comment = null;
-            Message message = null;
+    //         Post post = null;
+    //         Comment comment = null;
+    //         Message message = null;
             
-            // Nếu có PostID, lấy đối tượng Post tương ứng
-            if (payload.containsKey("postId")) {
-                // Giả định bạn có PostService
-                post = postService.getPostByID((Integer) payload.get("postId"));
-            }
+    //         if (payload.containsKey("postId")) {
+    //             post = postService.getPostByID((Integer) payload.get("postId"));
+    //         }
             
-            // Nếu có CommentID, lấy đối tượng Comment tương ứng
-            if (payload.containsKey("commentId")) {
-                // Giả định bạn có CommentService
-                comment = commentService.getCommentById((Integer) payload.get("commentId"));
-            }
+    //         if (payload.containsKey("commentId")) {
+    //             comment = commentService.getCommentById((Integer) payload.get("commentId"));
+    //         }
             
-            // Nếu có MessageID, lấy đối tượng Message tương ứng
-            if (payload.containsKey("messageId")) {
-                // Giả định bạn có MessageService
-                // message = messageService.getMessageById((Integer) payload.get("messageId"));
-            }
+
+    //         if (payload.containsKey("messageId")) {
+    //         }
             
-            String content = (String) payload.get("content");
+    //         String content = (String) payload.get("content");
             
-            // Tạo thông báo mới
-            Notification notification = notificationService.createNotification(
-                    user, sender, type, post, comment, message, content);
+    //         // Tạo thông báo mới
+    //         Notification notification = notificationService.createNotification(
+    //                 user, sender, type, post, comment, message, content);
             
-            return ResponseEntity.status(HttpStatus.CREATED).body(notification);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
+    //         return ResponseEntity.status(HttpStatus.CREATED).body(notification);
+    //     } catch (Exception e) {
+    //         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    //     }
+    // }
     
     /**
      * Đánh dấu một thông báo cụ thể là đã đọc
