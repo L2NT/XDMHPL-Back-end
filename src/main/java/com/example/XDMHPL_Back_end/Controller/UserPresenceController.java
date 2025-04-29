@@ -1,17 +1,29 @@
 package com.example.XDMHPL_Back_end.Controller;
 
+import java.security.Principal;
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.event.EventListener;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
+import com.example.XDMHPL_Back_end.DTO.CommentDTO;
 import com.example.XDMHPL_Back_end.DTO.OnlineStatusDTO;
+import com.example.XDMHPL_Back_end.DTO.OnlineUsersListDTO;
+import com.example.XDMHPL_Back_end.DTO.RequestNotificationDTO;
 import com.example.XDMHPL_Back_end.DTO.UserStatusDTO;
 import com.example.XDMHPL_Back_end.Services.FriendService;
+import com.example.XDMHPL_Back_end.Services.NotificationService;
 import com.example.XDMHPL_Back_end.Services.UserService;
+import com.example.XDMHPL_Back_end.model.NotificationStatus;
 import com.example.XDMHPL_Back_end.model.Users;
 
 @RestController
@@ -26,29 +38,83 @@ public class UserPresenceController {
     @Autowired
     private FriendService friendService;
 
+    @Autowired
+    private NotificationService notificationService;
+    
+    // Set để lưu trữ danh sách người dùng đang online
+    private final Set<Integer> onlineUsers = ConcurrentHashMap.newKeySet();
+
     // Constructor...
 
     @MessageMapping("/status/online")
-    public void userOnline( @Payload UserStatusDTO statusDTO) {
+    public void userOnline(@Payload UserStatusDTO statusDTO) {
         int userId = statusDTO.getUserId();
         System.out.println("User " + userId + " is online");
 
-        // Cập nhật trạng thái online
-        userService.updateOnlineStatus(userId, true);
+        // Thêm vào danh sách online
+        onlineUsers.add(userId);
+        
+        // Cập nhật trạng thái online trong database
+        // userService.updateOnlineStatus(userId, true);
 
         // Thông báo cho tất cả bạn bè
         notifyFriendsAboutStatus(userId, true);
     }
 
+    @MessageMapping("/status/notify")
+    public void sendNotify(@Payload RequestNotificationDTO notification) {
+         // Gửi thông báo cho người dùng được nhắc đến trong bình luận
+        notificationService.createNotification(notification.getUserID(),notification.getSenderID(), NotificationStatus.COMMENT, notification.getPostID(), notification.getCommentID(), notification.getMessageID(), "Đã bình luận về bài viết của bạn");
+        
+    }
+
+
     @MessageMapping("/status/offline")
-    public void userOffline( @Payload UserStatusDTO statusDTO) {
+    public void userOffline(@Payload UserStatusDTO statusDTO) {
         int userId = statusDTO.getUserId();
         System.out.println("User " + userId + " is offline");
-        // Cập nhật trạng thái offline
-        userService.updateOnlineStatus(userId, false);
+        
+        // Xóa khỏi danh sách online
+        onlineUsers.remove(userId);
+        
+        // Cập nhật trạng thái offline trong database
+        // userService.updateOnlineStatus(userId, false);
 
         // Thông báo cho tất cả bạn bè
         notifyFriendsAboutStatus(userId, false);
+    }
+    
+    /**
+     * Xử lý yêu cầu lấy danh sách người dùng online
+     */
+    @MessageMapping("/status/get-online-users")
+    public void getOnlineUsers(@Payload UserStatusDTO request, Principal principal) {
+        int userId = request.getUserId();
+        System.out.println("User " + userId + " requested online users list");
+        
+        try {
+            // Lấy danh sách bạn bè đã chấp nhận
+            List<Users> acceptedFriends = friendService.getAcceptedFriends(userId);
+            System.out.println("Sent accepted friends list: " + acceptedFriends.size() + " friends");
+            
+            // Lọc ra bạn bè đang online
+            List<Integer> onlineFriends = acceptedFriends.stream()
+                .map(Users::getUserID)
+                .filter(onlineUsers::contains)
+                .collect(Collectors.toList());
+            
+            // Gửi đến người dùng yêu cầu - SỬA ĐƯỜNG DẪN Ở ĐÂY
+            messagingTemplate.convertAndSendToUser(
+                String.valueOf(userId),
+                "/queue/statususer",
+                new OnlineUsersListDTO(onlineFriends)
+            );
+            
+            System.out.println("Sent online friends list: " + onlineFriends.size() + " friends");
+        } catch (Exception e) {
+            System.err.println("Error sending online users list: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     private void notifyFriendsAboutStatus(int userId, boolean isOnline) {
@@ -59,14 +125,12 @@ public class UserPresenceController {
         OnlineStatusDTO statusUpdate = new OnlineStatusDTO(userId, isOnline);
         
         for (Users friend : acceptedFriends) {
-            System.out.println("About to send to: /user/" + friend.getUserID() + "/statususer");
+            System.out.println("About to send to user: " + friend.getUserID());
             try {
-                // In thêm chi tiết trạng thái để debug
-                System.out.println("Status update: userId=" + statusUpdate.getUserId() + ", online=" + statusUpdate.isOnline());
-                
+                // SỬA ĐƯỜNG DẪN Ở ĐÂY
                 messagingTemplate.convertAndSendToUser(
                         String.valueOf(friend.getUserID()),
-                        "/queue/statususer",
+                        "/queue/statususer",  // Không cần thêm /user/ vì framework sẽ tự thêm
                         statusUpdate);
                 System.out.println("Message sent successfully");
             } catch (Exception e) {
@@ -75,11 +139,28 @@ public class UserPresenceController {
             }
         }
     }
-
-    // @MessageMapping("/status/heartbeat")
-    // public void userHeartbeat(@Payload UserStatusDTO statusDTO) {
-    // int userId = statusDTO.getUserId();
-    // // Cập nhật thời gian hoạt động cuối cùng
-    // userService.updateUserActivity(userId);
-    // }
+    
+    /**
+     * Xử lý khi người dùng ngắt kết nối
+     */
+    @EventListener
+    public void handleSessionDisconnect(SessionDisconnectEvent event) {
+        StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
+        String userId = headerAccessor.getUser().getName();
+        
+        if (userId != null) {
+            int userIdInt = Integer.parseInt(userId);
+            
+            // Xóa khỏi danh sách online
+            onlineUsers.remove(userIdInt);
+            
+            // Cập nhật trạng thái offline trong database
+            userService.updateOnlineStatus(userIdInt, false);
+            
+            // Thông báo cho bạn bè
+            notifyFriendsAboutStatus(userIdInt, false);
+            
+            System.out.println("User " + userIdInt + " disconnected");
+        }
+    }
 }

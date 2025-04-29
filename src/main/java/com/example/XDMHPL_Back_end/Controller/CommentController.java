@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.XDMHPL_Back_end.DTO.CommentDTO;
+import com.example.XDMHPL_Back_end.DTO.RequestNotificationDTO;
 import com.example.XDMHPL_Back_end.Services.CommentService;
 import com.example.XDMHPL_Back_end.Services.UserService;
 import com.example.XDMHPL_Back_end.model.Comment;
@@ -30,8 +32,8 @@ public class CommentController {
     public ResponseEntity<?> createComment(@RequestBody Comment comment, @PathVariable("postId") Integer postId, @PathVariable("userId") Integer userId )
     {
         try {
-			commentService.createComment(comment, postId, userId);
-			return new ResponseEntity<>("Đã thay đổi tương tác bài đăng:", HttpStatus.OK);
+		 	RequestNotificationDTO commentDTO = commentService.createComment(comment, postId, userId);
+			return new ResponseEntity<>(commentDTO, HttpStatus.OK);
 		} catch (Exception e) {
 			Map<String, String> response = new HashMap<>();
 			response.put("error", "Không thể tương tác bài đăng: " + e.getMessage());

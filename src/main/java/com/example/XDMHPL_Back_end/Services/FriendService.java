@@ -52,8 +52,6 @@ public class FriendService {
             .forEach(friend -> acceptedFriends.add(friend.getUser()));
         if(acceptedFriends.isEmpty()) {
             throw new UsernameNotFoundException("No accepted friends found for user with ID: " + userId);
-        } else {
-            System.out.println("Accepted friends for user " + userId );
         }
         return acceptedFriends;
     }
@@ -77,7 +75,7 @@ public class FriendService {
         receiver.getFriends().add(friend);
 
         friendRepository.save(friend);
-        notificationService.createNotification(receiver,sender,NotificationStatus.FRIEND_REQUEST, null, null, null, "Đã gửi cho bạn lời mời kết bạn");
+        // notificationService.createNotification(receiver,sender,NotificationStatus.FRIEND_REQUEST, null, null, null, "Đã gửi cho bạn lời mời kết bạn");
     }
 
 
