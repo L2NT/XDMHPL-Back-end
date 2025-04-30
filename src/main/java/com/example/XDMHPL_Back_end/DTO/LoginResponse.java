@@ -5,12 +5,13 @@ public class LoginResponse {
     private int userId;
     private String username;
     private String role;
-
-    public LoginResponse(String sessionId, int userId, String username, String role) {
+    private String message;
+    public LoginResponse(String sessionId, int userId, String username, String role, String message) {
         this.sessionId = sessionId;
         this.userId = userId;
         this.username = username;
         this.role = role;
+        this.message = message;
     }
 
     // getters & setters
@@ -22,4 +23,12 @@ public class LoginResponse {
     public void setUsername(String username) { this.username = username; }
     public String getRole() { return role; }
     public void setRole(String role) { this.role = role; }
+
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
 }
