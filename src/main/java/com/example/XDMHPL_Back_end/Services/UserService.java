@@ -1,10 +1,7 @@
 package com.example.XDMHPL_Back_end.Services;
 
-import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -29,7 +26,7 @@ public class UserService {
     public Users createUser(String fullName, String userName, String password, String email, String avatar, String phoneNumber, LocalDate dateOfBirth, String gender
 			, String coverPhotoURL, String sessionID, String role) {
         String encryptedPassword = passwordEncoder.encode(password);
-    	Users user = new Users(fullName, userName, encryptedPassword, email, avatar,phoneNumber, dateOfBirth, gender, coverPhotoURL, sessionID, null, role);
+    	Users user = new Users(fullName, userName, encryptedPassword, email, avatar,phoneNumber, dateOfBirth, gender, coverPhotoURL, sessionID, null, role, false);
         return usersRepository.save(user);
     }
     
