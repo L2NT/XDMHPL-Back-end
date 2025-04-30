@@ -30,8 +30,7 @@ public class AuthController {
     private SessionService sessionService;
     
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest,
-                                   HttpServletRequest servletRequest) {
+    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest, HttpServletRequest servletRequest) {
         try {
             // 1. Xác thực tài khoản
             Users user = userService.loginValidate(
@@ -39,9 +38,11 @@ public class AuthController {
                     loginRequest.getPassword(),
                     loginRequest.getRole()
             );
+
             if (user == null) {
+                // Trả về lỗi 401 nếu tài khoản không tồn tại hoặc mật khẩu sai
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                        .body(new ErrorResponse("Tài khoản hoặc mật khẩu không đúng."));
+                        .body(new ErrorResponse("Tài khoản không tồn tại hoặc mật khẩu không chính xác."));
             }
 
             // 2. Lấy deviceInfo (từ client hoặc User‑Agent header)
@@ -57,7 +58,8 @@ public class AuthController {
                     sessionId,
                     user.getUserID(),
                     user.getUserName(),
-                    user.getRole()
+                    user.getRole(),
+                    "Đăng nhập thành công"
             );
             return ResponseEntity.ok(resp);
 
