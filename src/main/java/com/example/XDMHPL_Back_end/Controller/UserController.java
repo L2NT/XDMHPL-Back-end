@@ -38,9 +38,9 @@ public class UserController {
 	        user.getDateOfBirth(), 
 	        user.getGender(), 
 	        user.getCoverPhotoURL(), 
-	        user.getSessionID(), 
+	        user.getSessionID(),
 	        user.getRole()
-	    );
+	        );
 	}
 	
 	
