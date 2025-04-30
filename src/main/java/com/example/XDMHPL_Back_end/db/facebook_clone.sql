@@ -89,10 +89,6 @@ CREATE TABLE `following` (
 -- Cấu trúc bảng cho bảng `friends`
 --
 
-CREATE TABLE `friends` (
-  `FriendID` int(11) NOT NULL,
-  `UserID` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -165,7 +161,8 @@ CREATE TABLE `post` (
   `Type` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
   `UserID` int(11) DEFAULT NULL,
   `Content` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-  `PriorityScore` int(11) DEFAULT 0
+  `PriorityScore` int(11) DEFAULT 0,
+  `Hide` tinyint (4) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -242,7 +239,7 @@ CREATE TABLE `sessions` (
 --
 
 CREATE TABLE `users` (
-  `UserID` int(11) NOT NULL,
+  `UserID` int(11) NOT NULL UNIQUE,
   `FullName` mediumtext DEFAULT NULL,
   `Username` varchar(50) DEFAULT NULL,
   `Password` varchar(255) DEFAULT NULL,
@@ -253,16 +250,29 @@ CREATE TABLE `users` (
   `Gender` varchar(10) DEFAULT NULL,
   `CoverPhotoUrl` varchar(200) DEFAULT NULL,
   `SessionID` varchar(255) DEFAULT NULL,
+  `Bio` varchar(255) DEFAULT NULL,
+  `Hide` tinyint (4) DEFAULT 0,
   `Role` varchar(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+CREATE TABLE `friends` (
+    FriendID int(11) AUTO_INCREMENT primary key,
+    UserID int(11) NOT NULL,
+    FriendUserID int(11) NOT NULL,
+    Status ENUM('pending', 'accepted', 'rejected') DEFAULT 'pending',
+    CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    
+    FOREIGN KEY (UserID) REFERENCES users(UserID) ON DELETE CASCADE,
+    FOREIGN KEY (FriendUserID) REFERENCES users(UserID) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 --
 -- Đang đổ dữ liệu cho bảng `users`
 --
 
-INSERT INTO `users` (`UserID`, `FullName`, `Username`, `Password`, `Email`, `AvatarURL`, `PhoneNumber`, `DateOfBirth`, `Gender`, `CoverPhotoUrl`, `SessionID`, `Role`) VALUES
-(1, 'Tống Thành Đạt', 'tongthanhdat001', 'matkhau123', 'a@gmail.com', NULL, '0395632026', '1990-01-01', 'Nam', NULL, 'NULL', 'user'),
-(42, 'TốngThành Đạt', 'tongthanhdat009', '$2a$10$0cZlYxjf4/fS1VczEYHyTOHLQ0RdWZFkrWxxKyOEixIYd3fMBqACq', 'gamingthanhdat@gmail.com', NULL, '0395632027', '2000-04-17', 'Nam', NULL, NULL, 'user');
+INSERT INTO `users` (`UserID`, `FullName`, `Username`, `Password`, `Email`, `AvatarURL`, `PhoneNumber`, `DateOfBirth`, `Gender`, `CoverPhotoUrl`, `Bio`, `SessionID`, `Role`) VALUES
+(1, 'Tống Thành Đạt', 'tongthanhdat001', 'matkhau123', 'a@gmail.com', NULL, '0395632026', '1990-01-01', 'Nam', NULL, '🌟 "Sống là không chờ đợi"', 'NULL', 'user'),
+(42, 'TốngThành Đạt', 'tongthanhdat009', '$2a$10$0cZlYxjf4/fS1VczEYHyTOHLQ0RdWZFkrWxxKyOEixIYd3fMBqACq', 'gamingthanhdat@gmail.com', NULL, '0395632027', '2000-04-17', 'Nam', NULL, '🌍 "Yêu thích công nghệ và khám phá"', NULL, 'user');
+
 
 --
 -- Chỉ mục cho các bảng đã đổ
@@ -304,11 +314,6 @@ ALTER TABLE `following`
   ADD KEY `FK_Following_Users` (`UserID`);
 
 --
--- Chỉ mục cho bảng `friends`
---
-ALTER TABLE `friends`
-  ADD PRIMARY KEY (`FriendID`),
-  ADD KEY `FK_Friends_Users` (`UserID`);
 
 --
 -- Chỉ mục cho bảng `likes`
@@ -371,12 +376,6 @@ ALTER TABLE `postshare`
 ALTER TABLE `sessions`
   ADD PRIMARY KEY (`SessionID`),
   ADD KEY `UserID` (`UserID`);
-
---
--- Chỉ mục cho bảng `users`
---
-ALTER TABLE `users`
-  ADD PRIMARY KEY (`UserID`);
 
 --
 -- AUTO_INCREMENT cho các bảng đã đổ
