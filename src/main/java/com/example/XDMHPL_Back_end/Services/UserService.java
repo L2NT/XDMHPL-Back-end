@@ -3,6 +3,7 @@ package com.example.XDMHPL_Back_end.Services;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,7 +83,84 @@ public class UserService {
         return null;
     }
 
+    // Hàm để cập nhật avatar
+    public Users updateUserAvatar(Integer id, String avatarPath) {
+        Users user = usersRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+        user.setAvatar(avatarPath);
+        return usersRepository.save(user);
+    }
+    // Hàm để cập nhật ảnh bìa
+    public void updateUserCoverPhoto(Integer userId, String coverPhotoPath) {
+        Users user = usersRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        user.setCoverPhotoURL(coverPhotoPath);
+        usersRepository.save(user);
+    }
 
+    public Users updateBio(int userID, String newBio) {
+        // Tìm người dùng theo userID
+        Users user = usersRepository.findById(userID).orElse(null);
+        if (user != null) {
+            // Cập nhật tiểu sử mới
+            user.setBio(newBio);
+            return usersRepository.save(user);
+        }
+        return null;
+    }
+    public Users updateProfile(int userID, Users userDetails) {
+        // Tìm người dùng theo userID
+        Users user = usersRepository.findById(userID).orElse(null);
+        if (user != null) {
+            // Cập nhật thông tin người dùng mới
+            user.setFullName(userDetails.getFullName());
+            user.setEmail(userDetails.getEmail());
+            user.setPhoneNumber(userDetails.getPhoneNumber());
+            user.setDateOfBirth(userDetails.getDateOfBirth());
+            user.setGender(userDetails.getGender());
+            return usersRepository.save(user);
+        }
+        return null;
+    }
+    public boolean hideUserById(int userId) {
+        Optional<Users> optionalUser = usersRepository.findById(userId);
+        if (optionalUser.isPresent()) {
+            Users user = optionalUser.get();
+            user.setHide(true);
+            usersRepository.save(user);
+            return true;
+        }
+        return false;
+    }
+
+    public List<Users> findUsersByHideFalse() {
+        return usersRepository.findByHideFalse();
+    }
+
+    public Users updateUserRole(int userId, String role) {
+        Users user = usersRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        user.setRole(role);
+        return usersRepository.save(user);
+    }
+
+
+    
+
+
+
+    //current user
+    public UserDTO getCurrentUser(int userId) {
+        Users user = usersRepository.findById(userId).orElse(null);
+        if (user != null) {
+            return UserDTO.fromEntity(user);
+        }
+        return null;
+    }
+
+
+
+
+
+
+    //user online
     private Map<Integer, Boolean> onlineUsers = new ConcurrentHashMap<>();
     public void updateOnlineStatus(int userId, boolean isOnline) {
         onlineUsers.put(userId , isOnline);
@@ -94,16 +172,5 @@ public class UserService {
     public void updateUserActivity(int userId) {
         // Cập nhật thời gian hoạt động cuối cùng
         updateOnlineStatus(userId , true);
-    }
-
-
-
-    //current user
-    public UserDTO getCurrentUser(int userId) {
-        Users user = usersRepository.findById(userId).orElse(null);
-        if (user != null) {
-            return UserDTO.fromEntity(user);
-        }
-        return null;
     }
 }

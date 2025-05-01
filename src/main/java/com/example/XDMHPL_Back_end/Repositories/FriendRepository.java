@@ -11,5 +11,6 @@ import com.example.XDMHPL_Back_end.model.Users;
 @Repository
 public interface FriendRepository extends JpaRepository<Friend, Integer> {
     Optional<Friend> findByUserAndFriendUser(Users user, Users friendUser);
+    Optional<Friend> findByUser_UserIDAndFriendUser_UserID(int userID, int friendUserID);
 }
 
