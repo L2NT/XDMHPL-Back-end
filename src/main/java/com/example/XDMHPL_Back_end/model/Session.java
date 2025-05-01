@@ -26,4 +26,8 @@ public class Session {
     private LocalDateTime createdAt;
     private LocalDateTime expiresAt;
     private String deviceInfo;
+    
+    public boolean isExpired() {
+        return this.expiresAt != null && this.expiresAt.isBefore(LocalDateTime.now());
+    }
 }

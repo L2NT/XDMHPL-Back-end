@@ -96,8 +96,6 @@ public class UserService {
         updateOnlineStatus(userId , true);
     }
 
-
-
     //current user
     public UserDTO getCurrentUser(int userId) {
         Users user = usersRepository.findById(userId).orElse(null);
@@ -106,4 +104,14 @@ public class UserService {
         }
         return null;
     }
+    
+    public Users updateSessionID(int userID, String newSessionID) {
+        Users user = usersRepository.findById(userID)
+                .orElseThrow(() -> new IllegalArgumentException("Người dùng không tồn tại."));
+
+        user.setSessionID(newSessionID);
+
+        return usersRepository.save(user);
+    }
+
 }
