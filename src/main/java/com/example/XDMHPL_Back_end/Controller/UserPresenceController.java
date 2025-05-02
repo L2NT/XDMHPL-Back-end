@@ -153,23 +153,37 @@ public class UserPresenceController {
      * Xử lý khi người dùng ngắt kết nối
      */
     @EventListener
-    public void handleSessionDisconnect(SessionDisconnectEvent event) {
-        StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
-        String userId = headerAccessor.getUser().getName();
-
-        if (userId != null) {
-            int userIdInt = Integer.parseInt(userId);
-
-            // Xóa khỏi danh sách online
-            onlineUsers.remove(userIdInt);
-
-            // Cập nhật trạng thái offline trong database
-            userService.updateOnlineStatus(userIdInt, false);
-
-            // Thông báo cho bạn bè
-            notifyFriendsAboutStatus(userIdInt, false);
-
-            System.out.println("User " + userIdInt + " disconnected");
+public void handleSessionDisconnect(SessionDisconnectEvent event) {
+    StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
+    Principal userPrincipal = headerAccessor.getUser();
+    
+    if (userPrincipal != null) {
+        String username = userPrincipal.getName();
+        System.out.println("User disconnected: " + username);
+        
+        try {
+            // Tìm userId dựa trên username
+            Users user = userService.getUserByUsername(username);
+            if (user != null) {
+                int userIdInt = user.getUserID();
+                
+                // Xóa khỏi danh sách online
+                onlineUsers.remove(userIdInt);
+                
+                // Cập nhật trạng thái offline trong database
+                userService.updateOnlineStatus(userIdInt, false);
+                
+                // Thông báo cho bạn bè
+                notifyFriendsAboutStatus(userIdInt, false);
+                
+                System.out.println("User " + userIdInt + " disconnected");
+            } else {
+                System.out.println("Không thể tìm thấy user với username: " + username);
+            }
+        } catch (Exception e) {
+            System.err.println("Lỗi khi xử lý ngắt kết nối: " + e.getMessage());
+            e.printStackTrace();
         }
     }
+}
 }
