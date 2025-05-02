@@ -40,7 +40,7 @@ public class UserPresenceController {
 
     @Autowired
     private NotificationService notificationService;
-    
+
     // Set để lưu trữ danh sách người dùng đang online
     private final Set<Integer> onlineUsers = ConcurrentHashMap.newKeySet();
 
@@ -53,7 +53,7 @@ public class UserPresenceController {
 
         // Thêm vào danh sách online
         onlineUsers.add(userId);
-        
+
         // Cập nhật trạng thái online trong database
         // userService.updateOnlineStatus(userId, true);
 
@@ -63,53 +63,58 @@ public class UserPresenceController {
 
     @MessageMapping("/status/notify")
     public void sendNotify(@Payload RequestNotificationDTO notification) {
-         // Gửi thông báo cho người dùng được nhắc đến trong bình luận
-        notificationService.createNotification(notification.getUserID(),notification.getSenderID(), NotificationStatus.COMMENT, notification.getPostID(), notification.getCommentID(), notification.getMessageID(), "Đã bình luận về bài viết của bạn");
-        
-    }
+        // Gửi thông báo cho người dùng được nhắc đến trong bình luận
+        notificationService.createNotification(notification.getUserID(), notification.getSenderID(),
+                NotificationStatus.COMMENT, notification.getPostID(), notification.getCommentID(),
+                notification.getMessageID(), "Đã bình luận về bài viết của bạn");
 
+    }
 
     @MessageMapping("/status/offline")
     public void userOffline(@Payload UserStatusDTO statusDTO) {
         int userId = statusDTO.getUserId();
         System.out.println("User " + userId + " is offline");
-        
+
         // Xóa khỏi danh sách online
         onlineUsers.remove(userId);
-        
+
         // Cập nhật trạng thái offline trong database
         // userService.updateOnlineStatus(userId, false);
 
         // Thông báo cho tất cả bạn bè
         notifyFriendsAboutStatus(userId, false);
     }
-    
+
     /**
      * Xử lý yêu cầu lấy danh sách người dùng online
      */
     @MessageMapping("/status/get-online-users")
     public void getOnlineUsers(@Payload UserStatusDTO request, Principal principal) {
         int userId = request.getUserId();
-        System.out.println("User " + userId + " requested online users list");
-        
+        String username = principal.getName();
+        System.out.println("User " + username + " requested online users list");
+
         try {
             // Lấy danh sách bạn bè đã chấp nhận
             List<Users> acceptedFriends = friendService.getAcceptedFriends(userId);
             System.out.println("Sent accepted friends list: " + acceptedFriends.size() + " friends");
-            
+
             // Lọc ra bạn bè đang online
             List<Integer> onlineFriends = acceptedFriends.stream()
-                .map(Users::getUserID)
-                .filter(onlineUsers::contains)
-                .collect(Collectors.toList());
-            
+                    .map(Users::getUserID)
+                    .filter(onlineUsers::contains)
+                    .collect(Collectors.toList());
+
             // Gửi đến người dùng yêu cầu - SỬA ĐƯỜNG DẪN Ở ĐÂY
-            messagingTemplate.convertAndSendToUser(
-                String.valueOf(userId),
-                "/queue/statususer",
-                new OnlineUsersListDTO(onlineFriends)
-            );
-            
+            // messagingTemplate.convertAndSendToUser(
+            // username,
+            // "/queue/statususer",
+            // new OnlineUsersListDTO(onlineFriends)
+            // );
+
+            messagingTemplate.convertAndSend(
+                    "/topic/status/" + username,
+                    new OnlineUsersListDTO(onlineFriends));
             System.out.println("Sent online friends list: " + onlineFriends.size() + " friends");
         } catch (Exception e) {
             System.err.println("Error sending online users list: " + e.getMessage());
@@ -119,18 +124,22 @@ public class UserPresenceController {
 
     private void notifyFriendsAboutStatus(int userId, boolean isOnline) {
         List<Users> acceptedFriends = friendService.getAcceptedFriends(userId);
-        
+
         System.out.println("Found " + acceptedFriends.size() + " friends to notify");
-        
+
         OnlineStatusDTO statusUpdate = new OnlineStatusDTO(userId, isOnline);
-        
+
         for (Users friend : acceptedFriends) {
             System.out.println("About to send to user: " + friend.getUserID());
             try {
                 // SỬA ĐƯỜNG DẪN Ở ĐÂY
-                messagingTemplate.convertAndSendToUser(
-                        String.valueOf(friend.getUserID()),
-                        "/queue/statususer",  // Không cần thêm /user/ vì framework sẽ tự thêm
+                // messagingTemplate.convertAndSendToUser(
+                //         friend.getUserName(),
+                //         "/queue/statususer", // Không cần thêm /user/ vì framework sẽ tự thêm
+                //         statusUpdate);
+
+                messagingTemplate.convertAndSend(
+                        "/topic/status/" + friend.getUserName(),
                         statusUpdate);
                 System.out.println("Message sent successfully");
             } catch (Exception e) {
@@ -139,7 +148,7 @@ public class UserPresenceController {
             }
         }
     }
-    
+
     /**
      * Xử lý khi người dùng ngắt kết nối
      */
@@ -147,19 +156,19 @@ public class UserPresenceController {
     public void handleSessionDisconnect(SessionDisconnectEvent event) {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
         String userId = headerAccessor.getUser().getName();
-        
+
         if (userId != null) {
             int userIdInt = Integer.parseInt(userId);
-            
+
             // Xóa khỏi danh sách online
             onlineUsers.remove(userIdInt);
-            
+
             // Cập nhật trạng thái offline trong database
             userService.updateOnlineStatus(userIdInt, false);
-            
+
             // Thông báo cho bạn bè
             notifyFriendsAboutStatus(userIdInt, false);
-            
+
             System.out.println("User " + userIdInt + " disconnected");
         }
     }

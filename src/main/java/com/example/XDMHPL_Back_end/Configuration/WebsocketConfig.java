@@ -1,5 +1,6 @@
 package com.example.XDMHPL_Back_end.Configuration;
 
+import java.security.Principal;
 import java.util.Collections;
 import java.util.List;
 
@@ -32,7 +33,7 @@ public class WebsocketConfig implements WebSocketMessageBrokerConfigurer {
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws")
                 .setAllowedOriginPatterns("http://localhost:5173") // Cho phép tất cả frontend kết nối
-                .withSockJS(); 
+                .withSockJS();
 
         // 🔔 Endpoint riêng cho notification
         registry.addEndpoint("/ws-notification")
@@ -40,23 +41,27 @@ public class WebsocketConfig implements WebSocketMessageBrokerConfigurer {
                 .withSockJS();
     }
 
+    @Override
 
-     @Override
     public void configureClientInboundChannel(ChannelRegistration registration) {
         registration.interceptors(new ChannelInterceptor() {
             @Override
             public Message<?> preSend(Message<?> message, MessageChannel channel) {
                 StompHeaderAccessor accessor = MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
-                
+
                 if (StompCommand.CONNECT.equals(accessor.getCommand())) {
-                    // Lấy user ID từ header hoặc session
-                    // Ví dụ: Giả sử userId được gửi trong header 'userId'
-                    List<String> userIdHeaders = accessor.getNativeHeader("userId");
-                    if (userIdHeaders != null && !userIdHeaders.isEmpty()) {
-                        String userId = userIdHeaders.get(0);
-                        System.out.println("Setting principal for user: " + userId);
-                        // Đặt principal là userId
-                        accessor.setUser(new UsernamePasswordAuthenticationToken(userId, null, Collections.emptyList()));
+                    List<String> usernameHeaders = accessor.getNativeHeader("username");
+                    if (usernameHeaders != null && !usernameHeaders.isEmpty()) {
+                        String username = usernameHeaders.get(0);
+                        System.out.println("Setting principal for user: " + username);
+
+                        // Sử dụng Principal đơn giản hơn
+                        accessor.setUser(new Principal() {
+                            @Override
+                            public String getName() {
+                                return username;
+                            }
+                        });
                     }
                 }
                 return message;
