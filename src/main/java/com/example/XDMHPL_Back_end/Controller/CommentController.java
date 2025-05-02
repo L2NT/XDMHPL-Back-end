@@ -5,6 +5,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -49,5 +50,31 @@ public class CommentController {
         // Comment likedComment = commentService.likeComment(commentId, user.getId());
         // return likedComment;
         return null;
+    }
+
+
+    @PutMapping("/update/{commentId}")
+    public ResponseEntity<?> updateComment(@RequestBody Comment comment, @PathVariable("commentId") Integer commentId)
+    {
+        try {
+           commentService.updateComment(comment, commentId);
+            return new ResponseEntity<>("Đã thay đổi bình luận:", HttpStatus.OK);
+        } catch (Exception e) {
+            Map<String, String> response = new HashMap<>();
+            response.put("error", "Không thể tương tác bài đăng: " + e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @DeleteMapping("/delete/{commentId}")
+    public ResponseEntity<?> deleteComment(@PathVariable int commentId) {
+        try {
+            commentService.deleteComment(commentId);
+            return new ResponseEntity<>("Bình luận đã xóa thành công", HttpStatus.OK);
+        } catch (Exception e) {
+            Map<String, String> response = new HashMap<>();
+            response.put("error", "Không thể xóa bài đăng: " + e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }

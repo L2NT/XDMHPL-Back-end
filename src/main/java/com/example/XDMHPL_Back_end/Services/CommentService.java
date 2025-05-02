@@ -53,4 +53,16 @@ public class CommentService {
         return commentRepository.findById(commentId)
                 .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy bình luận với ID: " + commentId));
     }
+
+    public Comment updateComment(Comment comment, int commentId) {
+        Comment existingComment = getCommentById(commentId);
+        existingComment.setContent(comment.getContent());
+        return commentRepository.save(existingComment);
+    }
+
+    public Comment deleteComment(int commentId) {
+        Comment existingComment = getCommentById(commentId);
+        commentRepository.delete(existingComment);
+        return existingComment;
+    }
 }
