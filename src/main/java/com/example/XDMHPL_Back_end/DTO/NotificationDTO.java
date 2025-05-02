@@ -20,6 +20,7 @@ public class NotificationDTO {
     private int PostID;
     private int SenderID;
     private int UserID;
+    private int isReadFlag;
 
     // Constructors, getters, setters
 
@@ -31,10 +32,11 @@ public class NotificationDTO {
         dto.setType(notification.getType());
         dto.setUserID(notification.getUser().getUserID());
         dto.setSenderID(notification.getSender().getUserID());
-        dto.setPostID(notification.getPost().getPostID());
-        dto.setMessageID(notification.getMessage().getMessageID());
-        dto.setCommentID(notification.getComment().getCommentID());
+        dto.setPostID(notification.getPost() != null ? notification.getPost().getPostID() : 0);
+        dto.setMessageID(notification.getMessage() != null ? notification.getMessage().getMessageID() : 0);
+        dto.setCommentID(notification.getComment() != null ? notification.getComment().getCommentID() : 0);
         dto.setCreationDate(notification.getCreatedAt().toString()); // Chuyển đổi Date thành String
+        dto.setIsReadFlag(notification.getIsReadFlag());
         return dto;
     }
 }

@@ -57,6 +57,9 @@ public class Users {
 	@Column(name = "Hide", nullable = true)
 	private boolean hide;
 
+	@Column(name = "is_online", nullable = false)
+    private Boolean isOnline = false;
+
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Notification> notifications; // Danh sách thông báo nhận được
 
