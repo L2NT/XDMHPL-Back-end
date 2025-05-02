@@ -1,6 +1,5 @@
 package com.example.XDMHPL_Back_end.Controller;
 
-import java.util.Iterator;
 import java.util.List;
 
 import javax.management.relation.Role;
@@ -47,7 +46,13 @@ public class AuthController {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                         .body(new ErrorResponse("Tài khoản không tồn tại hoặc mật khẩu không chính xác."));
             }
-
+            
+            if (!user.getRole().equalsIgnoreCase(loginRequest.getRole())) {
+                // Trả về lỗi 403 nếu role của người dùng không khớp với role được yêu cầu
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body(new ErrorResponse("Bạn không có quyền truy cập với vai trò này."));
+            }
+            
             // 2. Lấy deviceInfo (từ client hoặc User‑Agent header)
             String deviceInfo = loginRequest.getDeviceInfo() != null
                     ? loginRequest.getDeviceInfo()

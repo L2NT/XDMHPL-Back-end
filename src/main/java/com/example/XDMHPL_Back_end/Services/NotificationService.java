@@ -12,7 +12,7 @@ import com.example.XDMHPL_Back_end.Repositories.NotificationRepository;
 import com.example.XDMHPL_Back_end.Repositories.PostRepository;
 import com.example.XDMHPL_Back_end.Repositories.UserRepository;
 import com.example.XDMHPL_Back_end.model.Comment;
-import com.example.XDMHPL_Back_end.model.Message;
+import com.example.XDMHPL_Back_end.model.MessageModel;
 import com.example.XDMHPL_Back_end.model.Notification;
 import com.example.XDMHPL_Back_end.model.NotificationStatus;
 import com.example.XDMHPL_Back_end.model.Post;
@@ -39,7 +39,7 @@ public class NotificationService {
             Integer postID, Integer commentID, Integer messageID, String content) {
         Post post = null;
         Comment comment = null;
-        Message message = null;
+        MessageModel message = null;
         if (postID != null) {
             post = postRepository.findById(postID)
                     .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy bài đăng với ID: " + postID));

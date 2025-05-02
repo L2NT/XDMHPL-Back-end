@@ -12,7 +12,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class ChatBoxDetailId implements Serializable {
-    private int userID;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private int userID;
     private int chatBoxID;
     
     // Constructors, equals, hashCode

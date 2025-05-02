@@ -22,7 +22,7 @@ import com.example.XDMHPL_Back_end.Services.NotificationService;
 import com.example.XDMHPL_Back_end.Services.PostService;
 import com.example.XDMHPL_Back_end.Services.UserService;
 import com.example.XDMHPL_Back_end.model.Comment;
-import com.example.XDMHPL_Back_end.model.Message;
+import com.example.XDMHPL_Back_end.model.MessageModel;
 import com.example.XDMHPL_Back_end.model.Notification;
 import com.example.XDMHPL_Back_end.model.NotificationStatus;
 import com.example.XDMHPL_Back_end.model.Post;

@@ -30,5 +30,5 @@ public class MessageMedia {
 
     @ManyToOne
     @JoinColumn(name = "MessageID")
-    private Message message;
+    private MessageModel message;
 }

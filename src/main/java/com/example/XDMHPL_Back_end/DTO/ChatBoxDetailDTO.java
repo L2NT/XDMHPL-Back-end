@@ -1,5 +1,7 @@
 package com.example.XDMHPL_Back_end.DTO;
 
+import com.example.XDMHPL_Back_end.model.Users;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -12,7 +14,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "chatboxdetail")
-public class ChatBoxDetail {
+public class ChatBoxDetailDTO {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,11 +27,11 @@ public class ChatBoxDetail {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ChatBoxID", nullable = false)
-    private ChatBox chatBox;
+    private ChatBoxDTO chatBox;
 
-    public ChatBoxDetail() {}
+    public ChatBoxDetailDTO() {}
 
-    public ChatBoxDetail(Users user, ChatBox chatBox) {
+    public ChatBoxDetailDTO(Users user, ChatBoxDTO chatBox) {
         this.user = user;
         this.chatBox = chatBox;
     }
@@ -50,11 +52,11 @@ public class ChatBoxDetail {
         this.user = user;
     }
 
-    public ChatBox getChatBox() {
+    public ChatBoxDTO getChatBox() {
         return chatBox;
     }
 
-    public void setChatBox(ChatBox chatBox) {
+    public void setChatBox(ChatBoxDTO chatBox) {
         this.chatBox = chatBox;
     }
 }

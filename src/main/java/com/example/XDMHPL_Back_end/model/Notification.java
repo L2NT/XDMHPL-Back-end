@@ -47,7 +47,7 @@ public class Notification {
 
     @ManyToOne
     @JoinColumn(name = "MessageID")
-    private Message message;
+    private MessageModel message;
 
     @Column(name = "Content")
     private String content;

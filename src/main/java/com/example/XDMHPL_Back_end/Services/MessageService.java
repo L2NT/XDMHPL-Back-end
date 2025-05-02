@@ -8,13 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
-import com.example.XDMHPL_Back_end.DTO.ChatBox;
+import com.example.XDMHPL_Back_end.DTO.ChatBoxDTO;
 import com.example.XDMHPL_Back_end.DTO.Message;
-import com.example.XDMHPL_Back_end.DTO.MessageMedia;
 import com.example.XDMHPL_Back_end.Repositories.ChatBoxDetailRepository;
 import com.example.XDMHPL_Back_end.Repositories.ChatBoxRepository;
 import com.example.XDMHPL_Back_end.Repositories.MessageMediaRepository;
 import com.example.XDMHPL_Back_end.Repositories.MessageRepository;
+import com.example.XDMHPL_Back_end.model.MessageMediaModel;
 
 @Service
 public class MessageService {
@@ -35,14 +35,14 @@ public class MessageService {
     private SimpMessagingTemplate messagingTemplate;
 
     // Phương thức gửi tin nhắn (Cho nhóm hoặc 1-1)
-    public Message sendMessage(Integer senderId, Integer chatBoxId, String text, Integer chatBoxId2, List<MessageMedia> mediaList) {
+    public Message sendMessage(Integer senderId, Integer chatBoxId, String text, Integer chatBoxId2, List<MessageMediaModel> mediaList) {
         // Tìm ChatBox
-        Optional<ChatBox> chatBoxOptional = chatBoxRepository.findById(chatBoxId);
+        Optional<ChatBoxDTO> chatBoxOptional = chatBoxRepository.findById(chatBoxId);
         if (!chatBoxOptional.isPresent()) {
             throw new RuntimeException("ChatBox không tồn tại.");
         }
 
-        ChatBox chatBox = chatBoxOptional.get();
+        ChatBoxDTO chatBox = chatBoxOptional.get();
 
         // Kiểm tra nếu là cuộc trò chuyện 1-1 và người gửi có quyền gửi tin nhắn
         if (!chatBox.getIsGroup() && !isUserInChatBox(senderId, chatBoxId)) {
@@ -68,9 +68,9 @@ public class MessageService {
         return savedMessage;
     }
 
-    private void saveMessageMedia(List<MessageMedia> mediaList, Message savedMessage) {
+    private void saveMessageMedia(List<MessageMediaModel> mediaList, Message savedMessage) {
         if (mediaList != null && !mediaList.isEmpty()) {
-            for (MessageMedia media : mediaList) {
+            for (MessageMediaModel media : mediaList) {
                 String fileUrl = media.getMediaURL();
                 String mediaType = media.getMediaType();
     
@@ -100,7 +100,7 @@ public class MessageService {
     
 
     // Phương thức gửi tin nhắn realtime
-    private void sendRealTimeMessage(Integer senderId, Message savedMessage, ChatBox chatBox) {
+    private void sendRealTimeMessage(Integer senderId, Message savedMessage, ChatBoxDTO chatBox) {
         messagingTemplate.convertAndSendToUser(String.valueOf(senderId), "/queue/messages", savedMessage);
 
         if (!chatBox.getIsGroup()) {

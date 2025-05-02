@@ -41,6 +41,6 @@ public class ChatBox {
     private List<ChatBoxDetail> chatBoxDetails;
 
     @OneToMany(mappedBy = "chatBox", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Message> messages;
+    private List<MessageModel> messages;
     
 }

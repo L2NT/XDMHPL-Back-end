@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.XDMHPL_Back_end.DTO.ChatBox;
+import com.example.XDMHPL_Back_end.DTO.ChatBoxDTO;
 import com.example.XDMHPL_Back_end.DTO.ChatBoxInfo;
-import com.example.XDMHPL_Back_end.DTO.MessageMedia;
 import com.example.XDMHPL_Back_end.DTO.MessageMediaDTO;
 import com.example.XDMHPL_Back_end.Services.ChatBoxService;
+import com.example.XDMHPL_Back_end.model.MessageMediaModel;
 
 @RestController
 @RequestMapping("/chat")
@@ -32,7 +32,7 @@ public class ChatBoxController {
     }
 
   @PostMapping("/update/{chatBoxId}")
-public ChatBox updateBoxChat(@PathVariable Integer chatBoxId, 
+public ChatBoxDTO updateBoxChat(@PathVariable Integer chatBoxId, 
                               @RequestParam String name, 
                               @RequestParam String imageUrl) {
     return chatBoxService.updateBoxChat(chatBoxId, name, imageUrl);
@@ -45,7 +45,7 @@ public List<MessageMediaDTO> getChatBoxImages(@PathVariable Integer chatBoxId) {
 }
 
 @GetMapping("/sidebar/{userId}")
-public ResponseEntity<List<ChatBox>> getUserSidebar(@PathVariable Integer userId) {
+public ResponseEntity<List<ChatBoxDTO>> getUserSidebar(@PathVariable Integer userId) {
     return ResponseEntity.ok(chatBoxService.getSidebarChatBoxesByUserId(userId));
 }
 

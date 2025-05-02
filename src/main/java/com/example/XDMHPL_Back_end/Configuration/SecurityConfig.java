@@ -18,12 +18,11 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    @SuppressWarnings("removal")
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .cors(withDefaults())
-                .csrf(csrf -> csrf.disable()) // Có thể tắt CSRF để test API
+                .csrf(csrf -> csrf.disable()) // Có thể tắt CSRF để t est API
                 .authorizeHttpRequests(auth -> auth
                                 .requestMatchers("/chat/**").permitAll() // Cho phép truy cập WebSocket mà không cần xác thực
                                 .anyRequest().permitAll() // Tất cả các yêu cầu khác đều cho phép mà không cần xác thực
@@ -35,13 +34,13 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("http://localhost:3000")); // Cho phép từ frontend tại localhost:3000
+        config.setAllowedOrigins(List.of("http://localhost:5173"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true); // Nếu dùng cookie hoặc auth header
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", config); // Áp dụng cấu hình CORS cho tất cả các endpoint
+        source.registerCorsConfiguration("/**", config); 
         return source;
     }
 
