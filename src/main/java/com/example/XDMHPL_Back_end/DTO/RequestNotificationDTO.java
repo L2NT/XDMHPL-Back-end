@@ -1,8 +1,5 @@
 package com.example.XDMHPL_Back_end.DTO;
 
-import com.example.XDMHPL_Back_end.model.Notification;
-import com.example.XDMHPL_Back_end.model.NotificationStatus;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,4 +13,5 @@ public class RequestNotificationDTO {
     private Integer PostID;
     private int SenderID;
     private int UserID;
+    private Boolean isOnline;
 }

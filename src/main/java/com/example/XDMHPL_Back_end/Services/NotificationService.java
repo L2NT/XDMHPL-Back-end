@@ -54,7 +54,7 @@ public class NotificationService {
         // Tìm người dùng theo ID
         Users user = userRepository.findById(userID)
                 .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy người dùng với ID: " + userID));
-        Users sender = userRepository.findById(userID)
+        Users sender = userRepository.findById(senderID)
                 .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy người dùng với ID: " + senderID));
 
         Notification notification = new Notification();

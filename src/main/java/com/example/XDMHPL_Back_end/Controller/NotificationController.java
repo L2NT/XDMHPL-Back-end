@@ -50,10 +50,23 @@ public class NotificationController {
 
 
     @MessageMapping("/comment/notification")
-    public void sendNotify(@Payload RequestNotificationDTO notification) {
+    public void sendNotifyComment(@Payload RequestNotificationDTO notification) {
         // Gửi thông báo cho người dùng được nhắc đến trong bình luận
         NotificationDTO newNotification = notificationService.createNotification(notification.getUserID(), notification.getSenderID(),
                 NotificationStatus.COMMENT, notification.getPostID(), notification.getCommentID(),
+                notification.getMessageID(), "Đã bình luận về bài viết của bạn");
+        
+        Users user = userService.getUserById(notification.getUserID());
+        messagingTemplate.convertAndSend(
+                "/topic/notifications/" + user.getUserName(),
+                newNotification);
+    }
+
+    @MessageMapping("/like/notification")
+    public void sendNotifyLike(@Payload RequestNotificationDTO notification) {
+        // Gửi thông báo cho người dùng được nhắc đến trong bình luận
+        NotificationDTO newNotification = notificationService.createNotification(notification.getUserID(), notification.getSenderID(),
+                NotificationStatus.LIKE, notification.getPostID(), notification.getCommentID(),
                 notification.getMessageID(), "Đã bình luận về bài viết của bạn");
         
         Users user = userService.getUserById(notification.getUserID());

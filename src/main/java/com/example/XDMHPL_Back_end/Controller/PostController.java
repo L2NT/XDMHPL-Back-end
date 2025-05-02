@@ -1,7 +1,6 @@
 package com.example.XDMHPL_Back_end.Controller;
 
 import java.io.IOException;
-import java.sql.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.XDMHPL_Back_end.DTO.PostDTO;
+import com.example.XDMHPL_Back_end.DTO.RequestNotificationDTO;
 import com.example.XDMHPL_Back_end.Services.PostService;
 import com.example.XDMHPL_Back_end.model.Post;
 
@@ -77,8 +77,8 @@ public class PostController {
 	@PutMapping("/like/{postId}/{userId}")
 	public ResponseEntity<?> likePost(@PathVariable int postId, @PathVariable int userId) {
 		try {
-			postService.likePost(postId, userId);
-			return new ResponseEntity<>("Đã thay đổi tương tác bài đăng:", HttpStatus.OK);
+			RequestNotificationDTO liekDto =postService.likePost(postId, userId);
+			return new ResponseEntity<>(liekDto, HttpStatus.OK);
 		} catch (Exception e) {
 			Map<String, String> response = new HashMap<>();
 			response.put("error", "Không thể tương tác bài đăng: " + e.getMessage());

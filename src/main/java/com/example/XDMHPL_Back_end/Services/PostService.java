@@ -12,16 +12,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.apache.catalina.connector.Request;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.XDMHPL_Back_end.DTO.PostDTO;
+import com.example.XDMHPL_Back_end.DTO.RequestNotificationDTO;
 import com.example.XDMHPL_Back_end.Repositories.LikeRepository;
+import com.example.XDMHPL_Back_end.Repositories.NotificationRepository;
 import com.example.XDMHPL_Back_end.Repositories.PostMediaRepository;
 import com.example.XDMHPL_Back_end.Repositories.PostRepository;
 import com.example.XDMHPL_Back_end.Repositories.UserRepository;
 import com.example.XDMHPL_Back_end.model.Like;
+import com.example.XDMHPL_Back_end.model.NotificationStatus;
 import com.example.XDMHPL_Back_end.model.Post;
 import com.example.XDMHPL_Back_end.model.PostMedia;
 import com.example.XDMHPL_Back_end.model.Users;
@@ -42,6 +46,9 @@ public class PostService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+	private NotificationRepository notificationRepository;
 
     private final String IMAGE_UPLOAD_PATH = "src/main/resources/static/uploads/postimage/";
     private final String VIDEO_UPLOAD_PATH = "src/main/resources/static/uploads/postvideo/";
@@ -120,7 +127,7 @@ public class PostService {
         return PostDTO.fromEntity(savedPost);
     }
 
-    public void likePost(int postId, int userId) {
+    public RequestNotificationDTO likePost(int postId, int userId) {
         // Tìm bài đăng theo ID
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy bài đăng với ID: " + postId));
@@ -135,13 +142,17 @@ public class PostService {
         if (existingLike != null) {
             // Nếu đã thích rồi, xóa like đi
             likeRepository.delete(existingLike);
+            notificationRepository.deleteByUser_UserIDAndPost_PostIDAndType(userId, post.getPostID(), NotificationStatus.LIKE);
+            return null;
         } else {
             // Nếu chưa thích, tạo like mới
             Like newLike = new Like();
             newLike.setPost(post);
             newLike.setUser(user);
             likeRepository.save(newLike);
+            return new RequestNotificationDTO(null, null, post.getPostID(), userId, post.getUser().getUserID(),post.getUser().getIsOnline());
         }
+
     }
 
     public Post getPostByID(Integer id) {

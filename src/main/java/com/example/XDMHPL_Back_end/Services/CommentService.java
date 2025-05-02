@@ -45,7 +45,7 @@ public class CommentService {
         post.getComments().add(savedComment);
         postRepository.save(post);
        
-        return new RequestNotificationDTO(savedComment.getCommentID(), null, post.getPostID(), userId, post.getUser().getUserID());
+        return new RequestNotificationDTO(savedComment.getCommentID(), null, post.getPostID(), userId, post.getUser().getUserID(),post.getUser().getIsOnline());
     }
 
 
