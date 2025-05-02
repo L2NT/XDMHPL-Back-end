@@ -55,7 +55,7 @@ public class UserPresenceController {
         onlineUsers.add(userId);
 
         // Cập nhật trạng thái online trong database
-        // userService.updateOnlineStatus(userId, true);
+        userService.updateOnlineStatus(userId, true);
 
         // Thông báo cho tất cả bạn bè
         notifyFriendsAboutStatus(userId, true);
@@ -79,7 +79,7 @@ public class UserPresenceController {
         onlineUsers.remove(userId);
 
         // Cập nhật trạng thái offline trong database
-        // userService.updateOnlineStatus(userId, false);
+        userService.updateOnlineStatus(userId, false);
 
         // Thông báo cho tất cả bạn bè
         notifyFriendsAboutStatus(userId, false);

@@ -161,16 +161,11 @@ public class UserService {
 
 
     //user online
-    private Map<Integer, Boolean> onlineUsers = new ConcurrentHashMap<>();
     public void updateOnlineStatus(int userId, boolean isOnline) {
-        onlineUsers.put(userId , isOnline);
-    }
-    public boolean isUserOnline(int userId) {
-        return onlineUsers.getOrDefault(userId , false);
-    }
-
-    public void updateUserActivity(int userId) {
-        // Cập nhật thời gian hoạt động cuối cùng
-        updateOnlineStatus(userId , true);
+        Users user = usersRepository.findById(userId).orElse(null);
+        if (user != null) {
+            user.setIsOnline(isOnline);
+            usersRepository.save(user);
+        }
     }
 }
