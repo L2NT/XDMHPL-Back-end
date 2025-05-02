@@ -1,7 +1,7 @@
 package com.example.XDMHPL_Back_end.Configuration;
 
 import java.security.Principal;
-import java.util.Collections;
+
 import java.util.List;
 
 import org.springframework.context.annotation.Configuration;
@@ -13,7 +13,6 @@ import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.messaging.support.MessageHeaderAccessor;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
@@ -33,11 +32,6 @@ public class WebsocketConfig implements WebSocketMessageBrokerConfigurer {
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws")
                 .setAllowedOriginPatterns("http://localhost:5173") // Cho phép tất cả frontend kết nối
-                .withSockJS();
-
-        // 🔔 Endpoint riêng cho notification
-        registry.addEndpoint("/ws-notification")
-                .setAllowedOriginPatterns("http://localhost:5173")
                 .withSockJS();
     }
 

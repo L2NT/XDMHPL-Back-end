@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.XDMHPL_Back_end.DTO.NotificationDTO;
 import com.example.XDMHPL_Back_end.Repositories.CommentRepository;
 import com.example.XDMHPL_Back_end.Repositories.NotificationRepository;
 import com.example.XDMHPL_Back_end.Repositories.PostRepository;
@@ -35,7 +36,7 @@ public class NotificationService {
     // @Autowired
     // private MessageRepository messageRepository;
 
-    public Notification createNotification(int userID, int senderID, NotificationStatus type,
+    public NotificationDTO createNotification(int userID, int senderID, NotificationStatus type,
             Integer postID, Integer commentID, Integer messageID, String content) {
         Post post = null;
         Comment comment = null;
@@ -67,7 +68,7 @@ public class NotificationService {
         notification.setCreatedAt(new Date());
         notification.setIsReadFlag(0); // 0 = chưa đọc
 
-        return notificationRepository.save(notification);
+        return NotificationDTO.fromEntity(notificationRepository.save(notification));
     }
 
     public Notification markAsRead(int notificationID) {
@@ -93,7 +94,8 @@ public class NotificationService {
         return notificationRepository.findByUserIdAndReadStatus(userID, 0);
     }
 
-    public List<Notification> getAllNotifications(int userID) {
-        return notificationRepository.findByUserId(userID);
+    public List<NotificationDTO> getAllNotifications(int userID) {
+        List<Notification> notifications = notificationRepository.findByUserId(userID);
+        return notifications.stream().map(NotificationDTO::fromEntity).toList();
     }
 }

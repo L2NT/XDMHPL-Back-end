@@ -15,15 +15,11 @@ import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
-import com.example.XDMHPL_Back_end.DTO.CommentDTO;
 import com.example.XDMHPL_Back_end.DTO.OnlineStatusDTO;
 import com.example.XDMHPL_Back_end.DTO.OnlineUsersListDTO;
-import com.example.XDMHPL_Back_end.DTO.RequestNotificationDTO;
 import com.example.XDMHPL_Back_end.DTO.UserStatusDTO;
 import com.example.XDMHPL_Back_end.Services.FriendService;
-import com.example.XDMHPL_Back_end.Services.NotificationService;
 import com.example.XDMHPL_Back_end.Services.UserService;
-import com.example.XDMHPL_Back_end.model.NotificationStatus;
 import com.example.XDMHPL_Back_end.model.Users;
 
 @RestController
@@ -37,9 +33,6 @@ public class UserPresenceController {
 
     @Autowired
     private FriendService friendService;
-
-    @Autowired
-    private NotificationService notificationService;
 
     // Set để lưu trữ danh sách người dùng đang online
     private final Set<Integer> onlineUsers = ConcurrentHashMap.newKeySet();
@@ -61,14 +54,6 @@ public class UserPresenceController {
         notifyFriendsAboutStatus(userId, true);
     }
 
-    @MessageMapping("/status/notify")
-    public void sendNotify(@Payload RequestNotificationDTO notification) {
-        // Gửi thông báo cho người dùng được nhắc đến trong bình luận
-        notificationService.createNotification(notification.getUserID(), notification.getSenderID(),
-                NotificationStatus.COMMENT, notification.getPostID(), notification.getCommentID(),
-                notification.getMessageID(), "Đã bình luận về bài viết của bạn");
-
-    }
 
     @MessageMapping("/status/offline")
     public void userOffline(@Payload UserStatusDTO statusDTO) {
