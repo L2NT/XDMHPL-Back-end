@@ -38,6 +38,9 @@ public class NotificationService {
 
     public NotificationDTO createNotification(int userID, int senderID, NotificationStatus type,
             Integer postID, Integer commentID, Integer messageID, String content) {
+        if(userID == senderID) {
+            return null;
+        }
         Post post = null;
         Comment comment = null;
         Message message = null;

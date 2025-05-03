@@ -32,7 +32,6 @@ public class CommentController {
     {
         try {
 		 	NotificationDTO commentDTO = commentService.createComment(comment, postId, userId);
-            System.out.println(commentDTO.getCommentID());
 			return new ResponseEntity<>(commentDTO, HttpStatus.OK);
 		} catch (Exception e) {
 			Map<String, String> response = new HashMap<>();
