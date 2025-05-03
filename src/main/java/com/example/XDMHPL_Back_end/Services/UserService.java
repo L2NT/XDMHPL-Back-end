@@ -36,11 +36,11 @@ public class UserService {
         user.setUserName(userName);
         user.setPassword(encryptedPassword);
         user.setEmail(email);
-        user.setAvatar(avatar);
+        user.setAvatar("/avatars/default.jpg");
         user.setPhoneNumber(phoneNumber);
         user.setDateOfBirth(dateOfBirth);
         user.setGender(gender);
-        user.setCoverPhotoURL(coverPhotoURL);
+        user.setCoverPhotoURL("/covers/default.jpg");
         user.setSessionID(sessionID);
         user.setRole(role);
         user.setHide(false); // Default value for hide
@@ -52,7 +52,7 @@ public class UserService {
         return usersRepository.findById(id).orElse(null);
     }
     
-    public Object[] findUserByID(int id) {
+    public Object findUserByID(int id) {
     	return usersRepository.findUserInfoByID(id);
     }
     
@@ -145,11 +145,6 @@ public class UserService {
         return usersRepository.save(user);
     }
 
-
-    
-
-
-
     //current user
     public UserDTO getCurrentUser(int userId) {
         Users user = usersRepository.findById(userId).orElse(null);
@@ -158,11 +153,6 @@ public class UserService {
         }
         return null;
     }
-
-
-
-
-
 
     //user online
     public void updateOnlineStatus(int userId, boolean isOnline) {

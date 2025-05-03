@@ -16,6 +16,6 @@ public interface UserRepository extends JpaRepository<Users, Integer> {
     Users findByPhoneNumber(String phoneNumber);
     public List<Users> findByHideFalse();
     
-    @Query("SELECT u.userID, u.fullName FROM Users u WHERE u.userID = :userID")
-    Object[] findUserInfoByID(@Param("userID") int userID);
+    @Query("SELECT u.userID, u.fullName, u.avatar FROM Users u WHERE u.userID = :userID")
+    Object findUserInfoByID(@Param("userID") int userID);
 }

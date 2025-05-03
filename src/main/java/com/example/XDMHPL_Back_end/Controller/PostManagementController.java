@@ -66,9 +66,23 @@ public class PostManagementController {
         }
     }
 	
+	@DeleteMapping("/delete-comment/{commentID}")
+	public ResponseEntity<String> deleteComment(@PathVariable int commentID){
+		boolean isDeleted = postManagementService.deleteComment(commentID);
+		if (isDeleted) {
+            return ResponseEntity.ok("Comment with ID " + commentID + " has been successfully deleted.");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Comment with ID " + commentID + " not found.");
+        }
+		
+	}
+	
+	
 	private final String VIDEO_DIRECTORY = "src/main/resources/static/uploads/postvideo/";
     private final String IMAGE_DIRECTORY = "src/main/resources/static/uploads/postimage/";
-
+    private final String AVATAR = "src/main/resources/static/uploads/avatars/";
+    
     @GetMapping("/media/{type}/{filename}")
     public ResponseEntity<Resource> getMedia(@PathVariable String type, @PathVariable String filename) {
         try {
@@ -82,7 +96,11 @@ public class PostManagementController {
             } else if (type.equalsIgnoreCase("image")) {
                 directory = IMAGE_DIRECTORY;
                 contentType = getImageContentType(filename);
-            } else {
+            } else if (type.equalsIgnoreCase("avatar")) {
+            	directory = AVATAR;
+                contentType = getImageContentType(filename);
+            }
+            else {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null); // Loại không hợp lệ
             }
 

@@ -148,7 +148,7 @@ public class UserController {
 	}
 	
 	@GetMapping("/find/{id}")
-	public Object[] finUsersByID(@PathVariable int id) {
+	public Object finUsersByID(@PathVariable int id) {
 		return usersService.findUserByID(id);
 	}
 	
