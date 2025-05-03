@@ -66,26 +66,37 @@ public class ChatBoxService {
         );
     }
 
-        public ChatBox updateBoxChat(Integer chatBoxId, String name, String imageUrl) {
-            // Kiểm tra dữ liệu đầu vào
-            if (name == null || name.isEmpty()) {
-                throw new IllegalArgumentException("ChatBox name cannot be empty");
-            }
-            if (imageUrl == null || imageUrl.isEmpty()) {
-                throw new IllegalArgumentException("Image URL cannot be empty");
-            }
-        
-            // Tìm chatBox theo ID
-            ChatBox box = chatBoxRepo.findById(chatBoxId).orElse(null);
-        
-        
-            // Cập nhật tên và URL hình ảnh
-            box.setChatBoxName(name);
-            box.setImageURL(imageUrl);
-            
-            // Lưu lại và trả về đối tượng chatBox đã cập nhật
-            return chatBoxRepo.save(box);
+    public ChatBox updateBoxChat(Integer chatBoxId, String name, String imageUrl) {
+        // Kiểm tra dữ liệu đầu vào
+        if (name == null || name.isEmpty()) {
+            throw new IllegalArgumentException("ChatBox name cannot be empty");
         }
+    
+        // Kiểm tra imageUrl và chỉ lưu tên ảnh (không bao gồm đường dẫn)
+        if (imageUrl == null || imageUrl.isEmpty()) {
+            imageUrl = "default-avatar.jpg";  // Giá trị mặc định khi không có hình ảnh
+        } else {
+            // Nếu có ảnh mới, chỉ lưu tên ảnh vào cơ sở dữ liệu
+            String imageName = imageUrl.substring(imageUrl.lastIndexOf("/") + 1);  // Lấy tên ảnh từ đường dẫn đầy đủ
+            imageUrl = "http://localhost:8080/assets/" + imageName;  // Thêm /assets/ vào tên ảnh
+        }
+    
+        // Tìm chatBox theo ID
+        ChatBox box = chatBoxRepo.findById(chatBoxId).orElse(null);
+    
+        if (box == null) {
+            throw new IllegalArgumentException("ChatBox not found with ID: " + chatBoxId);
+        }
+    
+        // Cập nhật tên và URL hình ảnh
+        box.setChatBoxName(name);
+        box.setImageURL(imageUrl);  // Lưu giá trị với đường dẫn tương đối vào cơ sở dữ liệu
+    
+        // Lưu lại và trả về đối tượng chatBox đã cập nhật
+        return chatBoxRepo.save(box);
+    }
+    
+    
     
 
   @Transactional
