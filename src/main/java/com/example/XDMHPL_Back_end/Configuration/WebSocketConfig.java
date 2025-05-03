@@ -14,7 +14,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         // Đăng ký endpoint cho WebSocket, cho phép kết nối từ địa chỉ frontend
         registry.addEndpoint("/chat")
-                .setAllowedOrigins("http://localhost:3000") // Cho phép kết nối từ frontend tại localhost:3000
+                .setAllowedOrigins("http://localhost:5173") // Cho phép kết nối từ frontend tại localhost:3000
                 .withSockJS(); // Sử dụng SockJS để hỗ trợ các trình duyệt không hỗ trợ WebSocket
     }
 
