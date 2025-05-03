@@ -41,13 +41,17 @@ public class NotificationService {
         Post post = null;
         Comment comment = null;
         Message message = null;
+        System.out.println(commentID);
         if (postID != null) {
             post = postRepository.findById(postID)
                     .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy bài đăng với ID: " + postID));
-        } else if (commentID != null) {
+        } 
+        
+        if (commentID != null) {
             comment = commentRepository.findById(commentID)
                     .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy bình luận với ID: " + commentID));
-        } else if (messageID != null) {
+        }
+        if (messageID != null) {
 
         }
 

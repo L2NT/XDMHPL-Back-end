@@ -15,14 +15,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.XDMHPL_Back_end.Repositories.FriendRepository;
+import com.example.XDMHPL_Back_end.DTO.NotificationDTO;
 import com.example.XDMHPL_Back_end.Services.FriendService;
 
 @RestController
 @RequestMapping("/friendrequests")
 public class FriendController {
-    @Autowired
-    private FriendRepository friendRepository;
     @Autowired
     private FriendService friendService;
 
@@ -30,8 +28,8 @@ public class FriendController {
     @PostMapping("/{senderId}/{receiverId}")
 	public ResponseEntity<?> sentRequestFriend(@PathVariable int receiverId, @PathVariable int senderId) {
 		try {
-			friendService.sentFriendRequest(senderId, receiverId);
-			return new ResponseEntity<>("Đã thay đổi tương tác bạn bè:", HttpStatus.OK);
+			NotificationDTO response = friendService.sentFriendRequest(senderId, receiverId);
+			return new ResponseEntity<>(response, HttpStatus.OK);
 		} catch (Exception e) {
 			Map<String, String> response = new HashMap<>();
 			response.put("error", "Không thể tương tác bạn bè: " + e.getMessage());

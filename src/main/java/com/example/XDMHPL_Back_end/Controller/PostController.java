@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.XDMHPL_Back_end.DTO.NotificationDTO;
 import com.example.XDMHPL_Back_end.DTO.PostDTO;
 import com.example.XDMHPL_Back_end.DTO.RequestNotificationDTO;
 import com.example.XDMHPL_Back_end.Services.PostService;
@@ -77,7 +78,7 @@ public class PostController {
 	@PutMapping("/like/{postId}/{userId}")
 	public ResponseEntity<?> likePost(@PathVariable int postId, @PathVariable int userId) {
 		try {
-			RequestNotificationDTO liekDto =postService.likePost(postId, userId);
+			NotificationDTO liekDto =postService.likePost(postId, userId);
 			return new ResponseEntity<>(liekDto, HttpStatus.OK);
 		} catch (Exception e) {
 			Map<String, String> response = new HashMap<>();

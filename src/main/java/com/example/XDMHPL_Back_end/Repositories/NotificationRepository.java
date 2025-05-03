@@ -22,5 +22,8 @@ public interface NotificationRepository extends JpaRepository<Notification, Inte
 
     //Xóa thông báo của user khi xóa Like
     void deleteByUser_UserIDAndPost_PostIDAndType(int userID, int postID, NotificationStatus type);
+
+    //Xóa thông báo của user khi hủy kết bạn + hủy lời mời
+    void deleteByUser_UserIDAndSender_UserIDAndType(int userID, int senderID, NotificationStatus type);
     
 }

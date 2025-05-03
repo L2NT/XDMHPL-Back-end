@@ -50,29 +50,33 @@ public class NotificationController {
 
 
     @MessageMapping("/comment/notification")
-    public void sendNotifyComment(@Payload RequestNotificationDTO notification) {
+    public void sendNotifyComment(@Payload NotificationDTO notification) {
         // Gửi thông báo cho người dùng được nhắc đến trong bình luận
-        NotificationDTO newNotification = notificationService.createNotification(notification.getUserID(), notification.getSenderID(),
-                NotificationStatus.COMMENT, notification.getPostID(), notification.getCommentID(),
-                notification.getMessageID(), "Đã bình luận về bài viết của bạn");
         
         Users user = userService.getUserById(notification.getUserID());
         messagingTemplate.convertAndSend(
                 "/topic/notifications/" + user.getUserName(),
-                newNotification);
+                notification);
     }
 
     @MessageMapping("/like/notification")
-    public void sendNotifyLike(@Payload RequestNotificationDTO notification) {
+    public void sendNotifyLike(@Payload NotificationDTO notification) {
         // Gửi thông báo cho người dùng được nhắc đến trong bình luận
-        NotificationDTO newNotification = notificationService.createNotification(notification.getUserID(), notification.getSenderID(),
-                NotificationStatus.LIKE, notification.getPostID(), notification.getCommentID(),
-                notification.getMessageID(), "Đã bình luận về bài viết của bạn");
         
         Users user = userService.getUserById(notification.getUserID());
         messagingTemplate.convertAndSend(
                 "/topic/notifications/" + user.getUserName(),
-                newNotification);
+                notification);
+    }
+
+    @MessageMapping("/friendRequest/notification")
+    public void sendNotifyFriendRequest(@Payload NotificationDTO notification) {
+        // Gửi thông báo cho người dùng được nhắc đến trong bình luận
+        
+        Users user = userService.getUserById(notification.getUserID());
+        messagingTemplate.convertAndSend(
+                "/topic/notifications/" + user.getUserName(),
+                notification);
     }
 
 

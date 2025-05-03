@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.XDMHPL_Back_end.DTO.NotificationDTO;
 import com.example.XDMHPL_Back_end.DTO.PostDTO;
 import com.example.XDMHPL_Back_end.DTO.RequestNotificationDTO;
 import com.example.XDMHPL_Back_end.Repositories.LikeRepository;
@@ -29,6 +30,8 @@ import com.example.XDMHPL_Back_end.model.NotificationStatus;
 import com.example.XDMHPL_Back_end.model.Post;
 import com.example.XDMHPL_Back_end.model.PostMedia;
 import com.example.XDMHPL_Back_end.model.Users;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class PostService {
@@ -49,6 +52,9 @@ public class PostService {
 
     @Autowired
 	private NotificationRepository notificationRepository;
+
+    @Autowired
+    private NotificationService notificationService;
 
     private final String IMAGE_UPLOAD_PATH = "src/main/resources/static/uploads/postimage/";
     private final String VIDEO_UPLOAD_PATH = "src/main/resources/static/uploads/postvideo/";
@@ -127,7 +133,8 @@ public class PostService {
         return PostDTO.fromEntity(savedPost);
     }
 
-    public RequestNotificationDTO likePost(int postId, int userId) {
+    @Transactional
+    public NotificationDTO likePost(int postId, int userId) {
         // Tìm bài đăng theo ID
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy bài đăng với ID: " + postId));
@@ -142,7 +149,7 @@ public class PostService {
         if (existingLike != null) {
             // Nếu đã thích rồi, xóa like đi
             likeRepository.delete(existingLike);
-            notificationRepository.deleteByUser_UserIDAndPost_PostIDAndType(userId, post.getPostID(), NotificationStatus.LIKE);
+            notificationRepository.deleteByUser_UserIDAndPost_PostIDAndType(post.getUser().getUserID(), post.getPostID(), NotificationStatus.LIKE);
             return null;
         } else {
             // Nếu chưa thích, tạo like mới
@@ -150,7 +157,7 @@ public class PostService {
             newLike.setPost(post);
             newLike.setUser(user);
             likeRepository.save(newLike);
-            return new RequestNotificationDTO(null, null, post.getPostID(), userId, post.getUser().getUserID(),post.getUser().getIsOnline());
+            return notificationService.createNotification(post.getUser().getUserID(), userId, NotificationStatus.LIKE, post.getPostID(), null, null, "Đã thích bài đăng của bạn");
         }
 
     }

@@ -10,9 +10,11 @@ import com.example.XDMHPL_Back_end.DTO.CommentDTO;
 import com.example.XDMHPL_Back_end.DTO.NotificationDTO;
 import com.example.XDMHPL_Back_end.DTO.RequestNotificationDTO;
 import com.example.XDMHPL_Back_end.Repositories.CommentRepository;
+import com.example.XDMHPL_Back_end.Repositories.NotificationRepository;
 import com.example.XDMHPL_Back_end.Repositories.PostRepository;
 import com.example.XDMHPL_Back_end.Repositories.UserRepository;
 import com.example.XDMHPL_Back_end.model.Comment;
+import com.example.XDMHPL_Back_end.model.Notification;
 import com.example.XDMHPL_Back_end.model.NotificationStatus;
 import com.example.XDMHPL_Back_end.model.Post;
 import com.example.XDMHPL_Back_end.model.Users;
@@ -28,7 +30,10 @@ public class CommentService {
     @Autowired
     private CommentRepository commentRepository;
 
-    public RequestNotificationDTO createComment(Comment comment, int postId, int userId) {
+    @Autowired
+    private NotificationService notificationService;
+
+    public NotificationDTO createComment(Comment comment, int postId, int userId) {
         // Tìm bài đăng theo ID
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy bài đăng với ID: " + postId));
@@ -44,8 +49,8 @@ public class CommentService {
         Comment savedComment=commentRepository.save(comment);
         post.getComments().add(savedComment);
         postRepository.save(post);
-       
-        return new RequestNotificationDTO(savedComment.getCommentID(), null, post.getPostID(), userId, post.getUser().getUserID(),post.getUser().getIsOnline());
+        System.out.println(savedComment.getCommentID());
+        return notificationService.createNotification(post.getUser().getUserID(), userId, NotificationStatus.COMMENT, post.getPostID(), savedComment.getCommentID(), null, "Đã bình luận về bài viết của bạn");
     }
 
 
