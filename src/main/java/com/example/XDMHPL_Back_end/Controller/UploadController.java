@@ -20,7 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/upload")
 public class UploadController {
 
-    private static final String UPLOAD_DIR = "uploads/";
+    private static final String UPLOAD_DIR = "assets/";
 
     static {
         try {
@@ -63,9 +63,10 @@ public class UploadController {
             Files.write(filePath, file.getBytes());
 
             // 5. Tạo URL phản hồi
-            String fileUrl = "http://localhost:8080/uploads/" + fileName;
+            String fileUrl = "http://localhost:8080/assets/" + fileName;
 
             return ResponseEntity.ok(Map.of(
+                "url", fileUrl,
                
                 "fileName", fileName
                
@@ -77,4 +78,4 @@ public class UploadController {
                 .body(Map.of("error", "Lỗi xảy ra khi xử lý tệp tải lên."));
         }
     }
-}
+} 
