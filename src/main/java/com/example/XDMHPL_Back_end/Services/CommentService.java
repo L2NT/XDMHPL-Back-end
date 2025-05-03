@@ -1,20 +1,15 @@
 package com.example.XDMHPL_Back_end.Services;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.XDMHPL_Back_end.DTO.CommentDTO;
 import com.example.XDMHPL_Back_end.DTO.NotificationDTO;
-import com.example.XDMHPL_Back_end.DTO.RequestNotificationDTO;
 import com.example.XDMHPL_Back_end.Repositories.CommentRepository;
-import com.example.XDMHPL_Back_end.Repositories.NotificationRepository;
 import com.example.XDMHPL_Back_end.Repositories.PostRepository;
 import com.example.XDMHPL_Back_end.Repositories.UserRepository;
 import com.example.XDMHPL_Back_end.model.Comment;
-import com.example.XDMHPL_Back_end.model.Notification;
 import com.example.XDMHPL_Back_end.model.NotificationStatus;
 import com.example.XDMHPL_Back_end.model.Post;
 import com.example.XDMHPL_Back_end.model.Users;

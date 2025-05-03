@@ -143,8 +143,9 @@ public class UserController {
 	
 	
 	@GetMapping("/{id}")
-	public Users getUserById(@PathVariable Integer id) {
-		return usersService.getUserById(id);
+	public UserDTO getUserById(@PathVariable Integer id) {
+	   Users user = usersService.getUserById(id);
+	   return UserDTO.fromEntity(user);
 	}
 
 	@PutMapping("/{id}/hide")

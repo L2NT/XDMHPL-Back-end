@@ -14,11 +14,8 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.XDMHPL_Back_end.DTO.CommentDTO;
 import com.example.XDMHPL_Back_end.DTO.NotificationDTO;
-import com.example.XDMHPL_Back_end.DTO.RequestNotificationDTO;
 import com.example.XDMHPL_Back_end.Services.CommentService;
-import com.example.XDMHPL_Back_end.Services.UserService;
 import com.example.XDMHPL_Back_end.model.Comment;
 
 

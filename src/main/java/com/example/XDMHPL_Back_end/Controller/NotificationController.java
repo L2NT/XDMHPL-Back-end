@@ -1,40 +1,24 @@
 package com.example.XDMHPL_Back_end.Controller;
 
 import java.security.Principal;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.XDMHPL_Back_end.DTO.NotificationDTO;
-import com.example.XDMHPL_Back_end.DTO.OnlineUsersListDTO;
-import com.example.XDMHPL_Back_end.DTO.RequestNotificationDTO;
 import com.example.XDMHPL_Back_end.DTO.UserStatusDTO;
-import com.example.XDMHPL_Back_end.Services.CommentService;
 import com.example.XDMHPL_Back_end.Services.NotificationService;
-import com.example.XDMHPL_Back_end.Services.PostService;
 import com.example.XDMHPL_Back_end.Services.UserService;
-import com.example.XDMHPL_Back_end.model.Comment;
-import com.example.XDMHPL_Back_end.model.Message;
 import com.example.XDMHPL_Back_end.model.Notification;
-import com.example.XDMHPL_Back_end.model.NotificationStatus;
-import com.example.XDMHPL_Back_end.model.Post;
 import com.example.XDMHPL_Back_end.model.Users;
 
 @RestController
