@@ -81,6 +81,19 @@ public class NotificationController {
         }
     }
 
+    @MessageMapping("/status/mark-notification-read")
+    public void getMarkReadNotification(@Payload NotificationDTO request, Principal principal) {
+        int userId = request.getUserID();
+        int notificationId = request.getNotificationID();
+        System.out.println("User " + principal.getName() + " mark notification " + notificationId + " as read");
+        try {
+             notificationService.markAsRead(notificationId);
+        } catch (Exception e) {
+            System.err.println("Error sending notification list: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
     
     /**
      * Lấy tất cả thông báo của người dùng hiện tại
