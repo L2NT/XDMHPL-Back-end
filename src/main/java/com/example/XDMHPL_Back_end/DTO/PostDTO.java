@@ -25,7 +25,8 @@ public class PostDTO {
     private int commentCount;
     private int shareCount;
     private String postType;
-
+    private int hide;
+    
     // Thêm các trường cho PostShare
     private Integer originalPostID; // Cho post_type=SHARE
     private Integer parentShareID; // Cho post_type=SHARE
@@ -44,7 +45,8 @@ public class PostDTO {
         dto.setUserID(post.getUser().getUserID());
         dto.setContent(post.getContent());
         dto.setPriorityScore(post.getPriorityScore());
-
+        dto.setHide(post.getHide());
+        
         // Đặt loại post
         if (post instanceof PostShare) {
             dto.setPostType("SHARE");

@@ -146,7 +146,12 @@ public class UserController {
 	public Users getUserById(@PathVariable Integer id) {
 		return usersService.getUserById(id);
 	}
-
+	
+	@GetMapping("/find/{id}")
+	public Object[] finUsersByID(@PathVariable int id) {
+		return usersService.findUserByID(id);
+	}
+	
 	@PutMapping("/{id}/hide")
 	public ResponseEntity<?> hideUser(@PathVariable int id) {
 		boolean result = usersService.hideUserById(id);

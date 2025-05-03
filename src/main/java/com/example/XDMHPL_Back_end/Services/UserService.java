@@ -52,6 +52,10 @@ public class UserService {
         return usersRepository.findById(id).orElse(null);
     }
     
+    public Object[] findUserByID(int id) {
+    	return usersRepository.findUserInfoByID(id);
+    }
+    
     public Users getUserByUsername(String userName){
     	return usersRepository.findByUserName(userName);
     }
