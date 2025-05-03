@@ -34,85 +34,82 @@ public class MessageService {
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
-    // Phương thức gửi tin nhắn (Cho nhóm hoặc 1-1)
-    public Message sendMessage(Integer senderId, Integer chatBoxId, String text, Integer chatBoxId2, List<MessageMediaModel> mediaList) {
-        // Tìm ChatBox
-        Optional<ChatBoxDTO> chatBoxOptional = chatBoxRepository.findById(chatBoxId);
+    public Message sendMessage(Integer senderId, Integer chatBoxId, String text, Integer chatBoxId2, List<MessageMedia> mediaList) {
+        Optional<ChatBox> chatBoxOptional = chatBoxRepository.findById(chatBoxId);
         if (!chatBoxOptional.isPresent()) {
             throw new RuntimeException("ChatBox không tồn tại.");
         }
-
-        ChatBoxDTO chatBox = chatBoxOptional.get();
-
-        // Kiểm tra nếu là cuộc trò chuyện 1-1 và người gửi có quyền gửi tin nhắn
+    
+        ChatBox chatBox = chatBoxOptional.get();
+    
+        // Kiểm tra người gửi có phải thành viên của cuộc trò chuyện không
         if (!chatBox.getIsGroup() && !isUserInChatBox(senderId, chatBoxId)) {
             throw new RuntimeException("Người gửi không phải là thành viên của cuộc trò chuyện.");
         }
-
-        // Tạo tin nhắn mới
+    
+        // Nếu không có text nhưng có media thì đặt nội dung mặc định
+        if ((text == null || text.trim().isEmpty()) && mediaList != null && !mediaList.isEmpty()) {
+            text = "Gửi tin nhắn hình ảnh";
+        }
+    
+        // Tạo tin nhắn
         Message message = new Message();
         message.setText(text);
         message.setTime(LocalDateTime.now());
         message.setSeen(false);
         message.setDisplay(true);
         message.setChatBox(chatBox);
-
+    
+        // Lưu tin nhắn
         Message savedMessage = messageRepository.save(message);
-
-        // Xử lý media nếu có
+    
+        // Lưu media nếu có
         saveMessageMedia(mediaList, savedMessage);
-
-        // Gửi tin nhắn realtime
+    
+        // Gửi realtime
         sendRealTimeMessage(senderId, savedMessage, chatBox);
-
+    
         return savedMessage;
     }
-
-    private void saveMessageMedia(List<MessageMediaModel> mediaList, Message savedMessage) {
+    
+    private void saveMessageMedia(List<MessageMedia> mediaList, Message savedMessage) {
         if (mediaList != null && !mediaList.isEmpty()) {
-            for (MessageMediaModel media : mediaList) {
-                String fileUrl = media.getMediaURL();
+            for (MessageMedia media : mediaList) {
+                String fileUrl = media.getMediaURL(); // URL đầy đủ từ client
                 String mediaType = media.getMediaType();
+                String fileName = fileUrl.substring(fileUrl.lastIndexOf("_") + 1);
+
     
-                // Log kiểm tra dữ liệu
-                System.out.println("File URL: " + fileUrl);
-                System.out.println("Media Type: " + mediaType);
-    
-                if (fileUrl == null || fileUrl.isEmpty()) {
-                    throw new RuntimeException("mediaUrl không hợp lệ.");
-                }
-    
+                // 👉 Chỉ lưu tên file vào DB (hoặc đường dẫn `/assets/` nếu cần)
+                String imageUrl = "http://localhost:8080/assets/" + fileName;
                 if (mediaType == null || mediaType.isEmpty()) {
                     mediaType = getMediaTypeFromFileUrl(fileUrl);
                 }
     
-                media.setMediaURL(fileUrl);
+                // Gán lại giá trị sau khi xử lý
+                media.setMediaURL(imageUrl); // hoặc chỉ `fileName` nếu bạn dùng path cố định từ FE
                 media.setMediaType(mediaType);
                 media.setMessage(savedMessage);
-                
-                // Log trước khi lưu
-                System.out.println("Saving Media: " + media);
     
                 messageMediaRepository.save(media);
             }
         }
     }
     
-
-    // Phương thức gửi tin nhắn realtime
-    private void sendRealTimeMessage(Integer senderId, Message savedMessage, ChatBoxDTO chatBox) {
+    
+    private void sendRealTimeMessage(Integer senderId, Message savedMessage, ChatBox chatBox) {
+        // Gửi tin nhắn realtime cho người gửi
         messagingTemplate.convertAndSendToUser(String.valueOf(senderId), "/queue/messages", savedMessage);
-
+    
+        // Gửi tin nhắn realtime cho người trong cuộc trò chuyện
         if (!chatBox.getIsGroup()) {
-            // Nếu không phải nhóm, gửi cho người nhận
             messagingTemplate.convertAndSendToUser(String.valueOf(chatBox.getChatBoxID()), "/queue/messages", savedMessage);
         } else {
-            // Gửi cho tất cả thành viên trong nhóm
             messagingTemplate.convertAndSend("/topic/chatbox/" + chatBox.getChatBoxID(), savedMessage);
         }
     }
+    
 
-    // Phương thức xác định loại media dựa trên URL
     private String getMediaTypeFromFileUrl(String fileUrl) {
         if (fileUrl.endsWith(".png")) {
             return "image/png";
@@ -123,24 +120,17 @@ public class MessageService {
         } else if (fileUrl.endsWith(".mp3")) {
             return "audio/mpeg";
         }
-        return "application/octet-stream"; // Default
+        return "application/octet-stream";
     }
 
-    // Kiểm tra người dùng có nằm trong ChatBox không
     private boolean isUserInChatBox(Integer userId, Integer chatBoxId) {
         return chatBoxDetailRepository.existsByUser_UserIDAndChatBox_ChatBoxID(userId, chatBoxId);
     }
 
-    // Lấy tin nhắn trong ChatBox
     public List<Message> getMessagesByChatBox(Integer chatBoxId) {
-        // Lấy tất cả tin nhắn từ chatBox mà không bị lặp dữ liệu media
-        List<Message> messages = messageRepository.findByChatBox_ChatBoxID(chatBoxId);
-        // Có thể thêm xử lý nếu cần thiết, như kiểm tra media trong các message, v.v.
-        return messages;
+        return messageRepository.findByChatBox_ChatBoxID(chatBoxId);
     }
-    
 
-    // Đánh dấu tin nhắn đã đọc
     public Message markAsSeen(Integer messageId) {
         Optional<Message> messageOpt = messageRepository.findById(messageId);
         if (messageOpt.isPresent()) {
@@ -151,4 +141,3 @@ public class MessageService {
         return null;
     }
 }
-
