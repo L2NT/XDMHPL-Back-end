@@ -40,8 +40,8 @@ public class UserDTO {
     // Constructors, getters, setters
 
     // Phương thức chuyển đổi từ Entity sang DTO
-    public static UserDTO fromEntity(Users user) {
-        UserDTO dto = new UserDTO();
+    public static Users fromEntity(Users user) {
+        Users dto = new UserDTO();
         dto.setUserID(user.getUserID());
         dto.setFullName(user.getFullName());
         dto.setUsername(user.getUserName());
