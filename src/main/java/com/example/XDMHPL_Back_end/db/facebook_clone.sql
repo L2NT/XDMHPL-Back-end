@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost:3306
--- Generation Time: Apr 28, 2025 at 04:07 PM
--- Server version: 8.0.41
--- PHP Version: 8.3.13
+-- Máy chủ: 127.0.0.1
+-- Thời gian đã tạo: Th5 04, 2025 lúc 01:51 PM
+-- Phiên bản máy phục vụ: 10.4.32-MariaDB
+-- Phiên bản PHP: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,108 +18,116 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `facebook_clone`
+-- Cơ sở dữ liệu: `facebook_clone`
 --
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `chatbox`
+-- Cấu trúc bảng cho bảng `chatbox`
 --
 
 CREATE TABLE `chatbox` (
-  `chatBoxID` int NOT NULL,
-  `Block` int DEFAULT NULL,
-  `ChatBoxName` varchar(255) DEFAULT NULL,
-  `ImageURL` varchar(255) DEFAULT NULL,
-  `Mute` int DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `chatBoxID` int(11) NOT NULL,
+  `Block` bit(1) DEFAULT NULL,
+  `ChatBoxName` varchar(50) DEFAULT NULL,
+  `ImageURL` varchar(200) DEFAULT NULL,
+  `Mute` bit(1) DEFAULT NULL,
+  `isGroup` bit(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `chatboxdetail`
+-- Cấu trúc bảng cho bảng `chatboxdetail`
 --
 
 CREATE TABLE `chatboxdetail` (
-  `ChatBoxID` int NOT NULL,
-  `UserID` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `chatboxdetailId` int(11) NOT NULL,
+  `UserID` int(11) NOT NULL,
+  `ChatBoxID` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `comments`
+-- Cấu trúc bảng cho bảng `comments`
 --
 
 CREATE TABLE `comments` (
-  `commentID` int NOT NULL,
+  `commentID` int(11) NOT NULL,
   `CreationDate` datetime(6) DEFAULT NULL,
-  `PostID` int DEFAULT NULL,
-  `UserID` int DEFAULT NULL,
+  `PostID` int(11) DEFAULT NULL,
+  `UserID` int(11) DEFAULT NULL,
   `Content` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `comments`
+-- Đang đổ dữ liệu cho bảng `comments`
 --
 
 INSERT INTO `comments` (`commentID`, `CreationDate`, `PostID`, `UserID`, `Content`) VALUES
 (1, '2025-04-25 15:12:47.309000', 2, 1, 'chịu'),
 (2, '2025-04-26 09:33:29.784000', 10, 1, 'ông thương ?'),
-(3, '2025-04-26 09:37:11.783000', 5, 1, 'hi'),
-(4, '2025-04-27 12:53:18.107000', 2, 1, '??');
+(3, '2025-04-26 09:37:11.783000', 5, 1, 'hi');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `followers`
+-- Cấu trúc bảng cho bảng `followers`
 --
 
 CREATE TABLE `followers` (
-  `followerID` int NOT NULL,
-  `UserID` int DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `followerID` int(11) NOT NULL,
+  `UserID` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `following`
+-- Cấu trúc bảng cho bảng `following`
 --
 
 CREATE TABLE `following` (
-  `followingID` int NOT NULL,
-  `UserID` int DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `followingID` int(11) NOT NULL,
+  `UserID` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `friends`
+-- Cấu trúc bảng cho bảng `friends`
 --
 
 CREATE TABLE `friends` (
-  `friendID` int NOT NULL,
+  `friendID` int(11) NOT NULL,
   `CreatedAt` datetime(6) DEFAULT NULL,
   `Status` enum('ACCEPTED','PENDING','REJECTED') DEFAULT NULL,
-  `FriendUserID` int DEFAULT NULL,
-  `UserID` int DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `FriendUserID` int(11) DEFAULT NULL,
+  `UserID` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `friends`
+--
+
+INSERT INTO `friends` (`friendID`, `CreatedAt`, `Status`, `FriendUserID`, `UserID`) VALUES
+(1, '2025-05-04 01:56:39.000000', 'PENDING', 1, 7);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `likes`
+-- Cấu trúc bảng cho bảng `likes`
 --
 
 CREATE TABLE `likes` (
-  `likeID` int NOT NULL,
-  `PostID` int DEFAULT NULL,
-  `UserID` int DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `likeID` int(11) NOT NULL,
+  `PostID` int(11) DEFAULT NULL,
+  `UserID` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `likes`
+-- Đang đổ dữ liệu cho bảng `likes`
 --
 
 INSERT INTO `likes` (`likeID`, `PostID`, `UserID`) VALUES
@@ -130,68 +138,68 @@ INSERT INTO `likes` (`likeID`, `PostID`, `UserID`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `message`
+-- Cấu trúc bảng cho bảng `message`
 --
 
 CREATE TABLE `message` (
-  `messageID` int NOT NULL,
-  `Display` int DEFAULT NULL,
-  `Seen` int DEFAULT NULL,
-  `Text` varchar(255) DEFAULT NULL,
-  `Time` date DEFAULT NULL,
-  `ChatBoxID` int DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `messageID` int(11) NOT NULL,
+  `Display` bit(1) DEFAULT NULL,
+  `Seen` bit(1) DEFAULT NULL,
+  `Text` varchar(500) DEFAULT NULL,
+  `Time` datetime(6) DEFAULT NULL,
+  `ChatBoxID` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `messagemedia`
+-- Cấu trúc bảng cho bảng `messagemedia`
 --
 
 CREATE TABLE `messagemedia` (
-  `messageMediaID` int NOT NULL,
+  `messageMediaID` int(11) NOT NULL,
   `MediaType` varchar(255) DEFAULT NULL,
   `MediaURL` varchar(255) DEFAULT NULL,
-  `MessageID` int DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `MessageID` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `notification`
+-- Cấu trúc bảng cho bảng `notification`
 --
 
 CREATE TABLE `notification` (
-  `notificationID` int NOT NULL,
+  `notificationID` int(11) NOT NULL,
   `Content` varchar(255) DEFAULT NULL,
   `CreatedAt` datetime(6) DEFAULT NULL,
-  `IsReadFlag` int DEFAULT NULL,
+  `IsReadFlag` int(11) DEFAULT NULL,
   `Type` enum('COMMENT','FRIEND_REQUEST','LIKE','MESSAGE') DEFAULT NULL,
-  `CommentID` int DEFAULT NULL,
-  `MessageID` int DEFAULT NULL,
-  `PostID` int DEFAULT NULL,
-  `SenderID` int DEFAULT NULL,
-  `UserID` int DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `CommentID` int(11) DEFAULT NULL,
+  `MessageID` int(11) DEFAULT NULL,
+  `PostID` int(11) DEFAULT NULL,
+  `SenderID` int(11) DEFAULT NULL,
+  `UserID` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `post`
+-- Cấu trúc bảng cho bảng `post`
 --
 
 CREATE TABLE `post` (
   `post_type` varchar(31) NOT NULL,
-  `postID` int NOT NULL,
+  `postID` int(11) NOT NULL,
   `Content` varchar(255) NOT NULL,
   `CreationDate` datetime(6) NOT NULL,
-  `Hide` int NOT NULL,
-  `PriorityScore` int NOT NULL,
-  `UserID` int DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `Hide` int(11) NOT NULL,
+  `PriorityScore` int(11) NOT NULL,
+  `UserID` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `post`
+-- Đang đổ dữ liệu cho bảng `post`
 --
 
 INSERT INTO `post` (`post_type`, `postID`, `Content`, `CreationDate`, `Hide`, `PriorityScore`, `UserID`) VALUES
@@ -212,18 +220,18 @@ INSERT INTO `post` (`post_type`, `postID`, `Content`, `CreationDate`, `Hide`, `P
 -- --------------------------------------------------------
 
 --
--- Table structure for table `postmedia`
+-- Cấu trúc bảng cho bảng `postmedia`
 --
 
 CREATE TABLE `postmedia` (
-  `postMediaID` int NOT NULL,
+  `postMediaID` int(11) NOT NULL,
   `MediaURL` varchar(255) DEFAULT NULL,
   `Type` varchar(255) DEFAULT NULL,
-  `PostID` int DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `PostID` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `postmedia`
+-- Đang đổ dữ liệu cho bảng `postmedia`
 --
 
 INSERT INTO `postmedia` (`postMediaID`, `MediaURL`, `Type`, `PostID`) VALUES
@@ -232,7 +240,7 @@ INSERT INTO `postmedia` (`postMediaID`, `MediaURL`, `Type`, `PostID`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `sessions`
+-- Cấu trúc bảng cho bảng `sessions`
 --
 
 CREATE TABLE `sessions` (
@@ -240,23 +248,30 @@ CREATE TABLE `sessions` (
   `createdAt` datetime(6) DEFAULT NULL,
   `deviceInfo` varchar(255) DEFAULT NULL,
   `expiresAt` datetime(6) DEFAULT NULL,
-  `UserID` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `UserID` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `sessions`
+--
+
+INSERT INTO `sessions` (`sessionID`, `createdAt`, `deviceInfo`, `expiresAt`, `UserID`) VALUES
+('40584006-1ae6-4007-996c-40db6324d92e', '2025-05-04 01:43:53.000000', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0', '2025-05-04 03:43:53.000000', 6);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `sharepost`
+-- Cấu trúc bảng cho bảng `sharepost`
 --
 
 CREATE TABLE `sharepost` (
-  `OriginalPostID` int NOT NULL,
-  `ParentShareID` int DEFAULT NULL,
-  `postID` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `OriginalPostID` int(11) NOT NULL,
+  `ParentShareID` int(11) DEFAULT NULL,
+  `postID` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `sharepost`
+-- Đang đổ dữ liệu cho bảng `sharepost`
 --
 
 INSERT INTO `sharepost` (`OriginalPostID`, `ParentShareID`, `postID`) VALUES
@@ -272,11 +287,11 @@ INSERT INTO `sharepost` (`OriginalPostID`, `ParentShareID`, `postID`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `users`
+-- Cấu trúc bảng cho bảng `users`
 --
 
 CREATE TABLE `users` (
-  `userID` int NOT NULL,
+  `userID` int(11) NOT NULL,
   `Bio` varchar(255) DEFAULT NULL,
   `AvatarURL` varchar(255) DEFAULT NULL,
   `CoverPhotoURL` varchar(255) DEFAULT NULL,
@@ -289,39 +304,44 @@ CREATE TABLE `users` (
   `PhoneNumber` varchar(255) DEFAULT NULL,
   `Role` varchar(255) DEFAULT NULL,
   `SessionID` varchar(255) DEFAULT NULL,
-  `UserName` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `UserName` varchar(255) DEFAULT NULL,
+  `is_online` bit(1) NOT NULL,
+  `Token` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `users`
+-- Đang đổ dữ liệu cho bảng `users`
 --
 
-INSERT INTO `users` (`userID`, `Bio`, `AvatarURL`, `CoverPhotoURL`, `DateOfBirth`, `Email`, `FullName`, `Gender`, `Hide`, `Password`, `PhoneNumber`, `Role`, `SessionID`, `UserName`) VALUES
-(1, NULL, NULL, NULL, '2000-04-22', 'huynhsmash2468@gmail.com', 'HuỳnhTuấn', 'Nam', b'0', '$2a$10$uODsvkYz9zK9L5Bjnk5Z1.vV6ASaSesjNHg0xhAmF395zQqbxojNe', '0938124402', 'user', NULL, 'tuan2810'),
-(2, NULL, NULL, NULL, '2000-04-21', 'abc468@gmail.com', 'Huỳnh A', 'Nam', b'0', '$2a$10$uODsvkYz9zK9L5Bjnk5Z1.vV6ASaSesjNHg0xhAmF395zQqbxojNe', '0938124321', 'user', NULL, 'abc123'),
-(3, NULL, NULL, NULL, '2000-03-22', 'abc123@gmail.com', 'Huỳnh C', 'Nam', b'0', '$2a$10$uODsvkYz9zK9L5Bjnk5Z1.vV6ASaSesjNHg0xhAmF395zQqbxojNe', '0939124402', 'user', NULL, 'zeus2810'),
-(4, NULL, NULL, NULL, '2000-03-22', 'bcd123@gmail.com', 'Luffy', 'Nam', b'0', '$2a$10$uODsvkYz9zK9L5Bjnk5Z1.vV6ASaSesjNHg0xhAmF395zQqbxojNe', '0932111122', 'user', NULL, 'zac2810'),
-(5, NULL, NULL, NULL, '2000-04-27', 'tuan123@gmail.com', 'HuỳnhTuấn', 'Nam', b'0', '$2a$10$EMcvUCQXy64Hgw/uuqux9eM043ara31pOmYmrQO.XaC3Rh3w/2Xuy', '0938124567', 'user', NULL, 'yassuo');
+INSERT INTO `users` (`userID`, `Bio`, `AvatarURL`, `CoverPhotoURL`, `DateOfBirth`, `Email`, `FullName`, `Gender`, `Hide`, `Password`, `PhoneNumber`, `Role`, `SessionID`, `UserName`, `is_online`, `Token`) VALUES
+(1, NULL, NULL, NULL, '2000-04-22', 'huynhsmash2468@gmail.com', 'HuỳnhTuấn', 'Nam', b'0', '$2a$10$uODsvkYz9zK9L5Bjnk5Z1.vV6ASaSesjNHg0xhAmF395zQqbxojNe', '0938124402', 'user', NULL, 'tuan2810', b'0', ''),
+(2, NULL, NULL, NULL, '2000-04-21', 'abc468@gmail.com', 'Huỳnh A', 'Nam', b'0', '$2a$10$uODsvkYz9zK9L5Bjnk5Z1.vV6ASaSesjNHg0xhAmF395zQqbxojNe', '0938124321', 'user', NULL, 'abc123', b'0', ''),
+(3, NULL, NULL, NULL, '2000-03-22', 'abc123@gmail.com', 'Huỳnh C', 'Nam', b'0', '$2a$10$uODsvkYz9zK9L5Bjnk5Z1.vV6ASaSesjNHg0xhAmF395zQqbxojNe', '0939124402', 'user', NULL, 'zeus2810', b'0', ''),
+(4, NULL, NULL, NULL, '2000-03-22', 'bcd123@gmail.com', 'Luffy', 'Nam', b'1', '$2a$10$uODsvkYz9zK9L5Bjnk5Z1.vV6ASaSesjNHg0xhAmF395zQqbxojNe', '0932111122', 'user', NULL, 'zac2810', b'0', ''),
+(5, NULL, NULL, NULL, '2000-04-27', 'tuan123@gmail.com', 'HuỳnhTuấn', 'Nam', b'0', '$2a$10$EMcvUCQXy64Hgw/uuqux9eM043ara31pOmYmrQO.XaC3Rh3w/2Xuy', '0938124567', 'user', NULL, 'yassuo', b'0', ''),
+(6, NULL, '/avatars/default.jpg', '/covers/default.jpg', '2000-02-08', 'gamingthanhdat@gmail.com', 'TốngThành Đạt', 'Nam', b'0', '$2a$10$6WOd.eG9Q2vAigQD22YMBubtaZtQP4ueLLZWTxIE/s/chci4YVrz2', '0395632222', 'admin', NULL, 'tongthanhdat009', b'0', ''),
+(7, NULL, '/avatars/default.jpg', '/covers/default.jpg', '2000-02-08', 'toiladat20041405@gmail.com', 'TốngThành Đạt', 'Nam', b'0', '$2a$10$v2/3xNYxuXsip0y70IC96.ibPspuQaqQdjUbfYPtDOybU6VG5WE6O', '0395632027', 'user', NULL, 'tongthanhdat145', b'0', '7f16bdb2-9c30-4cd7-b775-e9d244c02708');
 
 --
--- Indexes for dumped tables
+-- Chỉ mục cho các bảng đã đổ
 --
 
 --
--- Indexes for table `chatbox`
+-- Chỉ mục cho bảng `chatbox`
 --
 ALTER TABLE `chatbox`
   ADD PRIMARY KEY (`chatBoxID`);
 
 --
--- Indexes for table `chatboxdetail`
+-- Chỉ mục cho bảng `chatboxdetail`
 --
 ALTER TABLE `chatboxdetail`
-  ADD PRIMARY KEY (`ChatBoxID`,`UserID`),
-  ADD KEY `FKchec4y1agno5s9dr5hk416aty` (`UserID`);
+  ADD PRIMARY KEY (`chatboxdetailId`),
+  ADD KEY `UserID` (`UserID`),
+  ADD KEY `ChatBoxID` (`ChatBoxID`);
 
 --
--- Indexes for table `comments`
+-- Chỉ mục cho bảng `comments`
 --
 ALTER TABLE `comments`
   ADD PRIMARY KEY (`commentID`),
@@ -329,21 +349,21 @@ ALTER TABLE `comments`
   ADD KEY `FKci4467lbd1ge8iaa0honrhn7h` (`UserID`);
 
 --
--- Indexes for table `followers`
+-- Chỉ mục cho bảng `followers`
 --
 ALTER TABLE `followers`
   ADD PRIMARY KEY (`followerID`),
   ADD KEY `FK4mk1n1rf1vwrod7s9gp3uonwc` (`UserID`);
 
 --
--- Indexes for table `following`
+-- Chỉ mục cho bảng `following`
 --
 ALTER TABLE `following`
   ADD PRIMARY KEY (`followingID`),
   ADD KEY `FK30whdl5kql2hr2chdmrn3pm1w` (`UserID`);
 
 --
--- Indexes for table `friends`
+-- Chỉ mục cho bảng `friends`
 --
 ALTER TABLE `friends`
   ADD PRIMARY KEY (`friendID`),
@@ -351,7 +371,7 @@ ALTER TABLE `friends`
   ADD KEY `FKktwqd1uwxw1995yckx1ra2pcw` (`UserID`);
 
 --
--- Indexes for table `likes`
+-- Chỉ mục cho bảng `likes`
 --
 ALTER TABLE `likes`
   ADD PRIMARY KEY (`likeID`),
@@ -359,21 +379,21 @@ ALTER TABLE `likes`
   ADD KEY `FK3oynqv7hs92poyw59hhv3bjbw` (`UserID`);
 
 --
--- Indexes for table `message`
+-- Chỉ mục cho bảng `message`
 --
 ALTER TABLE `message`
   ADD PRIMARY KEY (`messageID`),
   ADD KEY `FKlciebyh9giq4qrp6s8bj7c41v` (`ChatBoxID`);
 
 --
--- Indexes for table `messagemedia`
+-- Chỉ mục cho bảng `messagemedia`
 --
 ALTER TABLE `messagemedia`
   ADD PRIMARY KEY (`messageMediaID`),
   ADD KEY `FKcvikldynqnuj0sb0qq3bc2vfc` (`MessageID`);
 
 --
--- Indexes for table `notification`
+-- Chỉ mục cho bảng `notification`
 --
 ALTER TABLE `notification`
   ADD PRIMARY KEY (`notificationID`),
@@ -384,28 +404,28 @@ ALTER TABLE `notification`
   ADD KEY `FKmvtsv8c5vqmh5vr140eongy92` (`UserID`);
 
 --
--- Indexes for table `post`
+-- Chỉ mục cho bảng `post`
 --
 ALTER TABLE `post`
   ADD PRIMARY KEY (`postID`),
   ADD KEY `FKt9vxvrvsgc7f3s4njg2flsda4` (`UserID`);
 
 --
--- Indexes for table `postmedia`
+-- Chỉ mục cho bảng `postmedia`
 --
 ALTER TABLE `postmedia`
   ADD PRIMARY KEY (`postMediaID`),
   ADD KEY `FKqylfcrstf2uhi4lbtoeuus886` (`PostID`);
 
 --
--- Indexes for table `sessions`
+-- Chỉ mục cho bảng `sessions`
 --
 ALTER TABLE `sessions`
   ADD PRIMARY KEY (`sessionID`),
   ADD KEY `FKk2cpl048i8votugqaw0iu9qr9` (`UserID`);
 
 --
--- Indexes for table `sharepost`
+-- Chỉ mục cho bảng `sharepost`
 --
 ALTER TABLE `sharepost`
   ADD PRIMARY KEY (`postID`),
@@ -413,7 +433,7 @@ ALTER TABLE `sharepost`
   ADD KEY `FKa94wv3q4ll427r7f9dyclk2mr` (`ParentShareID`);
 
 --
--- Indexes for table `users`
+-- Chỉ mục cho bảng `users`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`userID`),
@@ -421,139 +441,145 @@ ALTER TABLE `users`
   ADD UNIQUE KEY `UKcbbki2qc009wc9fa641ww99pm` (`UserName`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- AUTO_INCREMENT cho các bảng đã đổ
 --
 
 --
--- AUTO_INCREMENT for table `chatbox`
+-- AUTO_INCREMENT cho bảng `chatbox`
 --
 ALTER TABLE `chatbox`
-  MODIFY `chatBoxID` int NOT NULL AUTO_INCREMENT;
+  MODIFY `chatBoxID` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `comments`
---
-ALTER TABLE `comments`
-  MODIFY `commentID` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
-
---
--- AUTO_INCREMENT for table `followers`
---
-ALTER TABLE `followers`
-  MODIFY `followerID` int NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `following`
---
-ALTER TABLE `following`
-  MODIFY `followingID` int NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `friends`
---
-ALTER TABLE `friends`
-  MODIFY `friendID` int NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `likes`
---
-ALTER TABLE `likes`
-  MODIFY `likeID` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
-
---
--- AUTO_INCREMENT for table `message`
---
-ALTER TABLE `message`
-  MODIFY `messageID` int NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `messagemedia`
---
-ALTER TABLE `messagemedia`
-  MODIFY `messageMediaID` int NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `notification`
---
-ALTER TABLE `notification`
-  MODIFY `notificationID` int NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `post`
---
-ALTER TABLE `post`
-  MODIFY `postID` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
-
---
--- AUTO_INCREMENT for table `postmedia`
---
-ALTER TABLE `postmedia`
-  MODIFY `postMediaID` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
-
---
--- AUTO_INCREMENT for table `users`
---
-ALTER TABLE `users`
-  MODIFY `userID` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
-
---
--- Constraints for dumped tables
---
-
---
--- Constraints for table `chatboxdetail`
+-- AUTO_INCREMENT cho bảng `chatboxdetail`
 --
 ALTER TABLE `chatboxdetail`
-  ADD CONSTRAINT `FKchec4y1agno5s9dr5hk416aty` FOREIGN KEY (`UserID`) REFERENCES `users` (`userID`),
-  ADD CONSTRAINT `FKqvy1fppspkt4u9l0yrf35c9on` FOREIGN KEY (`ChatBoxID`) REFERENCES `chatbox` (`chatBoxID`);
+  MODIFY `chatboxdetailId` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- Constraints for table `comments`
+-- AUTO_INCREMENT cho bảng `comments`
+--
+ALTER TABLE `comments`
+  MODIFY `commentID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT cho bảng `followers`
+--
+ALTER TABLE `followers`
+  MODIFY `followerID` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT cho bảng `following`
+--
+ALTER TABLE `following`
+  MODIFY `followingID` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT cho bảng `friends`
+--
+ALTER TABLE `friends`
+  MODIFY `friendID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT cho bảng `likes`
+--
+ALTER TABLE `likes`
+  MODIFY `likeID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+
+--
+-- AUTO_INCREMENT cho bảng `message`
+--
+ALTER TABLE `message`
+  MODIFY `messageID` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT cho bảng `messagemedia`
+--
+ALTER TABLE `messagemedia`
+  MODIFY `messageMediaID` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT cho bảng `notification`
+--
+ALTER TABLE `notification`
+  MODIFY `notificationID` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT cho bảng `post`
+--
+ALTER TABLE `post`
+  MODIFY `postID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+
+--
+-- AUTO_INCREMENT cho bảng `postmedia`
+--
+ALTER TABLE `postmedia`
+  MODIFY `postMediaID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+
+--
+-- AUTO_INCREMENT cho bảng `users`
+--
+ALTER TABLE `users`
+  MODIFY `userID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- Các ràng buộc cho các bảng đã đổ
+--
+
+--
+-- Các ràng buộc cho bảng `chatboxdetail`
+--
+ALTER TABLE `chatboxdetail`
+  ADD CONSTRAINT `chatboxdetail_ibfk_1` FOREIGN KEY (`UserID`) REFERENCES `users` (`userID`),
+  ADD CONSTRAINT `chatboxdetail_ibfk_2` FOREIGN KEY (`ChatBoxID`) REFERENCES `chatbox` (`chatBoxID`);
+
+--
+-- Các ràng buộc cho bảng `comments`
 --
 ALTER TABLE `comments`
   ADD CONSTRAINT `FK3vha5epni7fedios55i119wj7` FOREIGN KEY (`PostID`) REFERENCES `post` (`postID`),
   ADD CONSTRAINT `FKci4467lbd1ge8iaa0honrhn7h` FOREIGN KEY (`UserID`) REFERENCES `users` (`userID`);
 
 --
--- Constraints for table `followers`
+-- Các ràng buộc cho bảng `followers`
 --
 ALTER TABLE `followers`
   ADD CONSTRAINT `FK4mk1n1rf1vwrod7s9gp3uonwc` FOREIGN KEY (`UserID`) REFERENCES `users` (`userID`);
 
 --
--- Constraints for table `following`
+-- Các ràng buộc cho bảng `following`
 --
 ALTER TABLE `following`
   ADD CONSTRAINT `FK30whdl5kql2hr2chdmrn3pm1w` FOREIGN KEY (`UserID`) REFERENCES `users` (`userID`);
 
 --
--- Constraints for table `friends`
+-- Các ràng buộc cho bảng `friends`
 --
 ALTER TABLE `friends`
   ADD CONSTRAINT `FK8tul4frvv417a09mondr8tyvn` FOREIGN KEY (`FriendUserID`) REFERENCES `users` (`userID`),
   ADD CONSTRAINT `FKktwqd1uwxw1995yckx1ra2pcw` FOREIGN KEY (`UserID`) REFERENCES `users` (`userID`);
 
 --
--- Constraints for table `likes`
+-- Các ràng buộc cho bảng `likes`
 --
 ALTER TABLE `likes`
   ADD CONSTRAINT `FK3oynqv7hs92poyw59hhv3bjbw` FOREIGN KEY (`UserID`) REFERENCES `users` (`userID`),
   ADD CONSTRAINT `FKrueukm07fd66xgb6ru56p5fh1` FOREIGN KEY (`PostID`) REFERENCES `post` (`postID`);
 
 --
--- Constraints for table `message`
+-- Các ràng buộc cho bảng `message`
 --
 ALTER TABLE `message`
   ADD CONSTRAINT `FKlciebyh9giq4qrp6s8bj7c41v` FOREIGN KEY (`ChatBoxID`) REFERENCES `chatbox` (`chatBoxID`);
 
 --
--- Constraints for table `messagemedia`
+-- Các ràng buộc cho bảng `messagemedia`
 --
 ALTER TABLE `messagemedia`
   ADD CONSTRAINT `FKcvikldynqnuj0sb0qq3bc2vfc` FOREIGN KEY (`MessageID`) REFERENCES `message` (`messageID`);
 
 --
--- Constraints for table `notification`
+-- Các ràng buộc cho bảng `notification`
 --
 ALTER TABLE `notification`
   ADD CONSTRAINT `FKc41vv7fokhy0phawxaoqvip1c` FOREIGN KEY (`MessageID`) REFERENCES `message` (`messageID`),
@@ -563,25 +589,25 @@ ALTER TABLE `notification`
   ADD CONSTRAINT `FKpinrnlea73rk2rfpfv6wy9whe` FOREIGN KEY (`CommentID`) REFERENCES `comments` (`commentID`);
 
 --
--- Constraints for table `post`
+-- Các ràng buộc cho bảng `post`
 --
 ALTER TABLE `post`
   ADD CONSTRAINT `FKt9vxvrvsgc7f3s4njg2flsda4` FOREIGN KEY (`UserID`) REFERENCES `users` (`userID`);
 
 --
--- Constraints for table `postmedia`
+-- Các ràng buộc cho bảng `postmedia`
 --
 ALTER TABLE `postmedia`
   ADD CONSTRAINT `FKqylfcrstf2uhi4lbtoeuus886` FOREIGN KEY (`PostID`) REFERENCES `post` (`postID`);
 
 --
--- Constraints for table `sessions`
+-- Các ràng buộc cho bảng `sessions`
 --
 ALTER TABLE `sessions`
   ADD CONSTRAINT `FKk2cpl048i8votugqaw0iu9qr9` FOREIGN KEY (`UserID`) REFERENCES `users` (`userID`);
 
 --
--- Constraints for table `sharepost`
+-- Các ràng buộc cho bảng `sharepost`
 --
 ALTER TABLE `sharepost`
   ADD CONSTRAINT `FKa94wv3q4ll427r7f9dyclk2mr` FOREIGN KEY (`ParentShareID`) REFERENCES `post` (`postID`),
