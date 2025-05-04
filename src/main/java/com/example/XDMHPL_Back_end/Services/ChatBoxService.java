@@ -176,6 +176,7 @@ public class ChatBoxService {
         chatBox.setImageURL(null); // Có thể dùng avatar của người kia
         chatBox.setMute(false);
         chatBox.setBlock(false);
+        chatBox.setIsGroup(false);
         
         // Lưu chatbox
         ChatBox savedChatBox = chatBoxRepo.save(chatBox);
