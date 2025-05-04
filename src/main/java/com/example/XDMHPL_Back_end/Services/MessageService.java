@@ -76,11 +76,8 @@ public class MessageService {
     }
 
 
-    @SuppressWarnings("unused")
-    private void saveMessageMedia(List<MessageMediaModel> mediaList, MessageModel savedMessage) {
-        if (mediaList != null && !mediaList.isEmpty()) {
-            for (MessageMediaModel media : mediaList) {
-                String fileUrl = media.getMediaURL();
+    
+   
 
     
     private void saveMessageMedia(List<MessageMediaModel> mediaList, MessageModel savedMessage) {
@@ -107,11 +104,12 @@ public class MessageService {
             }
         }
     }
+
     
 
 
     // Phương thức gửi tin nhắn realtime
-    private void sendRealTimeMessage(Integer senderId, MessageModel savedMessage, ChatBox chatBox) {
+   
 
     
     private void sendRealTimeMessage(Integer senderId, MessageModel savedMessage, ChatBox chatBox) {
