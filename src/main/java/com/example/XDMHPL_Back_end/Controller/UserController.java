@@ -137,7 +137,8 @@ public class UserController {
 	        user.getGender(), 
 	        user.getCoverPhotoURL(), 
 	        user.getSessionID(),
-	        user.getRole()
+	        user.getRole(),
+	        user.getToken()
 	        );
 	}
 	
