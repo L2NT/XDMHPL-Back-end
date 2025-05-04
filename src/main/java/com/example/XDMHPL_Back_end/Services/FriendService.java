@@ -38,29 +38,13 @@ public class FriendService {
 
     // Constructor...
 
-    public List<Users> getAcceptedFriends(int userId) {
-        Users user = userRepository.findById(userId)
+    public List<Users> getUserOnline(int userId) {
+        // Kiểm tra user tồn tại
+        userRepository.findById(userId)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-        ;
-        if (user == null) {
-            throw new UsernameNotFoundException("User not found");
-        }
 
-        List<Users> acceptedFriends = new ArrayList<>();
-
-        // Lấy danh sách bạn bè người dùng đã kết bạn (user gửi lời mời)
-        user.getFriends().stream()
-                .filter(friend -> friend.getStatus() == FriendStatus.ACCEPTED)
-                .forEach(friend -> acceptedFriends.add(friend.getFriendUser()));
-
-        // Lấy danh sách người đã kết bạn với user (user nhận lời mời)
-        user.getFriendOf().stream()
-                .filter(friend -> friend.getStatus() == FriendStatus.ACCEPTED)
-                .forEach(friend -> acceptedFriends.add(friend.getUser()));
-        if (acceptedFriends.isEmpty()) {
-            throw new UsernameNotFoundException("No accepted friends found for user with ID: " + userId);
-        }
-        return acceptedFriends;
+        // Lấy danh sách user online, ngoại trừ userId
+        return userRepository.findAllByUserIDNot(userId);
     }
 
     public NotificationDTO sentFriendRequest(int senderID, int receiverID) {
@@ -81,7 +65,8 @@ public class FriendService {
         receiver.getFriends().add(friend);
 
         friendRepository.save(friend);
-        return notificationService.createNotification(receiver.getUserID(), sender.getUserID(), NotificationStatus.FRIEND_REQUEST, null, null, null, "Đã gửi lời mời kết bạn");
+        return notificationService.createNotification(receiver.getUserID(), sender.getUserID(),
+                NotificationStatus.FRIEND_REQUEST, null, null, null, "Đã gửi lời mời kết bạn");
 
     }
 

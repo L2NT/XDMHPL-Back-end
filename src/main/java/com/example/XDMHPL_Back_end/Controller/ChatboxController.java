@@ -60,11 +60,7 @@ public class ChatboxController {
 
             ChatBox chatBox = chatBoxService.createChatBox(userId1, userId2);
 
-            return ResponseEntity.status(HttpStatus.CREATED)
-                    .body(Map.of(
-                            "chatBoxID", chatBox.getChatBoxID(),
-                            "chatBoxName", chatBox.getChatBoxName(),
-                            "imageURL", chatBox.getImageURL()));
+            return new ResponseEntity<>(ChatBoxDTO.fromEntity(chatBox), HttpStatus.CREATED);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error: " + e.getMessage());

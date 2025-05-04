@@ -81,22 +81,16 @@ public class UserPresenceController {
 
         try {
             // Lấy danh sách bạn bè đã chấp nhận
-            List<Users> acceptedFriends = friendService.getAcceptedFriends(userId);
+            List<Users> acceptedFriends = friendService.getUserOnline(userId);
             System.out.println("Sent accepted friends list: " + acceptedFriends.size() + " friends");
-
-            // Lọc ra bạn bè đang online
-            List<Integer> onlineFriends = acceptedFriends.stream()
-                    .map(Users::getUserID)
-                    .filter(onlineUsers::contains)
+    
+            // Lọc ra bạn bè đang online và tạo danh sách OnlineStatusDTO
+            List<OnlineStatusDTO> onlineFriends = acceptedFriends.stream()
+                    .filter(friend -> onlineUsers.contains(friend.getUserID()))
+                    .map(friend -> new OnlineStatusDTO(friend.getUserID(), true)) // isOnline = true vì đã lọc
                     .collect(Collectors.toList());
-
-            // Gửi đến người dùng yêu cầu - SỬA ĐƯỜNG DẪN Ở ĐÂY
-            // messagingTemplate.convertAndSendToUser(
-            // username,
-            // "/queue/statususer",
-            // new OnlineUsersListDTO(onlineFriends)
-            // );
-
+    
+            // Gửi đến người dùng yêu cầu
             messagingTemplate.convertAndSend(
                     "/topic/status/" + username,
                     new OnlineUsersListDTO(onlineFriends));
@@ -108,7 +102,7 @@ public class UserPresenceController {
     }
 
     private void notifyFriendsAboutStatus(int userId, boolean isOnline) {
-        List<Users> acceptedFriends = friendService.getAcceptedFriends(userId);
+        List<Users> acceptedFriends = friendService.getUserOnline(userId);
 
         System.out.println("Found " + acceptedFriends.size() + " friends to notify");
 
