@@ -11,10 +11,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.XDMHPL_Back_end.DTO.ChatBoxDTO;
-import com.example.XDMHPL_Back_end.DTO.ChatBoxInfo;
-import com.example.XDMHPL_Back_end.DTO.MessageMediaDTO;
+
 import com.example.XDMHPL_Back_end.Services.ChatBoxService;
+import com.example.XDMHPL_Back_end.model.ChatBox;
 import com.example.XDMHPL_Back_end.model.MessageMediaModel;
 
 @RestController
@@ -26,7 +25,7 @@ public class ChatBoxController {
 
     // API lấy thông tin chat box và người đang chat
     @GetMapping("/info/{chatBoxId}/{currentUserId}")
-    public ChatBoxInfo getChatBoxInfo(@PathVariable Integer chatBoxId, @PathVariable Integer currentUserId) {
+    public ChatBox getChatBoxInfo(@PathVariable Integer chatBoxId, @PathVariable Integer currentUserId) {
         return chatBoxService.getChatBoxInfo(chatBoxId, currentUserId);
     }
 
@@ -39,12 +38,12 @@ public ChatBox updateBoxChat(@PathVariable Integer chatBoxId,
 
 
 @GetMapping("/images/{chatBoxId}")
-public List<MessageMediaDTO> getChatBoxImages(@PathVariable Integer chatBoxId) {
+public List<MessageMediaModel> getChatBoxImages(@PathVariable Integer chatBoxId) {
     return chatBoxService.getChatBoxImages(chatBoxId);
 }
 
 @GetMapping("/sidebar/{userId}")
-public ResponseEntity<List<ChatBoxDTO>> getUserSidebar(@PathVariable Integer userId) {
+public ResponseEntity<List<ChatBox>> getUserSidebar(@PathVariable Integer userId) {
     return ResponseEntity.ok(chatBoxService.getSidebarChatBoxesByUserId(userId));
 }
 
