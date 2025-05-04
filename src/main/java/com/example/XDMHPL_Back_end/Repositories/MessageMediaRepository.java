@@ -6,7 +6,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+
 import com.example.XDMHPL_Back_end.model.MessageMediaModel;
+
+
+
 public interface MessageMediaRepository extends JpaRepository<MessageMediaModel, Integer> {
     
     // Truy vấn để lấy các media của chatBox với các loại media khác nhau
