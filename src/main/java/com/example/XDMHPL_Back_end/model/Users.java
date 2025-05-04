@@ -60,6 +60,9 @@ public class Users {
     @Column(name = "is_online", nullable = false)
     private Boolean isOnline = false;
 
+    @Column(name = "Token")
+    private String token;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Notification> notifications; // Danh sách thông báo nhận được
 

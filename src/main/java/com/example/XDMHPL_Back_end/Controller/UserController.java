@@ -139,7 +139,7 @@ public class UserController {
 	        user.getSessionID(),
 	        user.getRole(),
 	        user.getToken()
-	        );
+	    );
 	}
 	
 	
