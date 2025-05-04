@@ -12,16 +12,16 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.XDMHPL_Back_end.DTO.ChatBoxDTO;
-import com.example.XDMHPL_Back_end.DTO.PostDTO;
 import com.example.XDMHPL_Back_end.Services.ChatBoxService;
 import com.example.XDMHPL_Back_end.Services.MessageService;
 import com.example.XDMHPL_Back_end.model.ChatBox;
+import com.example.XDMHPL_Back_end.model.MessageMediaModel;
 @RestController
 @RequestMapping("/chatbox")
 public class ChatboxController {
@@ -30,6 +30,12 @@ public class ChatboxController {
 
     @Autowired
     private MessageService messageService;
+
+
+    @GetMapping("/info/{chatBoxId}/{currentUserId}")
+    public ChatBoxDTO getChatBoxInfo(@PathVariable Integer chatBoxId, @PathVariable Integer currentUserId) {
+        return chatBoxService.getChatBoxInfo(chatBoxId, currentUserId);
+    }
 
     /**
      * Lấy tất cả chatbox của một người dùng
@@ -44,6 +50,11 @@ public class ChatboxController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error: " + e.getMessage());
         }
+    }
+
+    @GetMapping("/images/{chatBoxId}")
+    public List<MessageMediaModel> getChatBoxImages(@PathVariable Integer chatBoxId) {
+        return chatBoxService.getChatBoxImages(chatBoxId);
     }
 
     /**
@@ -83,6 +94,18 @@ public class ChatboxController {
                     .body("Error: " + e.getMessage());
         }
     }
+
+     @PostMapping("/update/{chatBoxId}")
+    public ChatBox updateBoxChat(@PathVariable Integer chatBoxId, 
+                                  @RequestParam String name, 
+                                  @RequestParam(required = false) String imageUrl) {
+        // Nếu không có imageUrl, sử dụng giá trị mặc định
+        if (imageUrl == null || imageUrl.isEmpty()) {
+            imageUrl = "/assets/default-avatar.jpg";
+        }
+        return chatBoxService.updateBoxChat(chatBoxId, name, imageUrl);
+    }
+
 
     /**
      * Cập nhật thông tin chatbox
@@ -175,5 +198,10 @@ public class ChatboxController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error: " + e.getMessage());
         }
+    }
+
+    @GetMapping("/sidebar/{userId}")
+    public ResponseEntity<List<ChatBoxDTO>> getUserSidebar(@PathVariable Integer userId) {
+        return ResponseEntity.ok(chatBoxService.getSidebarChatBoxesByUserId(userId));
     }
 }
