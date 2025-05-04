@@ -1,4 +1,6 @@
-package com.example.XDMHPL_Back_end.DTO;
+package com.example.XDMHPL_Back_end.model;
+
+import com.example.XDMHPL_Back_end.DTO.Message;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -11,7 +13,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "messagemedia")
-public class MessageMedia {
+public class MessageMediaModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

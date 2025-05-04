@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.example.XDMHPL_Back_end.DTO.MessageMedia;
 import com.example.XDMHPL_Back_end.Repositories.MessageMediaRepository;
+import com.example.XDMHPL_Back_end.model.MessageMediaModel;
 
 @RestController
 @RequestMapping("/api")
@@ -35,7 +35,7 @@ public class FileUploadController {
             Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
 
             // Lưu thông tin vào cơ sở dữ liệu
-            MessageMedia media = new MessageMedia();
+            MessageMediaModel media = new MessageMediaModel();
             media.setMediaURL("uploads/" + fileName);
             media.setMediaType(file.getContentType());
             messageMediaRepository.save(media);

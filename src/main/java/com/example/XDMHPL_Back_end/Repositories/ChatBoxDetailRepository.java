@@ -8,32 +8,32 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.example.XDMHPL_Back_end.DTO.ChatBox;
-import com.example.XDMHPL_Back_end.DTO.ChatBoxDetail;
+import com.example.XDMHPL_Back_end.DTO.ChatBoxDTO;
+import com.example.XDMHPL_Back_end.DTO.ChatBoxDetailDTO;
 
 @Repository
-public interface ChatBoxDetailRepository extends JpaRepository<ChatBoxDetail, Integer> {
+public interface ChatBoxDetailRepository extends JpaRepository<ChatBoxDetailDTO, Integer> {
 
     /**
      * Tìm chi tiết chat box theo ID
      */
-    Optional<ChatBoxDetail> findById(Integer chatboxdetailId);
+    Optional<ChatBoxDetailDTO> findById(Integer chatboxdetailId);
 
     /**
      * Tìm chi tiết chat box theo userId và chatBoxId
      */
-    Optional<ChatBoxDetail> findByUser_UserIDAndChatBox_ChatBoxID(Integer userId, Integer chatBoxId);
+    Optional<ChatBoxDetailDTO> findByUser_UserIDAndChatBox_ChatBoxID(Integer userId, Integer chatBoxId);
 
     /**
      * Lấy danh sách chi tiết chat box theo chatBoxId
      */
-    List<ChatBoxDetail> findByChatBox_ChatBoxID(Integer chatBoxId);
+    List<ChatBoxDetailDTO> findByChatBox_ChatBoxID(Integer chatBoxId);
 
     /**
      * Lấy tất cả các ChatBox mà user tham gia
      */
     @Query("SELECT c.chatBox FROM ChatBoxDetail c WHERE c.user.userID = :userId")
-    List<ChatBox> findChatBoxesByUserId(@Param("userId") Integer userId);
+    List<ChatBoxDTO> findChatBoxesByUserId(@Param("userId") Integer userId);
 
     /**
      * Kiểm tra xem user đã tham gia vào chat box chưa

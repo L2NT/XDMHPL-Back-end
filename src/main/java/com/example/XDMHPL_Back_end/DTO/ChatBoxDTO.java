@@ -9,7 +9,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "chatbox")
-public class ChatBox {
+public class ChatBoxDTO {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,11 +31,11 @@ public class ChatBox {
     private Boolean isGroup;
 
     // Constructor mặc định
-    public ChatBox() {
+    public ChatBoxDTO() {
     }
 
     // Constructor đầy đủ
-    public ChatBox(Integer chatBoxID, String chatBoxName, String imageURL, Boolean mute, Boolean block, Boolean isGroup) {
+    public ChatBoxDTO(Integer chatBoxID, String chatBoxName, String imageURL, Boolean mute, Boolean block, Boolean isGroup) {
         this.chatBoxID = chatBoxID;
         this.chatBoxName = chatBoxName;
         this.imageURL = imageURL;

@@ -6,18 +6,18 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.example.XDMHPL_Back_end.DTO.MessageMedia;
-public interface MessageMediaRepository extends JpaRepository<MessageMedia, Integer> {
+import com.example.XDMHPL_Back_end.model.MessageMediaModel;
+public interface MessageMediaRepository extends JpaRepository<MessageMediaModel, Integer> {
     
     // Truy vấn để lấy các media của chatBox với các loại media khác nhau
     @Query("SELECT m FROM MessageMedia m WHERE m.message.chatBox.chatBoxID = :chatBoxID AND (m.mediaType LIKE 'image%' OR m.mediaType LIKE 'video%' OR m.mediaType LIKE 'audio%')")
-    List<MessageMedia> findMediaByChatBoxID(@Param("chatBoxID") Integer chatBoxID);
+    List<MessageMediaModel> findMediaByChatBoxID(@Param("chatBoxID") Integer chatBoxID);
 
     // Tìm các media liên quan đến một message cụ thể
-    List<MessageMedia> findByMessage_MessageId(Integer messageId);
+    List<MessageMediaModel> findByMessage_MessageId(Integer messageId);
     
     // Tìm các media theo messageId và loại media
-    List<MessageMedia> findByMessage_MessageIdAndMediaType(Integer messageId, String mediaType);
+    List<MessageMediaModel> findByMessage_MessageIdAndMediaType(Integer messageId, String mediaType);
 }
 
 

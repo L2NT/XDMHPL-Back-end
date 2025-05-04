@@ -8,13 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
-import com.example.XDMHPL_Back_end.DTO.ChatBox;
+import com.example.XDMHPL_Back_end.DTO.ChatBoxDTO;
 import com.example.XDMHPL_Back_end.DTO.Message;
-import com.example.XDMHPL_Back_end.DTO.MessageMedia;
 import com.example.XDMHPL_Back_end.Repositories.ChatBoxDetailRepository;
 import com.example.XDMHPL_Back_end.Repositories.ChatBoxRepository;
 import com.example.XDMHPL_Back_end.Repositories.MessageMediaRepository;
 import com.example.XDMHPL_Back_end.Repositories.MessageRepository;
+import com.example.XDMHPL_Back_end.model.MessageMediaModel;
 
 @Service
 public class MessageService {
@@ -39,10 +39,10 @@ public class MessageService {
         if (!chatBoxOptional.isPresent()) {
             throw new RuntimeException("ChatBox không tồn tại.");
         }
-    
+
         ChatBox chatBox = chatBoxOptional.get();
-    
-        // Kiểm tra người gửi có phải thành viên của cuộc trò chuyện không
+
+        // Kiểm tra nếu là cuộc trò chuyện 1-1 và người gửi có quyền gửi tin nhắn
         if (!chatBox.getIsGroup() && !isUserInChatBox(senderId, chatBoxId)) {
             throw new RuntimeException("Người gửi không phải là thành viên của cuộc trò chuyện.");
         }
@@ -71,11 +71,11 @@ public class MessageService {
     
         return savedMessage;
     }
-    
+
     private void saveMessageMedia(List<MessageMedia> mediaList, Message savedMessage) {
         if (mediaList != null && !mediaList.isEmpty()) {
             for (MessageMedia media : mediaList) {
-                String fileUrl = media.getMediaURL(); // URL đầy đủ từ client
+                String fileUrl = media.getMediaURL();
                 String mediaType = media.getMediaType();
     
                 if (fileUrl == null || fileUrl.isEmpty()) {
@@ -104,9 +104,9 @@ public class MessageService {
         }
     }
     
-    
+
+    // Phương thức gửi tin nhắn realtime
     private void sendRealTimeMessage(Integer senderId, Message savedMessage, ChatBox chatBox) {
-        // Gửi tin nhắn realtime cho người gửi
         messagingTemplate.convertAndSendToUser(String.valueOf(senderId), "/queue/messages", savedMessage);
     
         // Gửi tin nhắn realtime cho người trong cuộc trò chuyện

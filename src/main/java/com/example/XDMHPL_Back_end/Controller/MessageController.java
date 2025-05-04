@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.XDMHPL_Back_end.DTO.Message;
-import com.example.XDMHPL_Back_end.DTO.MessageMedia;
 import com.example.XDMHPL_Back_end.Services.MessageService;
+import com.example.XDMHPL_Back_end.model.MessageMediaModel;
 
 @RestController
 @RequestMapping("/messages")
@@ -29,7 +29,7 @@ public class MessageController {
         @RequestParam Integer receiverId,
         @RequestParam String text,
         @RequestParam Integer chatBoxId,
-        @RequestBody(required = false) List<MessageMedia> mediaList) {
+        @RequestBody(required = false) List<MessageMediaModel> mediaList) {
 
         // Debug log
         if (mediaList == null || mediaList.isEmpty()) {

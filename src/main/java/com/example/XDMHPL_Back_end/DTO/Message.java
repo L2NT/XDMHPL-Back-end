@@ -3,6 +3,7 @@ package com.example.XDMHPL_Back_end.DTO;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.example.XDMHPL_Back_end.model.MessageMediaModel;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -42,12 +43,12 @@ public class Message {
     @ManyToOne
     @JoinColumn(name = "ChatBoxID", referencedColumnName = "chatBoxID")
     @JsonBackReference // Ngừng việc serialization ngược về ChatBox
-    private ChatBox chatBox;
+    private ChatBoxDTO chatBox;
 
     // Liên kết ngược với MessageMedia (OneToMany)
     @OneToMany(mappedBy = "message", cascade = CascadeType.ALL)
     @JsonIgnore  // Bỏ qua mediaList trong quá trình serialization
-    private List<MessageMedia> mediaList;
+    private List<MessageMediaModel> mediaList;
 
     // Getters & Setters
     public int getMessageId() {
@@ -90,19 +91,19 @@ public class Message {
         this.display = display;
     }
 
-    public ChatBox getChatBox() {
+    public ChatBoxDTO getChatBox() {
         return chatBox;
     }
 
-    public void setChatBox(ChatBox chatBox) {
+    public void setChatBox(ChatBoxDTO chatBox) {
         this.chatBox = chatBox;
     }
 
-    public List<MessageMedia> getMediaList() {
+    public List<MessageMediaModel> getMediaList() {
         return mediaList;
     }
 
-    public void setMediaList(List<MessageMedia> mediaList) {
+    public void setMediaList(List<MessageMediaModel> mediaList) {
         this.mediaList = mediaList;
     }
 }

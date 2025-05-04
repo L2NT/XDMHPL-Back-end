@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.XDMHPL_Back_end.DTO.PostMedia;
 import com.example.XDMHPL_Back_end.Services.PostMediaService;
+import com.example.XDMHPL_Back_end.model.PostMedia;
 
 @RestController
-@RequestMapping("/postmedia")
+@RequestMapping("/api/postmedia")
 public class PostMediaController {
 	@Autowired
 	private PostMediaService postMediaService;
