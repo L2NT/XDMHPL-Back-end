@@ -31,7 +31,7 @@ import org.springframework.util.StringUtils;
 public class UserController {
 	@Autowired
 	private UserService usersService;
-	private static final String UPLOAD_DIR = "src/main/resources/static/uploads/avatars"; // Thư mục lưu trữ avatar
+	private static final String UPLOAD_DIR = "uploads/avatars"; // Thư mục lưu trữ avatar
 
 	@GetMapping
 	public List<UserDTO> getUsers() {
@@ -72,7 +72,7 @@ public class UserController {
 	public ResponseEntity<String> uploadCoverPhoto(@PathVariable Integer id, @RequestParam("coverPhoto") MultipartFile coverPhoto) {
 		try {
 			// Thư mục lưu ảnh bìa
-			Path coverPhotosDir = Paths.get("src/main/resources/static/uploads/covers");
+			Path coverPhotosDir = Paths.get("uploads/covers");
 			if (!Files.exists(coverPhotosDir)) {
 				Files.createDirectories(coverPhotosDir);
 			}

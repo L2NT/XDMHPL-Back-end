@@ -52,8 +52,8 @@ public class PostService {
     @Autowired
     private NotificationService notificationService;
 
-    private final String IMAGE_UPLOAD_PATH = "src/main/resources/static/uploads/postimage/";
-    private final String VIDEO_UPLOAD_PATH = "src/main/resources/static/uploads/postvideo/";
+    private final String IMAGE_UPLOAD_PATH = "uploads/postimage/";
+    private final String VIDEO_UPLOAD_PATH = "uploads/postvideo/";
 
     public List<Post> getAllPost() {
         return postRepository.findByHide(0);
