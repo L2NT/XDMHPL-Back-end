@@ -1,14 +1,11 @@
 package com.example.XDMHPL_Back_end.Services;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.XDMHPL_Back_end.DTO.CommentDTO;
 import com.example.XDMHPL_Back_end.DTO.NotificationDTO;
-import com.example.XDMHPL_Back_end.DTO.RequestNotificationDTO;
 import com.example.XDMHPL_Back_end.Repositories.CommentRepository;
 import com.example.XDMHPL_Back_end.Repositories.PostRepository;
 import com.example.XDMHPL_Back_end.Repositories.UserRepository;
@@ -28,7 +25,10 @@ public class CommentService {
     @Autowired
     private CommentRepository commentRepository;
 
-    public RequestNotificationDTO createComment(Comment comment, int postId, int userId) {
+    @Autowired
+    private NotificationService notificationService;
+
+    public NotificationDTO createComment(Comment comment, int postId, int userId) {
         // Tìm bài đăng theo ID
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy bài đăng với ID: " + postId));
@@ -44,13 +44,25 @@ public class CommentService {
         Comment savedComment=commentRepository.save(comment);
         post.getComments().add(savedComment);
         postRepository.save(post);
-       
-        return new RequestNotificationDTO(savedComment.getCommentID(), null, post.getPostID(), userId, post.getUser().getUserID());
+        System.out.println(savedComment.getCommentID());
+        return notificationService.createNotification(post.getUser().getUserID(), userId, NotificationStatus.COMMENT, post.getPostID(), savedComment.getCommentID(), null, "Đã bình luận về bài viết của bạn");
     }
 
 
     public Comment getCommentById(int commentId) {
         return commentRepository.findById(commentId)
                 .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy bình luận với ID: " + commentId));
+    }
+
+    public Comment updateComment(Comment comment, int commentId) {
+        Comment existingComment = getCommentById(commentId);
+        existingComment.setContent(comment.getContent());
+        return commentRepository.save(existingComment);
+    }
+
+    public Comment deleteComment(int commentId) {
+        Comment existingComment = getCommentById(commentId);
+        commentRepository.delete(existingComment);
+        return existingComment;
     }
 }

@@ -1,40 +1,29 @@
 package com.example.XDMHPL_Back_end.Controller;
 
 import java.security.Principal;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.XDMHPL_Back_end.DTO.NotificationDTO;
-import com.example.XDMHPL_Back_end.DTO.OnlineUsersListDTO;
-import com.example.XDMHPL_Back_end.DTO.RequestNotificationDTO;
 import com.example.XDMHPL_Back_end.DTO.UserStatusDTO;
-import com.example.XDMHPL_Back_end.Services.CommentService;
 import com.example.XDMHPL_Back_end.Services.NotificationService;
-import com.example.XDMHPL_Back_end.Services.PostService;
 import com.example.XDMHPL_Back_end.Services.UserService;
+<<<<<<< HEAD
 import com.example.XDMHPL_Back_end.model.Comment;
 import com.example.XDMHPL_Back_end.model.MessageModel;
+=======
+>>>>>>> tuan
 import com.example.XDMHPL_Back_end.model.Notification;
-import com.example.XDMHPL_Back_end.model.NotificationStatus;
-import com.example.XDMHPL_Back_end.model.Post;
 import com.example.XDMHPL_Back_end.model.Users;
 
 @RestController
@@ -50,16 +39,33 @@ public class NotificationController {
 
 
     @MessageMapping("/comment/notification")
-    public void sendNotify(@Payload RequestNotificationDTO notification) {
+    public void sendNotifyComment(@Payload NotificationDTO notification) {
         // Gửi thông báo cho người dùng được nhắc đến trong bình luận
-        NotificationDTO newNotification = notificationService.createNotification(notification.getUserID(), notification.getSenderID(),
-                NotificationStatus.COMMENT, notification.getPostID(), notification.getCommentID(),
-                notification.getMessageID(), "Đã bình luận về bài viết của bạn");
         
         Users user = userService.getUserById(notification.getUserID());
         messagingTemplate.convertAndSend(
                 "/topic/notifications/" + user.getUserName(),
-                newNotification);
+                notification);
+    }
+
+    @MessageMapping("/like/notification")
+    public void sendNotifyLike(@Payload NotificationDTO notification) {
+        // Gửi thông báo cho người dùng được nhắc đến trong bình luận
+        
+        Users user = userService.getUserById(notification.getUserID());
+        messagingTemplate.convertAndSend(
+                "/topic/notifications/" + user.getUserName(),
+                notification);
+    }
+
+    @MessageMapping("/friendRequest/notification")
+    public void sendNotifyFriendRequest(@Payload NotificationDTO notification) {
+        // Gửi thông báo cho người dùng được nhắc đến trong bình luận
+        
+        Users user = userService.getUserById(notification.getUserID());
+        messagingTemplate.convertAndSend(
+                "/topic/notifications/" + user.getUserName(),
+                notification);
     }
 
 
@@ -74,6 +80,19 @@ public class NotificationController {
             messagingTemplate.convertAndSend(
                     "/topic/notifications/" + username,
                     notifications);
+        } catch (Exception e) {
+            System.err.println("Error sending notification list: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    @MessageMapping("/status/mark-notification-read")
+    public void getMarkReadNotification(@Payload NotificationDTO request, Principal principal) {
+        int userId = request.getUserID();
+        int notificationId = request.getNotificationID();
+        System.out.println("User " + principal.getName() + " mark notification " + notificationId + " as read");
+        try {
+             notificationService.markAsRead(notificationId);
         } catch (Exception e) {
             System.err.println("Error sending notification list: " + e.getMessage());
             e.printStackTrace();

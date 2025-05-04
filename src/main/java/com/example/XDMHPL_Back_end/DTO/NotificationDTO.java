@@ -21,6 +21,7 @@ public class NotificationDTO {
     private int SenderID;
     private int UserID;
     private int isReadFlag;
+    private Boolean isOnline;
 
     // Constructors, getters, setters
 
@@ -37,6 +38,7 @@ public class NotificationDTO {
         dto.setCommentID(notification.getComment() != null ? notification.getComment().getCommentID() : 0);
         dto.setCreationDate(notification.getCreatedAt().toString()); // Chuyển đổi Date thành String
         dto.setIsReadFlag(notification.getIsReadFlag());
+        dto.setIsOnline(notification.getUser().getIsOnline());
         return dto;
     }
 }

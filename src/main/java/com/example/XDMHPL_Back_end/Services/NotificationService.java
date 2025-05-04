@@ -38,23 +38,34 @@ public class NotificationService {
 
     public NotificationDTO createNotification(int userID, int senderID, NotificationStatus type,
             Integer postID, Integer commentID, Integer messageID, String content) {
+        if(userID == senderID) {
+            return null;
+        }
         Post post = null;
         Comment comment = null;
+<<<<<<< HEAD
         MessageModel message = null;
+=======
+        Message message = null;
+        System.out.println(commentID);
+>>>>>>> tuan
         if (postID != null) {
             post = postRepository.findById(postID)
                     .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy bài đăng với ID: " + postID));
-        } else if (commentID != null) {
+        } 
+        
+        if (commentID != null) {
             comment = commentRepository.findById(commentID)
                     .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy bình luận với ID: " + commentID));
-        } else if (messageID != null) {
+        }
+        if (messageID != null) {
 
         }
 
         // Tìm người dùng theo ID
         Users user = userRepository.findById(userID)
                 .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy người dùng với ID: " + userID));
-        Users sender = userRepository.findById(userID)
+        Users sender = userRepository.findById(senderID)
                 .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy người dùng với ID: " + senderID));
 
         Notification notification = new Notification();

@@ -91,9 +91,9 @@ public class UserController {
 	
 			// Cập nhật đường dẫn ảnh bìa vào database
 			String relativeFilePath = "/covers/" + fileName;
-			usersService.updateUserCoverPhoto(id, relativeFilePath);
+			Users user =usersService.updateUserCoverPhoto(id, relativeFilePath);
 	
-			return ResponseEntity.ok("Cover photo uploaded successfully: " + filePath.toString());
+			return ResponseEntity.ok(user.getCoverPhotoURL());
 		} catch (IOException e) {
 			return ResponseEntity.status(500).body("Failed to upload cover photo: " + e.getMessage());
 		}
@@ -143,8 +143,9 @@ public class UserController {
 	
 	
 	@GetMapping("/{id}")
-	public Users getUserById(@PathVariable Integer id) {
-		return usersService.getUserById(id);
+	public UserDTO getUserById(@PathVariable Integer id) {
+	   Users user = usersService.getUserById(id);
+	   return UserDTO.fromEntity(user);
 	}
 	
 	@GetMapping("/find/{id}")

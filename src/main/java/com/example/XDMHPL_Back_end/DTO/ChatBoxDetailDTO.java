@@ -1,5 +1,6 @@
 package com.example.XDMHPL_Back_end.DTO;
 
+<<<<<<< HEAD
 import com.example.XDMHPL_Back_end.model.Users;
 
 import jakarta.persistence.Column;
@@ -59,4 +60,15 @@ public class ChatBoxDetailDTO {
     public void setChatBox(ChatBoxDTO chatBox) {
         this.chatBox = chatBox;
     }
+=======
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class ChatBoxDetailDTO {
+    private int userID;
+>>>>>>> tuan
 }

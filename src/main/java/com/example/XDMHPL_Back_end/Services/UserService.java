@@ -94,10 +94,10 @@ public class UserService {
         return usersRepository.save(user);
     }
     // Hàm để cập nhật ảnh bìa
-    public void updateUserCoverPhoto(Integer userId, String coverPhotoPath) {
+    public Users updateUserCoverPhoto(Integer userId, String coverPhotoPath) {
         Users user = usersRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         user.setCoverPhotoURL(coverPhotoPath);
-        usersRepository.save(user);
+        return usersRepository.save(user);
     }
 
     public Users updateBio(int userID, String newBio) {

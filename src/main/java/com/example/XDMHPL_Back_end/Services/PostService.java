@@ -7,24 +7,27 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.XDMHPL_Back_end.DTO.NotificationDTO;
 import com.example.XDMHPL_Back_end.DTO.PostDTO;
 import com.example.XDMHPL_Back_end.Repositories.LikeRepository;
+import com.example.XDMHPL_Back_end.Repositories.NotificationRepository;
 import com.example.XDMHPL_Back_end.Repositories.PostMediaRepository;
 import com.example.XDMHPL_Back_end.Repositories.PostRepository;
 import com.example.XDMHPL_Back_end.Repositories.UserRepository;
 import com.example.XDMHPL_Back_end.model.Like;
+import com.example.XDMHPL_Back_end.model.NotificationStatus;
 import com.example.XDMHPL_Back_end.model.Post;
 import com.example.XDMHPL_Back_end.model.PostMedia;
 import com.example.XDMHPL_Back_end.model.Users;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class PostService {
@@ -42,6 +45,12 @@ public class PostService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+	private NotificationRepository notificationRepository;
+
+    @Autowired
+    private NotificationService notificationService;
 
     private final String IMAGE_UPLOAD_PATH = "src/main/resources/static/uploads/postimage/";
     private final String VIDEO_UPLOAD_PATH = "src/main/resources/static/uploads/postvideo/";
@@ -120,7 +129,8 @@ public class PostService {
         return PostDTO.fromEntity(savedPost);
     }
 
-    public void likePost(int postId, int userId) {
+    @Transactional
+    public NotificationDTO likePost(int postId, int userId) {
         // Tìm bài đăng theo ID
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy bài đăng với ID: " + postId));
@@ -135,13 +145,17 @@ public class PostService {
         if (existingLike != null) {
             // Nếu đã thích rồi, xóa like đi
             likeRepository.delete(existingLike);
+            notificationRepository.deleteByUser_UserIDAndPost_PostIDAndType(post.getUser().getUserID(), post.getPostID(), NotificationStatus.LIKE);
+            return null;
         } else {
             // Nếu chưa thích, tạo like mới
             Like newLike = new Like();
             newLike.setPost(post);
             newLike.setUser(user);
             likeRepository.save(newLike);
+            return notificationService.createNotification(post.getUser().getUserID(), userId, NotificationStatus.LIKE, post.getPostID(), null, null, "Đã thích bài đăng của bạn");
         }
+
     }
 
     public Post getPostByID(Integer id) {

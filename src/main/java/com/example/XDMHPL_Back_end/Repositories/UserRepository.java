@@ -18,6 +18,7 @@ public interface UserRepository extends JpaRepository<Users, Integer> {
     Users findByEmail(String email);
     Users findByUserName(String userName);
     Users findByPhoneNumber(String phoneNumber);
+    List<Users> findAllByUserIDNot(int userId);
     public List<Users> findByHideFalse();
     
     @Query("SELECT u.userID, u.fullName, u.avatar FROM Users u WHERE u.userID = :userID")
