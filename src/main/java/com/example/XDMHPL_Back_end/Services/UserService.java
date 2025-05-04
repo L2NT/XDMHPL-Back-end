@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,13 +24,17 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
     
+    @Autowired
+    private EmailService emailService;
+
+    
     public List<Users> getAllUser() {
         return usersRepository.findAll();
     }
 
     
     public Users createUser(String fullName, String userName, String password, String email, String avatar, String phoneNumber, LocalDate dateOfBirth, String gender
-			, String coverPhotoURL, String sessionID, String role) {
+			, String coverPhotoURL, String sessionID, String role, String token) {
         String encryptedPassword = passwordEncoder.encode(password);
     	Users user = new Users();
         user.setFullName(fullName);
@@ -43,8 +48,9 @@ public class UserService {
         user.setCoverPhotoURL("/covers/default.jpg");
         user.setSessionID(sessionID);
         user.setRole(role);
-        user.setHide(false); // Default value for hide
-        user.setBio(null); // Default value for bio
+        user.setHide(false); 
+        user.setBio(null); 
+        user.setToken("");
         return usersRepository.save(user);
     }
     
@@ -172,4 +178,26 @@ public class UserService {
         return usersRepository.save(user);
     }
 
+    public void sendResetPasswordEmail(String email) {
+        Users user = usersRepository.findByEmail(email);
+        if (user == null) {
+            throw new RuntimeException("Email không tồn tại.");
+        }        String token = UUID.randomUUID().toString(); // Tạo token
+        // Lưu token vào cơ sở dữ liệu (hoặc Redis)
+        user.setToken(token);
+        usersRepository.save(user);
+
+        String resetLink = "http://localhost:5173/reset-password/" + token;
+        emailService.sendEmail(email, "Đặt lại mật khẩu", "Click vào link để đặt lại mật khẩu: " + resetLink);
+    }
+
+    public void resetPassword(String token, String newPassword) {
+        Users user = usersRepository.findByToken(token);
+        if (user == null) {
+            throw new RuntimeException("Email không tồn tại.");
+        }
+        user.setPassword(passwordEncoder.encode(newPassword)); // Mã hóa mật khẩu
+        user.setToken(""); // Xóa token sau khi sử dụng
+        usersRepository.save(user);
+    }
 }
