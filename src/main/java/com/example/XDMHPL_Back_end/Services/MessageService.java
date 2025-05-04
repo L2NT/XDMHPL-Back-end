@@ -8,13 +8,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
-import com.example.XDMHPL_Back_end.DTO.ChatBoxDTO;
-import com.example.XDMHPL_Back_end.DTO.Message;
+
 import com.example.XDMHPL_Back_end.Repositories.ChatBoxDetailRepository;
 import com.example.XDMHPL_Back_end.Repositories.ChatBoxRepository;
 import com.example.XDMHPL_Back_end.Repositories.MessageMediaRepository;
 import com.example.XDMHPL_Back_end.Repositories.MessageRepository;
+import com.example.XDMHPL_Back_end.model.ChatBox;
 import com.example.XDMHPL_Back_end.model.MessageMediaModel;
+
+import com.example.XDMHPL_Back_end.model.MessageModel;
 
 @Service
 public class MessageService {
@@ -34,7 +36,7 @@ public class MessageService {
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
-    public Message sendMessage(Integer senderId, Integer chatBoxId, String text, Integer chatBoxId2, List<MessageMedia> mediaList) {
+    public MessageModel sendMessage(Integer senderId, Integer chatBoxId, String text, Integer chatBoxId2, List<MessageMediaModel> mediaList) {
         Optional<ChatBox> chatBoxOptional = chatBoxRepository.findById(chatBoxId);
         if (!chatBoxOptional.isPresent()) {
             throw new RuntimeException("ChatBox không tồn tại.");
@@ -53,7 +55,7 @@ public class MessageService {
         }
     
         // Tạo tin nhắn
-        Message message = new Message();
+        MessageModel message = new MessageModel();
         message.setText(text);
         message.setTime(LocalDateTime.now());
         message.setSeen(false);
@@ -61,7 +63,7 @@ public class MessageService {
         message.setChatBox(chatBox);
     
         // Lưu tin nhắn
-        Message savedMessage = messageRepository.save(message);
+        MessageModel savedMessage = messageRepository.save(message);
     
         // Lưu media nếu có
         saveMessageMedia(mediaList, savedMessage);
@@ -72,9 +74,9 @@ public class MessageService {
         return savedMessage;
     }
 
-    private void saveMessageMedia(List<MessageMedia> mediaList, Message savedMessage) {
+    private void saveMessageMedia(List<MessageMediaModel> mediaList, MessageModel savedMessage) {
         if (mediaList != null && !mediaList.isEmpty()) {
-            for (MessageMedia media : mediaList) {
+            for (MessageMediaModel media : mediaList) {
                 String fileUrl = media.getMediaURL();
                 String mediaType = media.getMediaType();
     
@@ -106,7 +108,7 @@ public class MessageService {
     
 
     // Phương thức gửi tin nhắn realtime
-    private void sendRealTimeMessage(Integer senderId, Message savedMessage, ChatBox chatBox) {
+    private void sendRealTimeMessage(Integer senderId, MessageModel savedMessage, ChatBox chatBox) {
         messagingTemplate.convertAndSendToUser(String.valueOf(senderId), "/queue/messages", savedMessage);
     
         // Gửi tin nhắn realtime cho người trong cuộc trò chuyện
@@ -135,14 +137,14 @@ public class MessageService {
         return chatBoxDetailRepository.existsByUser_UserIDAndChatBox_ChatBoxID(userId, chatBoxId);
     }
 
-    public List<Message> getMessagesByChatBox(Integer chatBoxId) {
+    public List<MessageModel> getMessagesByChatBox(Integer chatBoxId) {
         return messageRepository.findByChatBox_ChatBoxID(chatBoxId);
     }
 
-    public Message markAsSeen(Integer messageId) {
-        Optional<Message> messageOpt = messageRepository.findById(messageId);
+    public MessageModel markAsSeen(Integer messageId) {
+        Optional<MessageModel> messageOpt = messageRepository.findById(messageId);
         if (messageOpt.isPresent()) {
-            Message message = messageOpt.get();
+            MessageModel message = messageOpt.get();
             message.setSeen(true);
             return messageRepository.save(message);
         }
