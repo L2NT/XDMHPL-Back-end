@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import com.example.XDMHPL_Back_end.DTO.Message;
 import com.example.XDMHPL_Back_end.DTO.MessageRequest;
 import com.example.XDMHPL_Back_end.Services.MessageService;
+import com.example.XDMHPL_Back_end.model.MessageModel;
 
 @Controller
 public class MessageWebSocketController {
@@ -24,7 +25,7 @@ public class MessageWebSocketController {
     public void sendMessage(@Payload MessageRequest request) {
         try {
             // Gửi tin nhắn vào DB và trả về message
-            Message savedMessage = messageService.sendMessage(
+            MessageModel savedMessage = messageService.sendMessage(
                 request.getSenderId(),
                 request.getReceiverId(),
                 request.getText(),
