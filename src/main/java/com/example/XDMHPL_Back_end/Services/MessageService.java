@@ -43,8 +43,9 @@ public class MessageService {
         }
 
         ChatBox chatBox = chatBoxOptional.get();
+    
+        // Kiểm tra người gửi có phải thành viên của cuộc trò chuyện không
 
-        // Kiểm tra nếu là cuộc trò chuyện 1-1 và người gửi có quyền gửi tin nhắn
         if (!chatBox.getIsGroup() && !isUserInChatBox(senderId, chatBoxId)) {
             throw new RuntimeException("Người gửi không phải là thành viên của cuộc trò chuyện.");
         }
@@ -74,24 +75,25 @@ public class MessageService {
         return savedMessage;
     }
 
+
+    @SuppressWarnings("unused")
     private void saveMessageMedia(List<MessageMediaModel> mediaList, MessageModel savedMessage) {
         if (mediaList != null && !mediaList.isEmpty()) {
             for (MessageMediaModel media : mediaList) {
                 String fileUrl = media.getMediaURL();
+
+    
+    private void saveMessageMedia(List<MessageMediaModel> mediaList, MessageModel savedMessage) {
+        if (mediaList != null && !mediaList.isEmpty()) {
+            for (MessageMediaModel media : mediaList) {
+                String fileUrl = media.getMediaURL(); // URL đầy đủ từ client
+
                 String mediaType = media.getMediaType();
-    
-                if (fileUrl == null || fileUrl.isEmpty()) {
-                    throw new RuntimeException("mediaUrl không hợp lệ.");
-                }
-    
-                // 👉 Tách tên file từ URL
-                
                 String fileName = fileUrl.substring(fileUrl.lastIndexOf("_") + 1);
 
     
                 // 👉 Chỉ lưu tên file vào DB (hoặc đường dẫn `/assets/` nếu cần)
                 String imageUrl = "http://localhost:8080/assets/" + fileName;
-    
                 if (mediaType == null || mediaType.isEmpty()) {
                     mediaType = getMediaTypeFromFileUrl(fileUrl);
                 }
@@ -107,8 +109,14 @@ public class MessageService {
     }
     
 
+
     // Phương thức gửi tin nhắn realtime
     private void sendRealTimeMessage(Integer senderId, MessageModel savedMessage, ChatBox chatBox) {
+
+    
+    private void sendRealTimeMessage(Integer senderId, MessageModel savedMessage, ChatBox chatBox) {
+        // Gửi tin nhắn realtime cho người gửi
+
         messagingTemplate.convertAndSendToUser(String.valueOf(senderId), "/queue/messages", savedMessage);
     
         // Gửi tin nhắn realtime cho người trong cuộc trò chuyện
@@ -151,3 +159,5 @@ public class MessageService {
         return null;
     }
 }
+            
+            
