@@ -10,8 +10,8 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "users")
+@AllArgsConstructor
 @NoArgsConstructor
-
 @Data
 public class Users {
     @Id
@@ -92,42 +92,6 @@ public class Users {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Post> Posts; // Danh sách các bài đã likes của User
-
-    // Constructor with parameters
-    public Users(int userID, String fullName, String userName, String email, String password, String avatar,
-                 String phoneNumber, LocalDate dateOfBirth, String gender, String coverPhotoURL, String sessionID,
-                 String Bio, String role, boolean hide, Boolean isOnline,
-                 List<Notification> notifications, List<Notification> sentNotifications,
-                 List<Friend> friends, List<Friend> friendOf, List<Follower> followers,
-                 List<Following> followings, List<Session> sessions, List<ChatBoxDetail> chatBoxDetails,
-                 List<Comment> comments, List<Like> likes, List<Post> posts) {
-        this.userID = userID;
-        this.fullName = fullName;
-        this.userName = userName;
-        this.email = email;
-        this.password = password;
-        this.avatar = avatar;
-        this.phoneNumber = phoneNumber;
-        this.dateOfBirth = dateOfBirth;
-        this.gender = gender;
-        this.coverPhotoURL = coverPhotoURL;
-        this.sessionID = sessionID;
-        this.Bio = Bio;
-        this.role = role;
-        this.hide = hide;
-        this.isOnline = isOnline;
-        this.notifications = notifications;
-        this.sentNotifications = sentNotifications;
-        this.friends = friends;
-        this.friendOf = friendOf;
-        this.followers = followers;
-        this.followings = followings;
-        this.sessions = sessions;
-        this.chatBoxDetails = chatBoxDetails;
-        this.Comments = comments;
-        this.Likes = likes;
-        this.Posts = posts;
-    }
 
     // Getter and Setter methods
 

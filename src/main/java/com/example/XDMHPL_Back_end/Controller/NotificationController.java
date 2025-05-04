@@ -18,11 +18,7 @@ import com.example.XDMHPL_Back_end.DTO.NotificationDTO;
 import com.example.XDMHPL_Back_end.DTO.UserStatusDTO;
 import com.example.XDMHPL_Back_end.Services.NotificationService;
 import com.example.XDMHPL_Back_end.Services.UserService;
-<<<<<<< HEAD
-import com.example.XDMHPL_Back_end.model.Comment;
-import com.example.XDMHPL_Back_end.model.MessageModel;
-=======
->>>>>>> tuan
+
 import com.example.XDMHPL_Back_end.model.Notification;
 import com.example.XDMHPL_Back_end.model.Users;
 

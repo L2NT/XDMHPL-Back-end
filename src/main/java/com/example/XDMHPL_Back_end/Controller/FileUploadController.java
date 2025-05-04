@@ -18,7 +18,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 
 import com.example.XDMHPL_Back_end.Repositories.MessageMediaRepository;
-import com.example.XDMHPL_Back_end.model.MessageMediaDTO;
 import com.example.XDMHPL_Back_end.model.MessageMediaModel;
 
 @RestController

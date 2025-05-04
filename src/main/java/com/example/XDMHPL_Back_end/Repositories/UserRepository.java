@@ -22,6 +22,6 @@ public interface UserRepository extends JpaRepository<Users, Integer> {
     
     @Query("SELECT u.userID, u.fullName, u.avatar FROM Users u WHERE u.userID = :userID")
     Object findUserInfoByID(@Param("userID") int userID);
-    
+    List <Users> findAllByUserIDNot(int userID);
     Users findByToken(String token);
 }

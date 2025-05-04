@@ -43,12 +43,10 @@ public class NotificationService {
         }
         Post post = null;
         Comment comment = null;
-<<<<<<< HEAD
+
         MessageModel message = null;
-=======
-        Message message = null;
         System.out.println(commentID);
->>>>>>> tuan
+
         if (postID != null) {
             post = postRepository.findById(postID)
                     .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy bài đăng với ID: " + postID));

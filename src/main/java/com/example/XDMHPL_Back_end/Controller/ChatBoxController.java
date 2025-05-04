@@ -22,9 +22,6 @@ import com.example.XDMHPL_Back_end.DTO.PostDTO;
 import com.example.XDMHPL_Back_end.Services.ChatBoxService;
 import com.example.XDMHPL_Back_end.Services.MessageService;
 import com.example.XDMHPL_Back_end.model.ChatBox;
-import com.example.XDMHPL_Back_end.model.Message;
-import com.example.XDMHPL_Back_end.model.Users;
-
 @RestController
 @RequestMapping("/chatbox")
 public class ChatboxController {
@@ -90,39 +87,39 @@ public class ChatboxController {
     /**
      * Cập nhật thông tin chatbox
      */
-    @PutMapping("/{chatBoxId}")
-    public ResponseEntity<?> updateChatBox(
-            @PathVariable int chatBoxId,
-            @RequestBody Map<String, Object> request) {
-        try {
-            ChatBox chatBox = chatBoxService.getChatBoxById(chatBoxId)
-                    .orElseThrow(() -> new RuntimeException("ChatBox not found with id: " + chatBoxId));
+    // @PutMapping("/{chatBoxId}")
+    // public ResponseEntity<?> updateChatBox(
+    //         @PathVariable int chatBoxId,
+    //         @RequestBody Map<String, Object> request) {
+    //     try {
+    //         ChatBox chatBox = chatBoxService.getChatBoxById(chatBoxId)
+    //                 .orElseThrow(() -> new RuntimeException("ChatBox not found with id: " + chatBoxId));
 
-            // Cập nhật các thông tin
-            if (request.containsKey("chatBoxName")) {
-                chatBox.setChatBoxName((String) request.get("chatBoxName"));
-            }
+    //         // Cập nhật các thông tin
+    //         if (request.containsKey("chatBoxName")) {
+    //             chatBox.setChatBoxName((String) request.get("chatBoxName"));
+    //         }
 
-            if (request.containsKey("imageURL")) {
-                chatBox.setImageURL((String) request.get("imageURL"));
-            }
+    //         if (request.containsKey("imageURL")) {
+    //             chatBox.setImageURL((String) request.get("imageURL"));
+    //         }
 
-            if (request.containsKey("mute")) {
-                chatBox.setMute((Integer) request.get("mute"));
-            }
+    //         if (request.containsKey("mute")) {
+    //             chatBox.setMute((Boolean) request.get("mute"));
+    //         }
 
-            if (request.containsKey("block")) {
-                chatBox.setBlock((Integer) request.get("block"));
-            }
+    //         if (request.containsKey("block")) {
+    //             chatBox.setBlock((Boolean) request.get("block"));
+    //         }
 
-            ChatBox updatedChatBox = chatBoxService.updateChatBox(chatBox);
+    //         ChatBox updatedChatBox = chatBoxService.updateChatBox(chatBox);
 
-            return ResponseEntity.ok(updatedChatBox);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error: " + e.getMessage());
-        }
-    }
+    //         return ResponseEntity.ok(updatedChatBox);
+    //     } catch (Exception e) {
+    //         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+    //                 .body("Error: " + e.getMessage());
+    //     }
+    // }
 
     /**
      * Thêm người dùng vào chatbox (chỉ dành cho nhóm)

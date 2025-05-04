@@ -34,7 +34,7 @@ public class NotificationDTO {
         dto.setUserID(notification.getUser().getUserID());
         dto.setSenderID(notification.getSender().getUserID());
         dto.setPostID(notification.getPost() != null ? notification.getPost().getPostID() : 0);
-        dto.setMessageID(notification.getMessage() != null ? notification.getMessage().getMessageID() : 0);
+        dto.setMessageID(notification.getMessage() != null ? notification.getMessage().getMessageId() : 0);
         dto.setCommentID(notification.getComment() != null ? notification.getComment().getCommentID() : 0);
         dto.setCreationDate(notification.getCreatedAt().toString()); // Chuyển đổi Date thành String
         dto.setIsReadFlag(notification.getIsReadFlag());

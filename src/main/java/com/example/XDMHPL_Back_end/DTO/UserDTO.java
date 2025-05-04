@@ -40,8 +40,8 @@ public class UserDTO {
     // Constructors, getters, setters
 
     // Phương thức chuyển đổi từ Entity sang DTO
-    public static Users fromEntity(Users user) {
-        Users dto = new UserDTO();
+    public static UserDTO fromEntity(Users user) {
+        UserDTO dto = new UserDTO();
         dto.setUserID(user.getUserID());
         dto.setFullName(user.getFullName());
         dto.setUsername(user.getUserName());
@@ -79,22 +79,5 @@ public class UserDTO {
                 .collect(Collectors.toList()));
 
         return dto;
-    }
-
-    // Phương thức chuyển đổi từ DTO sang Entity
-    public Users toEntity() {
-        Users user = new Users();
-        user.setUserID(this.userID);
-        user.setFullName(this.fullName);
-        user.setUserName(this.username);
-        user.setEmail(this.email);
-        user.setAvatar(this.avatarURL);
-        user.setPhoneNumber(this.phoneNumber);
-        user.setDateOfBirth(this.dateOfBirth);
-        user.setGender(this.gender);
-        user.setCoverPhotoURL(this.coverPhotoUrl);
-        user.setBio(this.bio);
-        user.setRole(this.role);
-        return user;
     }
 }

@@ -6,7 +6,6 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
-import com.example.XDMHPL_Back_end.DTO.Message;
 import com.example.XDMHPL_Back_end.DTO.MessageRequest;
 import com.example.XDMHPL_Back_end.Services.MessageService;
 import com.example.XDMHPL_Back_end.model.MessageModel;
