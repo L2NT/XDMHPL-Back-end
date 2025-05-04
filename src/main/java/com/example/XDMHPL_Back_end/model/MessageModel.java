@@ -1,12 +1,13 @@
 package com.example.XDMHPL_Back_end.model;
-
-import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -14,36 +15,93 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "message")
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
 public class MessageModel {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int messageID;
+    @Column(name = "MessageID")
+    private int messageId;
 
-    @Column(name = "Text")
+    @Column(name = "Text", length = 500)
     private String text;
 
     @Column(name = "Time")
-    private Date time;
+    private LocalDateTime time;
 
     @Column(name = "Seen")
-    private int seen;
+    private Boolean seen;
 
     @Column(name = "Display")
-    private int display;
+    private Boolean display;
 
+    // Liên kết với ChatBox (ManyToOne)
     @ManyToOne
-    @JoinColumn(name = "ChatBoxID")
+    @JoinColumn(name = "ChatBoxID", referencedColumnName = "chatBoxID")
+    @JsonBackReference // Ngừng việc serialization ngược về ChatBox
     private ChatBox chatBox;
 
-    @OneToMany(mappedBy = "message", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<MessageMedia> mediaList;
+    // Liên kết ngược với MessageMedia (OneToMany)
+    @OneToMany(mappedBy = "message", cascade = CascadeType.ALL)
+    @JsonIgnore  // Bỏ qua mediaList trong quá trình serialization
+    private List<MessageMediaModel> mediaList;
+
+    // Getters & Setters
+    public int getMessageId() {
+        return messageId;
+    }
+
+    public void setMessageId(int messageId) {
+        this.messageId = messageId;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public LocalDateTime getTime() {
+        return time;
+    }
+
+    public void setTime(LocalDateTime time) {
+        this.time = time;
+    }
+
+    public Boolean getSeen() {
+        return seen;
+    }
+
+    public void setSeen(Boolean seen) {
+        this.seen = seen;
+    }
+
+    public Boolean getDisplay() {
+        return display;
+    }
+
+    public void setDisplay(Boolean display) {
+        this.display = display;
+    }
+
+    public ChatBox getChatBox() {
+        return chatBox;
+    }
+
+    public void setChatBox(ChatBox chatBox) {
+        this.chatBox = chatBox;
+    }
+
+    public List<MessageMediaModel> getMediaList() {
+        return mediaList;
+    }
+
+    public void setMediaList(List<MessageMediaModel> mediaList) {
+        this.mediaList = mediaList;
+    }
 }
