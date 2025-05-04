@@ -12,8 +12,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.XDMHPL_Back_end.DTO.Message;
+
+import com.example.XDMHPL_Back_end.DTO.MessageRequest;
 import com.example.XDMHPL_Back_end.Services.MessageService;
 import com.example.XDMHPL_Back_end.model.MessageMediaModel;
+import com.example.XDMHPL_Back_end.model.MessageModel;
 
 @RestController
 @RequestMapping("/messages")
@@ -24,7 +27,7 @@ public class MessageController {
 
     // Gửi tin nhắn REST
     @PostMapping("/send")
-    public Message sendMessage(
+    public MessageModel sendMessage(
         @RequestParam Integer senderId,
         @RequestParam Integer receiverId,
         @RequestParam String text,
@@ -44,7 +47,7 @@ public class MessageController {
 
     // Lấy toàn bộ tin nhắn theo chatBoxId
     @GetMapping("/{chatBoxId}")
-    public List<Message> getMessagesByChatBox(@PathVariable Integer chatBoxId) {
+    public List<MessageModel> getMessagesByChatBox(@PathVariable Integer chatBoxId) {
         return messageService.getMessagesByChatBox(chatBoxId);
     }
 
@@ -56,7 +59,7 @@ public class MessageController {
 
     // Đánh dấu tin nhắn là đã xem
     @PostMapping("/markAsSeen/{messageId}")
-    public Message markAsSeen(@PathVariable Integer messageId) {
+    public MessageModel markAsSeen(@PathVariable Integer messageId) {
         return messageService.markAsSeen(messageId);
     }
 }
