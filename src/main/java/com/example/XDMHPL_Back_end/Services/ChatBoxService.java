@@ -124,7 +124,7 @@ public class ChatBoxService {
 
     public List<ChatBox> getUserChatboxes(int userId) {
         // Lấy tất cả ChatBoxDetail của user
-        List<ChatBoxDetail> chatBoxDetails = chatBoxDetailRepo.findByIdUserID(userId);
+        List<ChatBoxDetail> chatBoxDetails = chatBoxDetailRepo.findByUser_UserID(userId);
         
         // Lấy các ChatBox tương ứng
         return chatBoxDetails.stream()

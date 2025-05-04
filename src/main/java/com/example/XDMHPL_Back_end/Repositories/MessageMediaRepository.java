@@ -14,7 +14,8 @@ import com.example.XDMHPL_Back_end.model.MessageMediaModel;
 public interface MessageMediaRepository extends JpaRepository<MessageMediaModel, Integer> {
     
     // Truy vấn để lấy các media của chatBox với các loại media khác nhau
-    @Query("SELECT m FROM MessageMedia m WHERE m.message.chatBox.chatBoxID = :chatBoxID AND (m.mediaType LIKE 'image%' OR m.mediaType LIKE 'video%' OR m.mediaType LIKE 'audio%')")
+    @Query("SELECT m FROM MessageMediaModel m WHERE m.message.chatBox.chatBoxID = :chatBoxID AND " +
+       "(m.mediaType LIKE 'image%' OR m.mediaType LIKE 'video%' OR m.mediaType LIKE 'audio%')")
     List<MessageMediaModel> findMediaByChatBoxID(@Param("chatBoxID") Integer chatBoxID);
 
     // Tìm các media liên quan đến một message cụ thể

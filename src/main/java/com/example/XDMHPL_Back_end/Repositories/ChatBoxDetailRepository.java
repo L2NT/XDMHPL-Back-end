@@ -42,6 +42,6 @@ import com.example.XDMHPL_Back_end.model.ChatBoxDetail;
      boolean existsByUser_UserIDAndChatBox_ChatBoxID(Integer userId, Integer chatBoxId);
 
     // Tìm tất cả ChatBoxDetail của một người dùng
-    List<ChatBoxDetail> findByIdUserID(int userId);
+    List<ChatBoxDetail> findByUser_UserID(int userId);
 
  }

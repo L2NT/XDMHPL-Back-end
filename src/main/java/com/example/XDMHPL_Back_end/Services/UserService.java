@@ -25,7 +25,7 @@ public class UserService {
     private PasswordEncoder passwordEncoder;
     
     @Autowired
-    private EmailService emailService;
+    // private EmailService emailService;
 
     
     public List<Users> getAllUser() {
@@ -178,18 +178,18 @@ public class UserService {
         return usersRepository.save(user);
     }
 
-    public void sendResetPasswordEmail(String email) {
-        Users user = usersRepository.findByEmail(email);
-        if (user == null) {
-            throw new RuntimeException("Email không tồn tại.");
-        }        String token = UUID.randomUUID().toString(); // Tạo token
-        // Lưu token vào cơ sở dữ liệu (hoặc Redis)
-        user.setToken(token);
-        usersRepository.save(user);
+    // public void sendResetPasswordEmail(String email) {
+    //     Users user = usersRepository.findByEmail(email);
+    //     if (user == null) {
+    //         throw new RuntimeException("Email không tồn tại.");
+    //     }        String token = UUID.randomUUID().toString(); // Tạo token
+    //     // Lưu token vào cơ sở dữ liệu (hoặc Redis)
+    //     user.setToken(token);
+    //     usersRepository.save(user);
 
-        String resetLink = "http://localhost:5173/reset-password/" + token;
-        emailService.sendEmail(email, "Đặt lại mật khẩu", "Click vào link để đặt lại mật khẩu: " + resetLink);
-    }
+    //     String resetLink = "http://localhost:5173/reset-password/" + token;
+    //     emailService.sendEmail(email, "Đặt lại mật khẩu", "Click vào link để đặt lại mật khẩu: " + resetLink);
+    // }
 
     public void resetPassword(String token, String newPassword) {
         Users user = usersRepository.findByToken(token);

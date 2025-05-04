@@ -26,6 +26,10 @@ import jakarta.persistence.Table;
      @ManyToOne
      @JoinColumn(name = "MessageID")
      private MessageModel message;
+
+     @ManyToOne
+    @JoinColumn(name = "ChatBoxID")
+    private ChatBox chatBox;
  
 
      public MessageMediaModel(int messageMediaID, String mediaType, String mediaURL, MessageModel message) {
