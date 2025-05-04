@@ -33,6 +33,9 @@ public class WebsocketConfig implements WebSocketMessageBrokerConfigurer {
         registry.addEndpoint("/ws")
                 .setAllowedOriginPatterns("http://localhost:5173") // Cho phép tất cả frontend kết nối
                 .withSockJS();
+        registry.addEndpoint("/chat")
+                .setAllowedOriginPatterns("http://localhost:5173") // Cho phép tất cả frontend kết nối
+                .withSockJS();
     }
 
     @Override

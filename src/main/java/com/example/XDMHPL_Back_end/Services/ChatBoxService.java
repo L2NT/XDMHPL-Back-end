@@ -112,7 +112,7 @@ public class ChatBoxService {
     // API lấy danh sách ChatBox theo UserId
     public List<ChatBoxDTO> getSidebarChatBoxesByUserId(Integer userId) {
         // Tìm các chi tiết ChatBox liên quan đến User
-        List<ChatBoxDetail> chatBoxDetails = chatBoxDetailRepo.findByChatBox_ChatBoxID(userId);
+        List<ChatBoxDetail> chatBoxDetails = chatBoxDetailRepo.findByUser_UserID(userId);
         
         // Trả về danh sách ChatBox từ các chi tiết
         return chatBoxDetails.stream()
