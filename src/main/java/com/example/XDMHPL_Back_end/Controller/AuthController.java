@@ -1,6 +1,7 @@
 package com.example.XDMHPL_Back_end.Controller;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.management.relation.Role;
 
@@ -171,5 +172,19 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new ErrorResponse("Lỗi hệ thống: " + e.getMessage()));
         }
+    }
+    
+    @PostMapping("/forgot-password")
+    public ResponseEntity<?> forgotPassword(@RequestBody Map<String, String> request) {
+        String email = request.get("email");
+        userService.sendResetPasswordEmail(email);
+        return ResponseEntity.ok(Map.of("message", "Link đặt lại mật khẩu đã được gửi đến email của bạn."));
+    }
+    
+    @PostMapping("/reset-password/{token}")
+    public ResponseEntity<?> resetPassword(@PathVariable String token, @RequestBody Map<String, String> request) {
+        String password = request.get("password");
+        userService.resetPassword(token, password);
+        return ResponseEntity.ok(Map.of("message", "Mật khẩu đã được cập nhật thành công."));
     }
 }
