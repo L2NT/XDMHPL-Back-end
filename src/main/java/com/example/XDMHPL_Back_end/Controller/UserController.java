@@ -60,9 +60,9 @@ public class UserController {
 
 			// Update avatar URL vào database
 			String avatarUrl = "/avatars/" + newFileName; // Quan trọng, chỉ lưu phần URL
-			usersService.updateUserAvatar(id, avatarUrl);
+			Users updatedUser = usersService.updateUserAvatar(id, avatarUrl);
 
-			return ResponseEntity.ok("Uploaded successfully: " + avatarUrl);
+			return ResponseEntity.ok(updatedUser.getAvatar());
 		} catch (IOException e) {
 			return ResponseEntity.status(500).body("Failed to upload: " + e.getMessage());
 		}
