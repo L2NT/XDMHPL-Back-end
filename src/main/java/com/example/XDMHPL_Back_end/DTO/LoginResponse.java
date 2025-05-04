@@ -21,7 +21,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class LoginResponse {
     private String sessionId;
-    private UserDTO user;
+    private Users user;
     private String message;
 
 }
