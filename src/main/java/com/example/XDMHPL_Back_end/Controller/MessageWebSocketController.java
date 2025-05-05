@@ -23,6 +23,11 @@ public class MessageWebSocketController {
     @MessageMapping("/chat/send")
     public void sendMessage(@Payload MessageRequest request) {
         try {
+            System.out.println(request.getChatBoxId());
+            System.out.println(request.getSenderId());
+            System.out.println(request.getReceiverId());
+            System.out.println(request.getText());
+            System.out.println(request.getMediaList());
             // Gửi tin nhắn vào DB và trả về message
             MessageModel savedMessage = messageService.sendMessage(
                 request.getSenderId(),
@@ -32,8 +37,9 @@ public class MessageWebSocketController {
                 request.getMediaList()
             );
 
+            System.out.println(savedMessage.getText());
             // Gửi tin nhắn qua WebSocket tới các client
-            simpMessagingTemplate.convertAndSend("/topic/messages", savedMessage);
+            simpMessagingTemplate.convertAndSend("/topic/messages/"+request.getChatBoxId(), savedMessage);
 
         } catch (Exception ex) {
             // Xử lý lỗi nếu có (tùy vào yêu cầu của bạn)

@@ -1,6 +1,7 @@
 package com.example.XDMHPL_Back_end.Repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import com.example.XDMHPL_Back_end.model.Session;
 import com.example.XDMHPL_Back_end.model.Users;
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public interface SessionRepository extends JpaRepository<Session, String> {
     Optional<Session> findBySessionIDAndExpiresAtAfter(String sessionID, LocalDateTime now);
     List<Session> findByUser(Users user);

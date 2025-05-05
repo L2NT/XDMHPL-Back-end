@@ -66,11 +66,12 @@ public class MessageService {
         // Lưu tin nhắn
         MessageModel savedMessage = messageRepository.save(message);
     
+        System.out.println("Message saved with ID: " + savedMessage.getMessageId());
         // Lưu media nếu có
         saveMessageMedia(mediaList, savedMessage);
     
         // Gửi realtime
-        sendRealTimeMessage(senderId, savedMessage, chatBox);
+        // sendRealTimeMessage(senderId, savedMessage, chatBox);
     
         return savedMessage;
     }
