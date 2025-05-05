@@ -1,5 +1,6 @@
 package com.example.XDMHPL_Back_end.Services;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -95,6 +96,7 @@ public class MessageService {
     
     private void saveMessageMedia(List<MessageMediaModel> mediaList, MessageModel savedMessage) {
         if (mediaList != null && !mediaList.isEmpty()) {
+            List<MessageMediaModel> savedMediaList = new ArrayList<>();
             for (MessageMediaModel media : mediaList) {
                 String fileUrl = media.getMediaURL(); // URL đầy đủ từ client
 
@@ -112,11 +114,13 @@ public class MessageService {
                 media.setMediaURL(imageUrl); // hoặc chỉ `fileName` nếu bạn dùng path cố định từ FE
                 media.setMediaType(mediaType);
                 media.setMessage(savedMessage);
-
-                savedMessage.getMediaList().add(media);
     
-                messageMediaRepository.save(media);
+                MessageMediaModel savedMedia = messageMediaRepository.save(media);
+                savedMediaList.add(savedMedia);
             }
+
+             // Gán lại danh sách media vào savedMessage
+            savedMessage.setMediaList(savedMediaList);
         }
     }
 
