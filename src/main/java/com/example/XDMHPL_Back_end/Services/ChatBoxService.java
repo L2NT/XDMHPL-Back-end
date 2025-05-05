@@ -173,7 +173,7 @@ public class ChatBoxService {
         // Tạo chatbox mới
         ChatBox chatBox = new ChatBox();
         chatBox.setChatBoxName(user1.getFullName() + ", " + user2.getFullName());
-        chatBox.setImageURL(null); // Có thể dùng avatar của người kia
+        chatBox.setImageURL("http://localhost:8080/assets/default-avatar.jpg"); // Có thể dùng avatar của người kia
         chatBox.setMute(false);
         chatBox.setBlock(false);
         chatBox.setIsGroup(false);

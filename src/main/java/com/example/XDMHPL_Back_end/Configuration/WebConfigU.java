@@ -13,5 +13,8 @@ public class WebConfigU implements WebMvcConfigurer {
         registry
                 .addResourceHandler("/assets/**")
                 .addResourceLocations("file:assets/"); // đường dẫn tương đối so với project root
+        registry
+                .addResourceHandler("/public/**")
+                .addResourceLocations("file:public/"); // đường dẫn tương đối so với project root
     }
 }
