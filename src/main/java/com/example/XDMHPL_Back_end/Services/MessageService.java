@@ -87,11 +87,11 @@ public class MessageService {
                 String fileUrl = media.getMediaURL(); // URL đầy đủ từ client
 
                 String mediaType = media.getMediaType();
-                String fileName = fileUrl.substring(fileUrl.lastIndexOf("_") + 1);
+                String fileName = fileUrl;
 
     
                 // 👉 Chỉ lưu tên file vào DB (hoặc đường dẫn `/assets/` nếu cần)
-                String imageUrl = "http://localhost:8080/assets/" + fileName;
+                String imageUrl =fileName;
                 if (mediaType == null || mediaType.isEmpty()) {
                     mediaType = getMediaTypeFromFileUrl(fileUrl);
                 }

@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -51,6 +52,11 @@ public class MessageModel {
     // Getters & Setters
     public int getMessageId() {
         return messageId;
+    }
+
+    @JsonProperty("chatBoxId")
+    public Integer getChatBoxId() {
+        return chatBox != null ? chatBox.getChatBoxID() : null;
     }
 
     public void setMessageId(int messageId) {
