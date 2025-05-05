@@ -32,6 +32,10 @@ import jakarta.persistence.Table;
     private ChatBox chatBox;
  
 
+    public MessageMediaModel() {
+        // bắt buộc: constructor mặc định
+    }
+
      public MessageMediaModel(int messageMediaID, String mediaType, String mediaURL, MessageModel message) {
         this.messageMediaID = messageMediaID;
         this.mediaType = mediaType;
