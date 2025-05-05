@@ -44,7 +44,7 @@ public class FriendService {
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         // Lấy danh sách user online, ngoại trừ userId
-        return userRepository.findAllByUserIDNot(userId);
+        return userRepository.findAllByUserIDNotAndRoleNot(userId,"admin");
     }
 
     public NotificationDTO sentFriendRequest(int senderID, int receiverID) {
