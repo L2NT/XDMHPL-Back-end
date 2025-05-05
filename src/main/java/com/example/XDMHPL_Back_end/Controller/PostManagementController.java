@@ -79,9 +79,9 @@ public class PostManagementController {
 	}
 	
 	
-	private final String VIDEO_DIRECTORY = "src/main/resources/static/uploads/postvideo/";
-    private final String IMAGE_DIRECTORY = "src/main/resources/static/uploads/postimage/";
-    private final String AVATAR = "src/main/resources/static/uploads/avatars/";
+	private final String VIDEO_DIRECTORY = "uploads/postvideo/";
+    private final String IMAGE_DIRECTORY = "uploads/postimage/";
+    private final String AVATAR = "uploads/avatars/";
     
     @GetMapping("/media/{type}/{filename}")
     public ResponseEntity<Resource> getMedia(@PathVariable String type, @PathVariable String filename) {
