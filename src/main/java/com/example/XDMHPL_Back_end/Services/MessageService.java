@@ -112,6 +112,8 @@ public class MessageService {
                 media.setMediaURL(imageUrl); // hoặc chỉ `fileName` nếu bạn dùng path cố định từ FE
                 media.setMediaType(mediaType);
                 media.setMessage(savedMessage);
+
+                savedMessage.getMediaList().add(media);
     
                 messageMediaRepository.save(media);
             }

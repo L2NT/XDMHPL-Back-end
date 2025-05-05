@@ -9,6 +9,7 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
+import com.example.XDMHPL_Back_end.DTO.MessageDTO;
 import com.example.XDMHPL_Back_end.DTO.MessageMediaDTO;
 import com.example.XDMHPL_Back_end.DTO.MessageRequest;
 import com.example.XDMHPL_Back_end.Services.MessageService;
@@ -56,7 +57,7 @@ public class MessageWebSocketController {
 
             System.out.println(savedMessage.getText());
             // Gửi tin nhắn qua WebSocket tới các client
-            simpMessagingTemplate.convertAndSend("/topic/messages/"+request.getChatBoxId(), savedMessage);
+            simpMessagingTemplate.convertAndSend("/topic/messages/"+request.getChatBoxId(), MessageDTO.toDTO(savedMessage));
 
         } catch (Exception ex) {
             // Xử lý lỗi nếu có (tùy vào yêu cầu của bạn)
