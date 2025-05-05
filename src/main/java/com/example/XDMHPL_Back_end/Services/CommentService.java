@@ -5,6 +5,7 @@ import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.XDMHPL_Back_end.DTO.CommentDTO;
 import com.example.XDMHPL_Back_end.DTO.NotificationDTO;
 import com.example.XDMHPL_Back_end.Repositories.CommentRepository;
 import com.example.XDMHPL_Back_end.Repositories.PostRepository;
@@ -28,7 +29,7 @@ public class CommentService {
     @Autowired
     private NotificationService notificationService;
 
-    public NotificationDTO createComment(Comment comment, int postId, int userId) {
+    public NotificationDTO createComment(CommentDTO comment, int postId, int userId) {
         // Tìm bài đăng theo ID
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy bài đăng với ID: " + postId));
@@ -37,11 +38,12 @@ public class CommentService {
         Users user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy người dùng với ID: " + userId));
 
-        comment.setUser(user);
-        comment.setContent(comment.getContent());
-        comment.setPost(post);
-        comment.setCreationDate(new Date());
-        Comment savedComment=commentRepository.save(comment);
+        Comment newComment=new Comment();
+        newComment.setUser(user);
+        newComment.setContent(comment.getContent());
+        newComment.setPost(post);
+        newComment.setCreationDate(new Date());
+        Comment savedComment=commentRepository.save(newComment);
         post.getComments().add(savedComment);
         postRepository.save(post);
         System.out.println(savedComment.getCommentID());

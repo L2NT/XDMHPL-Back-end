@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.XDMHPL_Back_end.DTO.CommentDTO;
 import com.example.XDMHPL_Back_end.DTO.NotificationDTO;
 import com.example.XDMHPL_Back_end.Services.CommentService;
 import com.example.XDMHPL_Back_end.model.Comment;
@@ -28,9 +29,10 @@ public class CommentController {
     private CommentService commentService;
 
     @PostMapping("/post/{postId}/{userId}")
-    public ResponseEntity<?> createComment(@RequestBody Comment comment, @PathVariable("postId") Integer postId, @PathVariable("userId") Integer userId )
+    public ResponseEntity<?> createComment(@RequestBody CommentDTO comment, @PathVariable("postId") Integer postId, @PathVariable("userId") Integer userId )
     {
         try {
+            System.out.println(postId);
 		 	NotificationDTO commentDTO = commentService.createComment(comment, postId, userId);
 			return new ResponseEntity<>(commentDTO, HttpStatus.OK);
 		} catch (Exception e) {
