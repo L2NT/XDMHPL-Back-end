@@ -54,7 +54,7 @@ public class CommentController {
 
 
     @PutMapping("/update/{commentId}")
-    public ResponseEntity<?> updateComment(@RequestBody Comment comment, @PathVariable("commentId") Integer commentId)
+    public ResponseEntity<?> updateComment(@RequestBody CommentDTO comment, @PathVariable("commentId") Integer commentId)
     {
         try {
            commentService.updateComment(comment, commentId);

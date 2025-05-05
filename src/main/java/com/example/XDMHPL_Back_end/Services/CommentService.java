@@ -56,7 +56,7 @@ public class CommentService {
                 .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy bình luận với ID: " + commentId));
     }
 
-    public Comment updateComment(Comment comment, int commentId) {
+    public Comment updateComment(CommentDTO comment, int commentId) {
         Comment existingComment = getCommentById(commentId);
         existingComment.setContent(comment.getContent());
         return commentRepository.save(existingComment);
