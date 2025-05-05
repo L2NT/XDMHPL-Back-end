@@ -210,6 +210,10 @@ public class Users {
         this.hide = hide;
     }
 
+    public boolean getHide() {
+    	return this.hide;
+    }
+    
     public Boolean getIsOnline() {
         return isOnline;
     }

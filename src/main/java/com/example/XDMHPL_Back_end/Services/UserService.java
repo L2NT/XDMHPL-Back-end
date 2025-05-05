@@ -130,11 +130,11 @@ public class UserService {
         }
         return null;
     }
-    public boolean hideUserById(int userId) {
+    public boolean hideUserById(int userId, boolean hideStat) {
         Optional<Users> optionalUser = usersRepository.findById(userId);
         if (optionalUser.isPresent()) {
             Users user = optionalUser.get();
-            user.setHide(true);
+            user.setHide(hideStat);
             usersRepository.save(user);
             return true;
         }

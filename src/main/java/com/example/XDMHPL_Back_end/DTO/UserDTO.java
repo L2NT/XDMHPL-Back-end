@@ -25,7 +25,7 @@ public class UserDTO {
     private String coverPhotoUrl;
     private String bio;
     private String role;
-
+    private boolean hide;
     // Danh sách bạn bè
     private List<FriendDTO> friends;
     private List<FriendDTO> friendOf;
@@ -53,6 +53,7 @@ public class UserDTO {
         dto.setCoverPhotoUrl(user.getCoverPhotoURL());
         dto.setBio(user.getBio());
         dto.setRole(user.getRole());
+        dto.setHide(user.getHide());
 
         // Chuyển đổi danh sách friends
         dto.setFriends(user.getFriends().stream()

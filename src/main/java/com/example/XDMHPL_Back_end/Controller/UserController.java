@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -154,15 +155,18 @@ public class UserController {
 		return usersService.findUserByID(id);
 	}
 	
-	@PutMapping("/{id}/hide")
-	public ResponseEntity<?> hideUser(@PathVariable int id) {
-		boolean result = usersService.hideUserById(id);
-		if (result) {
-			return ResponseEntity.ok("Ẩn người dùng thành công");
-		} else {
-			return ResponseEntity.notFound().build();
-		}
-	}
+	@PutMapping("/{userId}/hide/{status}")
+    public ResponseEntity<?> toggleUserHideStatus(@PathVariable int userId, @PathVariable Boolean status) {
+
+        boolean success = usersService.hideUserById(userId, status);
+
+        if (success) {
+            return ResponseEntity.ok().body("User hide status updated successfully.");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
+        }
+    }
+	
 	@PutMapping("/{id}/role")
 	public ResponseEntity<Users> updateUserRole(@PathVariable int id, @RequestBody Map<String, String> payload) {
 		String role = payload.get("role");
