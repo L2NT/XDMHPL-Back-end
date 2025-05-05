@@ -13,10 +13,12 @@ import com.example.XDMHPL_Back_end.Repositories.ChatBoxDetailRepository;
 import com.example.XDMHPL_Back_end.Repositories.ChatBoxRepository;
 import com.example.XDMHPL_Back_end.Repositories.MessageMediaRepository;
 import com.example.XDMHPL_Back_end.Repositories.MessageRepository;
+import com.example.XDMHPL_Back_end.Repositories.UserRepository;
 import com.example.XDMHPL_Back_end.model.ChatBox;
 import com.example.XDMHPL_Back_end.model.MessageMediaModel;
 
 import com.example.XDMHPL_Back_end.model.MessageModel;
+import com.example.XDMHPL_Back_end.model.Users;
 
 @Service
 public class MessageService {
@@ -36,10 +38,19 @@ public class MessageService {
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
+    @Autowired
+    private UserRepository usersRepository;
+
     public MessageModel sendMessage(Integer senderId, Integer chatBoxId, String text, Integer chatBoxId2, List<MessageMediaModel> mediaList) {
         Optional<ChatBox> chatBoxOptional = chatBoxRepository.findById(chatBoxId);
+        Optional<Users> user = usersRepository.findById(senderId);
+
         if (!chatBoxOptional.isPresent()) {
             throw new RuntimeException("ChatBox không tồn tại.");
+        }
+
+        if (!user.isPresent()) {
+            throw new RuntimeException("User không tồn tại.");
         }
 
         ChatBox chatBox = chatBoxOptional.get();
@@ -62,6 +73,7 @@ public class MessageService {
         message.setSeen(false);
         message.setDisplay(true);
         message.setChatBox(chatBox);
+        message.setUsers(user.get());
     
         // Lưu tin nhắn
         MessageModel savedMessage = messageRepository.save(message);

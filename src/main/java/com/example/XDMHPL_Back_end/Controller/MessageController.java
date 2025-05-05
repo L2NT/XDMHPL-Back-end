@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.example.XDMHPL_Back_end.DTO.MessageDTO;
 import com.example.XDMHPL_Back_end.Services.MessageService;
 import com.example.XDMHPL_Back_end.model.MessageMediaModel;
 import com.example.XDMHPL_Back_end.model.MessageModel;
@@ -45,8 +47,12 @@ public class MessageController {
 
     // Lấy toàn bộ tin nhắn theo chatBoxId
     @GetMapping("/{chatBoxId}")
-    public List<MessageModel> getMessagesByChatBox(@PathVariable Integer chatBoxId) {
-        return messageService.getMessagesByChatBox(chatBoxId);
+    public List<MessageDTO> getMessagesByChatBox(@PathVariable Integer chatBoxId) {
+        List<MessageModel> messages =messageService.getMessagesByChatBox(chatBoxId);
+        List<MessageDTO> dtos = messages.stream()
+                                .map(MessageDTO::toDTO)
+                                .toList();
+        return dtos;
     }
 
     // // ✅ Lấy tin nhắn cuối cùng trong chatBox

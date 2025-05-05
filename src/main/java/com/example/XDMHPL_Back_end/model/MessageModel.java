@@ -44,6 +44,12 @@ public class MessageModel {
     @JsonBackReference // Ngừng việc serialization ngược về ChatBox
     private ChatBox chatBox;
 
+
+    @ManyToOne
+    @JoinColumn(name = "UserID", referencedColumnName = "userID")
+    @JsonBackReference // Ngừng việc serialization ngược về ChatBox
+    private Users users;
+
     // Liên kết ngược với MessageMedia (OneToMany)
     @OneToMany(mappedBy = "message", cascade = CascadeType.ALL)
     @JsonIgnore  // Bỏ qua mediaList trong quá trình serialization
@@ -57,6 +63,11 @@ public class MessageModel {
     @JsonProperty("chatBoxId")
     public Integer getChatBoxId() {
         return chatBox != null ? chatBox.getChatBoxID() : null;
+    }
+
+    @JsonProperty("userId")
+    public Integer getUserId() {
+        return users != null ? users.getUserID() : null;
     }
 
     public void setMessageId(int messageId) {
@@ -101,6 +112,14 @@ public class MessageModel {
 
     public void setChatBox(ChatBox chatBox) {
         this.chatBox = chatBox;
+    }
+
+    public Users getUsers() {
+        return users;
+    }
+
+    public void setUsers(Users users) {
+        this.users = users;
     }
 
     public List<MessageMediaModel> getMediaList() {
