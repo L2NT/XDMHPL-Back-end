@@ -55,7 +55,6 @@ public class MessageWebSocketController {
                 mediaModelList
             );
 
-            System.out.println(savedMessage.getText());
             // Gửi tin nhắn qua WebSocket tới các client
             simpMessagingTemplate.convertAndSend("/topic/messages/"+request.getChatBoxId(), MessageDTO.toDTO(savedMessage));
 
