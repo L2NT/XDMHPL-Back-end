@@ -47,7 +47,6 @@ public class ChatBoxDTO {
 
         if (chatBox.getMessages() != null && !chatBox.getMessages().isEmpty()) {            
             MessageModel lastMessage = chatBox.getMessages().stream()
-                .filter(message -> message.getDisplay())
                 .max(Comparator.comparing(MessageModel::getTime))
                 .orElse(null);
                 

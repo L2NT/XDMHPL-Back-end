@@ -3,10 +3,11 @@ package com.example.XDMHPL_Back_end.Controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,6 +25,10 @@ public class MessageController {
 
     @Autowired
     private MessageService messageService;
+
+    @Autowired
+    private SimpMessagingTemplate simpMessagingTemplate;
+
 
     // Gửi tin nhắn REST
     @PostMapping("/send")
@@ -43,6 +48,15 @@ public class MessageController {
 
         // Lưu tin nhắn vào DB
         return messageService.sendMessage(senderId, receiverId, text, chatBoxId, mediaList);
+    }
+
+
+    @PutMapping("/update")
+    public void updateMessage(@RequestBody MessageDTO payload) {
+        // Xử lý update tại đây
+        // Gửi tin nhắn qua WebSocket tới các client
+        MessageModel updatedMessage = messageService.updateMessage(payload);
+        simpMessagingTemplate.convertAndSend("/topic/messages/"+updatedMessage.getChatBoxId(), MessageDTO.toDTO(updatedMessage));
     }
 
     // Lấy toàn bộ tin nhắn theo chatBoxId
@@ -65,5 +79,12 @@ public class MessageController {
     @PostMapping("/markAsSeen/{messageId}")
     public MessageModel markAsSeen(@PathVariable Integer messageId) {
         return messageService.markAsSeen(messageId);
+    }
+
+
+    @PutMapping("/recall/{messageId}")
+    public void deleteMessage(@PathVariable Integer messageId) {
+        MessageModel updatedMessage = messageService.deleteMessage(messageId);
+        simpMessagingTemplate.convertAndSend("/topic/messages/"+updatedMessage.getChatBoxId(), MessageDTO.toDTO(updatedMessage));
     }
 }

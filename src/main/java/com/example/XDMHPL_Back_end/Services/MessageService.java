@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
-
+import com.example.XDMHPL_Back_end.DTO.MessageDTO;
 import com.example.XDMHPL_Back_end.Repositories.ChatBoxDetailRepository;
 
 import com.example.XDMHPL_Back_end.Repositories.ChatBoxRepository;
@@ -171,6 +171,22 @@ public class MessageService {
         if (messageOpt.isPresent()) {
             MessageModel message = messageOpt.get();
             message.setSeen(true);
+            return messageRepository.save(message);
+        }
+        return null;
+    }
+
+    public MessageModel updateMessage (MessageDTO message) {
+        MessageModel message1 = messageRepository.findById(message.getMessageId()).get();
+        message1.setText(message.getText());
+        return messageRepository.save(message1);
+    }
+
+    public MessageModel deleteMessage(Integer messageId) {
+        Optional<MessageModel> messageOpt = messageRepository.findById(messageId);
+        if (messageOpt.isPresent()) {
+            MessageModel message = messageOpt.get();
+            message.setDisplay(false);
             return messageRepository.save(message);
         }
         return null;
