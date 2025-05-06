@@ -1,5 +1,7 @@
 package com.example.XDMHPL_Back_end.DTO;
 
+import java.text.SimpleDateFormat;
+
 import com.example.XDMHPL_Back_end.model.Notification;
 import com.example.XDMHPL_Back_end.model.NotificationStatus;
 
@@ -36,7 +38,11 @@ public class NotificationDTO {
         dto.setPostID(notification.getPost() != null ? notification.getPost().getPostID() : 0);
         dto.setMessageID(notification.getMessage() != null ? notification.getMessage().getMessageId() : 0);
         dto.setCommentID(notification.getComment() != null ? notification.getComment().getCommentID() : 0);
-        dto.setCreationDate(notification.getCreatedAt().toString()); // Chuyển đổi Date thành String
+        
+        // Thay đổi phương thức chuyển đổi Date thành String, sử dụng SimpleDateFormat
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        dto.setCreationDate(dateFormat.format(notification.getCreatedAt()));
+        
         dto.setIsReadFlag(notification.getIsReadFlag());
         dto.setIsOnline(notification.getUser().getIsOnline());
         return dto;
