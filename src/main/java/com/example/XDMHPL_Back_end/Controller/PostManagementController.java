@@ -96,7 +96,7 @@ public class PostManagementController {
             } else if (type.equalsIgnoreCase("image")) {
                 directory = IMAGE_DIRECTORY;
                 contentType = getImageContentType(filename);
-            } else if (type.equalsIgnoreCase("avatar")) {
+            } else if (type.equalsIgnoreCase("avatars")) {
             	directory = AVATAR;
                 contentType = getImageContentType(filename);
             }
