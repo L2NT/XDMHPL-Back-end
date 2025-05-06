@@ -126,20 +126,20 @@ public class UserController {
     }
 	
 	@PostMapping("/create-user")
-	public Users addUser(@RequestBody Users user) {
+	public Users addUser(@RequestBody UserDTO user) {
 	    return usersService.createUser(
 	        user.getFullName(), 
-	        user.getUserName(), 
+	        user.getUsername(), 
 	        user.getPassword(),
 	        user.getEmail(), 
-	        user.getAvatar(), 
+	        user.getAvatarURL(), 
 	        user.getPhoneNumber(), 
 	        user.getDateOfBirth(), 
 	        user.getGender(), 
-	        user.getCoverPhotoURL(), 
-	        user.getSessionID(),
+	        user.getCoverPhotoUrl(), 
+	        "",
 	        user.getRole(),
-	        user.getToken()
+	        ""
 	    );
 	}
 	
