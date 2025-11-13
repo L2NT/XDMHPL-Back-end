@@ -28,7 +28,7 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int commentID;
 
-    @Column(name = "Content")
+    @Column(name = "Content", columnDefinition = "TEXT")
     private String content;
 
     @Column(name = "CreationDate")
@@ -42,8 +42,6 @@ public class Comment {
     @JoinColumn(name = "PostID")
     private Post post;
 
-
     @OneToMany(mappedBy = "comment", cascade = CascadeType.REMOVE)
-	private List<Notification> notifications; // Danh sách thông báo nhận được
-
+    private List<Notification> notifications;
 }
