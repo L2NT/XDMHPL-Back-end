@@ -1,4 +1,4 @@
-package com.example.XDMHPL_Back_end.Controller.test;
+package com.example.XDMHPL_Back_end.Controller;
 
 import com.example.XDMHPL_Back_end.Controller.AuthController;
 import com.example.XDMHPL_Back_end.DTO.LoginRequest;
@@ -25,7 +25,7 @@ import java.util.Collections;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(controllers = AuthController.class)
@@ -54,7 +54,6 @@ class AuthControllerSliceTest {
         mockUser.setPassword("password123");
         mockUser.setRole("USER");
 
-        // ✅ Thêm 2 dòng này để tránh NullPointerException
         mockUser.setFriends(new ArrayList<>());
         mockUser.setFriendOf(new ArrayList<>());
 
@@ -97,5 +96,67 @@ class AuthControllerSliceTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(req)))
                 .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void checkUserSession_shouldReturnOk_whenSessionExists() throws Exception {
+        Users mockUser = new Users();
+        mockUser.setUserID(1);
+
+        Session mockSession = new Session();
+        mockSession.setSessionID("mock-session-id");
+
+        when(userService.getUserById(1)).thenReturn(mockUser);
+        when(sessionService.hasActiveSession(mockUser)).thenReturn(Collections.singletonList(mockSession));
+
+        mockMvc.perform(get("/auth/check-session/1"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void checkUserSession_shouldReturnNotFound_whenNoSessionExists() throws Exception {
+        Users mockUser = new Users();
+        mockUser.setUserID(1);
+
+        when(userService.getUserById(1)).thenReturn(mockUser);
+        when(sessionService.hasActiveSession(mockUser)).thenReturn(Collections.emptyList());
+
+        mockMvc.perform(get("/auth/check-session/1"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void updateSessionID_shouldReturnOk_whenSessionUpdated() throws Exception {
+        Users mockUser = new Users();
+        mockUser.setUserID(1);
+
+        when(userService.updateSessionID(1, "new-session-id")).thenReturn(mockUser);
+
+        mockMvc.perform(put("/auth/update-session/1")
+                        .param("newSessionID", "new-session-id"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void logout_shouldReturnOk_whenSessionValid() throws Exception {
+        mockMvc.perform(post("/auth/logout")
+                        .header("SessionID", "mock-session-id"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void forgotPassword_shouldReturnOk_whenEmailSent() throws Exception {
+        mockMvc.perform(post("/auth/forgot-password")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"email\":\"test@example.com\"}"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void resetPassword_shouldReturnOk_whenPasswordReset() throws Exception {
+        mockMvc.perform(post("/auth/reset-password/mock-token")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"password\":\"newPassword123\"}"))
+                .andExpect(status().isOk());
     }
 }

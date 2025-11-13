@@ -1,6 +1,7 @@
 package com.example.XDMHPL_Back_end.model;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.*;
@@ -211,9 +212,9 @@ public class Users {
     }
 
     public boolean getHide() {
-    	return this.hide;
+        return this.hide;
     }
-    
+
     public Boolean getIsOnline() {
         return isOnline;
     }
@@ -239,6 +240,9 @@ public class Users {
     }
 
     public List<Friend> getFriends() {
+        if (friends == null) {
+            friends = new ArrayList<>();
+        }
         return friends;
     }
 
@@ -247,6 +251,9 @@ public class Users {
     }
 
     public List<Friend> getFriendOf() {
+        if (friendOf == null) {
+            friendOf = new ArrayList<>();
+        }
         return friendOf;
     }
 
