@@ -1,4 +1,13 @@
 package com.example.XDMHPL_Back_end;
 
-public class XdmhplBackEndApplicationTests {
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest
+class XdmhplBackEndApplicationTests {
+
+    @Test
+    void contextLoads() {
+        // chỉ kiểm tra Spring context khởi tạo thành công
+    }
 }

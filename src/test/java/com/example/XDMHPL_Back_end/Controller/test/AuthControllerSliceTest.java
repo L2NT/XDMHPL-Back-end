@@ -1,5 +1,6 @@
-package com.example.XDMHPL_Back_end.Controller;
+package com.example.XDMHPL_Back_end.Controller.test;
 
+import com.example.XDMHPL_Back_end.Controller.AuthController;
 import com.example.XDMHPL_Back_end.DTO.LoginRequest;
 import com.example.XDMHPL_Back_end.Services.SessionService;
 import com.example.XDMHPL_Back_end.Services.UserService;
@@ -19,6 +20,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 
 import static org.mockito.ArgumentMatchers.*;
@@ -26,10 +28,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-/**
- * Test slice cho AuthController — không load toàn bộ ApplicationContext
- */
-@WebMvcTest(AuthController.class)
+@WebMvcTest(controllers = AuthController.class)
 @AutoConfigureMockMvc(addFilters = false)
 @ActiveProfiles("test")
 class AuthControllerSliceTest {
@@ -40,32 +39,31 @@ class AuthControllerSliceTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    // Chỉ mock các dependency mà AuthController autowire
     @MockBean private UserService userService;
     @MockBean private SessionService sessionService;
 
-    // Cấu hình giả để tránh Spring Boot quét các @Service/@Repository thực tế
     @Configuration
     @Import(AuthController.class)
     static class TestConfig {}
 
     @Test
     void login_shouldReturnOk_whenCredentialsValid() throws Exception {
-        // Mock user
         Users mockUser = new Users();
         mockUser.setUserID(1);
         mockUser.setUserName("testuser");
         mockUser.setPassword("password123");
         mockUser.setRole("USER");
 
-        // Mock session
+        // ✅ Thêm 2 dòng này để tránh NullPointerException
+        mockUser.setFriends(new ArrayList<>());
+        mockUser.setFriendOf(new ArrayList<>());
+
         Session mockSession = new Session();
         mockSession.setSessionID("mock-session-id");
         mockSession.setDeviceInfo("JUnitTest");
         mockSession.setCreatedAt(LocalDateTime.now());
         mockSession.setExpiresAt(LocalDateTime.now().plusHours(2));
 
-        // Giả lập hành vi service
         when(userService.loginValidate(anyString(), anyString(), anyString()))
                 .thenReturn(mockUser);
         when(sessionService.hasActiveSession(any(Users.class)))
@@ -87,7 +85,6 @@ class AuthControllerSliceTest {
 
     @Test
     void login_shouldReturnUnauthorized_whenPasswordInvalid() throws Exception {
-        // loginValidate trả về null nếu sai thông tin
         when(userService.loginValidate(anyString(), anyString(), anyString()))
                 .thenReturn(null);
 
