@@ -27,23 +27,71 @@ import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Unit Test cho CommentService
- * Test Level: Unit Test - Service Layer
- * Test Type: Functional Test
- * Sử dụng: Mockito để mock dependencies (Repository, NotificationService)
+ * ============================================================================
+ * UNIT TEST CHO COMMENTSERVICE - SERVICE LAYER
+ * ============================================================================
  *
- * Mục đích test:
- * - Kiểm tra business logic của service
- * - Đảm bảo các phương thức gọi đúng repository
- * - Kiểm tra exception handling
- * - Verify tương tác với dependencies
+ * CÂU HỎI 1: Test này thuộc Test Level nào? Test Type nào?
+ * TRÁ LỜI:
+ * - Test Level: UNIT TEST - Service Layer
+ * - Test Type: FUNCTIONAL TEST
+ * - KHÔNG phải Integration Test vì tất cả dependencies đều MOCK
+ * - KHÔNG phải Slice Test vì không load ApplicationContext
+ *
+ * CÂU HỎI 2: Tại sao sử dụng @ExtendWith(MockitoExtension.class)?
+ * TRÁ LỜI:
+ * - Kích hoạt Mockito framework cho JUnit 5
+ * - Tự động khởi tạo các @Mock objects
+ * - Inject các mock vào @InjectMocks
+ * - Không cần MockitoAnnotations.openMocks(this)
+ *
+ * CÂU HỎI 3: Mock Objects là gì? Tại sao cần Mock?
+ * TRÁ LỜI:
+ * - Mock Objects: Đối tượng giả lập, thay thế dependencies thật
+ * - Mockito Framework: Thư viện tạo và quản lý mock objects
+ * - LÝ DO CẦN MOCK:
+ *   + Test nhanh: Không cần database, network, file system
+ *   + Isolated: Chỉ test business logic của service
+ *   + Kiểm soát: Có thể giả lập bất kỳ scenario nào
+ *   + Test edge cases: Exception, timeout, null values...
+ *
+ * CÂU HỎI 4: Khác biệt với Repository Test?
+ * TRÁ LỜI:
+ * - Repository Test: Dùng database THẬT (H2), test query methods
+ * - Service Test: Mock TOÀN BỘ dependencies, test business logic
+ * - Repository Test: @DataJpaTest (Slice Test)
+ * - Service Test: @ExtendWith(MockitoExtension.class) (Pure Unit Test)
+ *
+ * CÂU HỎI 5: Test ở Service Layer test cái gì?
+ * TRÁ LỜI:
+ * - Business logic, nghiệp vụ của application
+ * - Xử lý data từ DTO -> Entity
+ * - Orchestration: Gọi nhiều repositories, services
+ * - Validation: Kiểm tra input hợp lệ
+ * - Exception handling: Xử lý lỗi
+ * - Transaction management
+ *
+ * CÂU HỎI 6: Dependencies trong pom.xml?
+ * TRÁ LỜI:
+ * - mockito-core: Framework mock chính
+ * - mockito-inline: Mock final classes và static methods
+ * - mockito-junit-jupiter: Tích hợp Mockito với JUnit 5
+ * - Đã bao gồm trong spring-boot-starter-test
  */
-@ExtendWith(MockitoExtension.class)
+@ExtendWith(MockitoExtension.class) // Kích hoạt Mockito
 @DisplayName("CommentService Unit Tests")
 class CommentServiceUnitTest {
 
+    /**
+     * CÂU HỎI: @Mock annotation làm gì?
+     * TRÁ LỜI:
+     * - Tạo mock object của interface/class
+     * - Mock object này là "dummy", không có logic thật
+     * - Cần define behavior bằng when().thenReturn()
+     * - Tất cả methods mặc định return null/0/false
+     */
     @Mock
-    private UserRepository userRepository;
+    private UserRepository userRepository; // Mock Repository
 
     @Mock
     private PostRepository postRepository;
@@ -54,8 +102,15 @@ class CommentServiceUnitTest {
     @Mock
     private NotificationService notificationService;
 
+    /**
+     * CÂU HỎI: @InjectMocks annotation làm gì?
+     * TRÁ LỜI:
+     * - Tạo instance thật của class cần test
+     * - Tự động inject các @Mock vào constructor/setter/field
+     * - Đây là object chứa business logic cần test
+     */
     @InjectMocks
-    private CommentService commentService;
+    private CommentService commentService; // Object cần test
 
     private Users user;
     private Users postOwner;
@@ -64,7 +119,7 @@ class CommentServiceUnitTest {
 
     @BeforeEach
     void setUp() {
-        // Khởi tạo test data
+        // Khởi tạo test data (không cần database)
         user = new Users();
         user.setUserID(1);
         user.setUserName("commenter");
@@ -85,17 +140,40 @@ class CommentServiceUnitTest {
     }
 
     /**
-     * Test Case: Tạo comment thành công
-     * Kịch bản: User comment vào post của người khác
-     * Kết quả mong đợi:
-     * - Comment được lưu vào database
-     * - Notification được tạo cho chủ post
-     * - Trả về NotificationDTO
+     * ========================================================================
+     * TEST CASE 1: HAPPY PATH - Tạo comment thành công
+     * ========================================================================
+     *
+     * CÂU HỎI: Test này test cái gì?
+     * TRÁ LỜI:
+     * - NGHIỆP VỤ: User tạo comment vào post của người khác
+     * - Business Logic:
+     *   1. Validate post tồn tại
+     *   2. Validate user tồn tại
+     *   3. Tạo Comment entity
+     *   4. Lưu comment vào database
+     *   5. Thêm comment vào post.comments list
+     *   6. Tạo notification cho chủ post
+     * - Không cần database thật, dùng Mock
+     *
+     * CÂU HỎI: when().thenReturn() là gì?
+     * TRÁ LỜI:
+     * - Define behavior cho mock object
+     * - when(mockObj.method(params)): Khi gọi method với params
+     * - thenReturn(value): Trả về value
+     * - Giả lập dependency trả về data mong muốn
+     *
+     * CÂU HỎI: verify() làm gì?
+     * TRÁ LỜI:
+     * - Kiểm tra mock object đã được gọi chưa
+     * - verify(mock, times(n)): Phải gọi đúng n lần
+     * - verify(mock, never()): Không được gọi
+     * - Đảm bảo service gọi đúng dependencies
      */
     @Test
     @DisplayName("Tạo comment thành công và gửi notification")
     void createComment_shouldReturnNotificationDTO_whenValidInput() {
-        // Arrange
+        // Arrange: Setup mock behavior
         Comment savedComment = new Comment();
         savedComment.setCommentID(99);
         savedComment.setContent(commentDTO.getContent());
@@ -104,25 +182,33 @@ class CommentServiceUnitTest {
         savedComment.setCreationDate(new Date());
 
         NotificationDTO mockNotification = new NotificationDTO();
-        // Không set message nếu không có setter, chỉ verify được trả về
 
+        // MOCK: Giả lập postRepository.findById() trả về post
         when(postRepository.findById(10)).thenReturn(Optional.of(post));
+
+        // MOCK: Giả lập userRepository.findById() trả về user
         when(userRepository.findById(1)).thenReturn(Optional.of(user));
+
+        // MOCK: Giả lập commentRepository.save() trả về savedComment
         when(commentRepository.save(any(Comment.class))).thenReturn(savedComment);
+
+        // MOCK: Giả lập postRepository.save() trả về post
         when(postRepository.save(any(Post.class))).thenReturn(post);
+
+        // MOCK: Giả lập notificationService.createNotification() trả về notification
         when(notificationService.createNotification(
                 eq(2), eq(1), eq(NotificationStatus.COMMENT),
                 eq(10), eq(99), isNull(), anyString()
         )).thenReturn(mockNotification);
 
-        // Act
+        // Act: Gọi method cần test
         NotificationDTO result = commentService.createComment(commentDTO, 10, 1);
 
-        // Assert
+        // Assert: Verify kết quả
         assertNotNull(result, "NotificationDTO không được null");
 
-        // Verify interactions
-        verify(postRepository, times(1)).findById(10);
+        // VERIFY: Kiểm tra các dependencies đã được gọi đúng
+        verify(postRepository, times(1)).findById(10); // Phải gọi đúng 1 lần
         verify(userRepository, times(1)).findById(1);
         verify(commentRepository, times(1)).save(any(Comment.class));
         verify(postRepository, times(1)).save(post);
@@ -130,39 +216,49 @@ class CommentServiceUnitTest {
                 eq(2), eq(1), eq(NotificationStatus.COMMENT),
                 eq(10), eq(99), isNull(), eq("Đã bình luận về bài viết của bạn"));
 
-        // Verify comment được thêm vào post
+        // ArgumentCaptor: Capture argument để verify chi tiết
         ArgumentCaptor<Post> postCaptor = ArgumentCaptor.forClass(Post.class);
         verify(postRepository).save(postCaptor.capture());
         assertTrue(postCaptor.getValue().getComments().contains(savedComment));
     }
 
     /**
-     * Test Case: Post không tồn tại
-     * Kịch bản: PostID không hợp lệ
-     * Kết quả mong đợi: Throw IllegalArgumentException
+     * ========================================================================
+     * TEST CASE 2: VALIDATION - Post không tồn tại
+     * ========================================================================
+     *
+     * CÂU HỎI: Tại sao test exception?
+     * TRÁ LỜI:
+     * - Đảm bảo service validate input đúng
+     * - Xử lý edge case: data không hợp lệ
+     * - Tránh NullPointerException trong production
+     * - Verify error message rõ ràng
      */
     @Test
     @DisplayName("Throw exception khi post không tồn tại")
     void createComment_shouldThrowException_whenPostNotFound() {
-        // Arrange
+        // Arrange: Mock repository trả về empty
         when(postRepository.findById(999)).thenReturn(Optional.empty());
 
-        // Act & Assert
+        // Act & Assert: Expect exception
         IllegalArgumentException exception = assertThrows(
             IllegalArgumentException.class,
             () -> commentService.createComment(commentDTO, 999, 1)
         );
 
+        // Verify error message
         assertTrue(exception.getMessage().contains("Không tìm thấy bài đăng"));
+
+        // Verify không lưu comment
         verify(commentRepository, never()).save(any());
         verify(notificationService, never()).createNotification(
                 anyInt(), anyInt(), any(), anyInt(), anyInt(), any(), anyString());
     }
 
     /**
-     * Test Case: User không tồn tại
-     * Kịch bản: UserID không hợp lệ
-     * Kết quả mong đợi: Throw IllegalArgumentException
+     * ========================================================================
+     * TEST CASE 3: VALIDATION - User không tồn tại
+     * ========================================================================
      */
     @Test
     @DisplayName("Throw exception khi user không tồn tại")
@@ -182,9 +278,9 @@ class CommentServiceUnitTest {
     }
 
     /**
-     * Test Case: Lấy comment theo ID thành công
-     * Kịch bản: CommentID hợp lệ
-     * Kết quả mong đợi: Trả về comment
+     * ========================================================================
+     * TEST CASE 4: READ OPERATION - Lấy comment theo ID
+     * ========================================================================
      */
     @Test
     @DisplayName("Lấy comment theo ID thành công")
@@ -207,9 +303,9 @@ class CommentServiceUnitTest {
     }
 
     /**
-     * Test Case: Comment không tồn tại
-     * Kịch bản: CommentID không hợp lệ
-     * Kết quả mong đợi: Throw IllegalArgumentException
+     * ========================================================================
+     * TEST CASE 5: NEGATIVE CASE - Comment không tồn tại
+     * ========================================================================
      */
     @Test
     @DisplayName("Throw exception khi comment không tồn tại")
@@ -227,9 +323,9 @@ class CommentServiceUnitTest {
     }
 
     /**
-     * Test Case: Cập nhật comment thành công
-     * Kịch bản: Update nội dung comment
-     * Kết quả mong đợi: Comment được update
+     * ========================================================================
+     * TEST CASE 6: UPDATE OPERATION - Cập nhật comment
+     * ========================================================================
      */
     @Test
     @DisplayName("Cập nhật comment thành công")
@@ -254,9 +350,9 @@ class CommentServiceUnitTest {
     }
 
     /**
-     * Test Case: Xóa comment thành công
-     * Kịch bản: Comment tồn tại
-     * Kết quả mong đợi: Comment bị xóa
+     * ========================================================================
+     * TEST CASE 7: DELETE OPERATION - Xóa comment thành công
+     * ========================================================================
      */
     @Test
     @DisplayName("Xóa comment thành công")
@@ -278,9 +374,9 @@ class CommentServiceUnitTest {
     }
 
     /**
-     * Test Case: Xóa comment không tồn tại
-     * Kịch bản: CommentID không hợp lệ
-     * Kết quả mong đợi: Throw exception
+     * ========================================================================
+     * TEST CASE 8: VALIDATION - Xóa comment không tồn tại
+     * ========================================================================
      */
     @Test
     @DisplayName("Throw exception khi xóa comment không tồn tại")
@@ -297,3 +393,46 @@ class CommentServiceUnitTest {
         verify(commentRepository, never()).delete(any());
     }
 }
+
+/**
+ * ============================================================================
+ * TÓM TẮT SERVICE LAYER TEST
+ * ============================================================================
+ *
+ * 1. TEST LEVEL: Unit Test - Service Layer
+ * 2. TEST TYPE: Functional Test
+ * 3. MOCKITO FRAMEWORK:
+ *    - @Mock: Tạo mock object
+ *    - @InjectMocks: Inject mock vào service
+ *    - when().thenReturn(): Define mock behavior
+ *    - verify(): Kiểm tra method đã được gọi
+ *    - ArgumentCaptor: Capture argument để verify chi tiết
+ *
+ * 4. SO SÁNH VỚI REPOSITORY TEST:
+ *    Repository Test          | Service Test
+ *    ------------------------|------------------------
+ *    @DataJpaTest            | @ExtendWith(MockitoExtension)
+ *    H2 database thật        | Mock toàn bộ
+ *    Test query methods      | Test business logic
+ *    Slice Test              | Pure Unit Test
+ *    Cần ApplicationContext  | Không cần Context
+ *
+ * 5. TEST COVERAGE:
+ *    - Happy path: Thành công
+ *    - Validation: Input không hợp lệ
+ *    - Exception: Error handling
+ *    - Negative cases: Data không tồn tại
+ *    - Business rules: Notification, cascade...
+ *
+ * 6. KHI NÀO DỪNG VIẾT TEST?
+ *    - Tất cả public methods đã được test
+ *    - Happy path + negative cases
+ *    - Exception handling
+ *    - Code coverage >= 80%
+ *
+ * 7. LỢI ÍCH CỦA MOCK:
+ *    - Nhanh: Không cần database
+ *    - Isolated: Chỉ test service logic
+ *    - Flexible: Giả lập mọi scenario
+ *    - Deterministic: Kết quả nhất quán
+ */
